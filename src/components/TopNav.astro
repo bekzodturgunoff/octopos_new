@@ -153,41 +153,61 @@ const links = [
         aria-expanded="false"
         class="flex h-9 w-9 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link lg:hidden"
       >
-        <svg
-          class="h-4 w-4"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          ><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"></path></svg
-        >
+        <span class="relative block h-3.5 w-[18px]" aria-hidden="true">
+          <span
+            data-burger-bar
+            class="absolute inset-x-0 top-0 h-[2px] rounded-full bg-current transition-transform duration-300 ease-far"
+          ></span>
+          <span
+            data-burger-bar
+            class="absolute inset-x-0 top-1/2 h-[2px] -translate-y-1/2 rounded-full bg-current transition-opacity duration-200 ease-far"
+          ></span>
+          <span
+            data-burger-bar
+            class="absolute inset-x-0 bottom-0 h-[2px] rounded-full bg-current transition-transform duration-300 ease-far"
+          ></span>
+        </span>
       </button>
     </div>
   </div>
 
   <div
     data-mobile-menu
-    class="hidden border-t border-hairline bg-page px-5 py-4 lg:hidden"
+    class="hidden border-t border-hairline bg-page lg:hidden"
   >
-    <nav class="flex flex-col gap-4" aria-label="Mobile">
+    <nav class="mx-auto flex max-w-[1600px] flex-col px-5" aria-label="Mobile">
       {
-        links.map((l) => (
+        links.map((l, i) => (
           <a
             href={l.href}
             data-i18n={l.key}
-            class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-ink"
+            class="group flex items-center justify-between border-b border-hairline py-4 font-geist text-[17px] leading-none font-medium text-ink transition-colors duration-300 last:border-0 hover:text-link"
           >
-            {l.key === "nav.apps"
-              ? "Ilovalar"
-              : l.key === "nav.solutions"
-                ? "Yechimlar"
-                : l.key === "nav.pricing"
-                  ? "Narxlar"
-                  : "Aloqa"}
+            <span>
+              {l.key === "nav.apps"
+                ? "Ilovalar"
+                : l.key === "nav.solutions"
+                  ? "Yechimlar"
+                  : l.key === "nav.pricing"
+                    ? "Narxlar"
+                    : "Aloqa"}
+            </span>
+            <span class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted">
+              {String(i + 1).padStart(2, "0")}
+            </span>
           </a>
         ))
       }
     </nav>
+    <div class="mx-auto max-w-[1600px] px-5 pt-5 pb-6">
+      <button
+        type="button"
+        data-plan-trigger="starter"
+        class="flex h-[48px] w-full items-center justify-center rounded-[99px] bg-accent font-geist-mono text-[12px] font-medium tracking-[0.72px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active"
+      >
+        <span data-i18n="cta.tryFree">Bepul sinab ko'rish →</span>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -308,8 +328,20 @@ const links = [
   /* ---------- mobile menu ---------- */
   const burger = document.querySelector<HTMLElement>("[data-burger]");
   const mobile = document.querySelector<HTMLElement>("[data-mobile-menu]");
+  const burgerBars = burger?.querySelectorAll<HTMLElement>("[data-burger-bar]");
+
+  const setBurger = (open: boolean): void => {
+    burger?.setAttribute("aria-expanded", String(open));
+    const [top, mid, bottom] = Array.from(burgerBars ?? []);
+    top?.classList.toggle("translate-y-[6px]", open);
+    top?.classList.toggle("rotate-45", open);
+    mid?.classList.toggle("opacity-0", open);
+    bottom?.classList.toggle("-translate-y-[6px]", open);
+    bottom?.classList.toggle("-rotate-45", open);
+  };
+
   burger?.addEventListener("click", () => {
     const open = mobile?.classList.toggle("hidden") === false;
-    burger.setAttribute("aria-expanded", String(open));
+    setBurger(open);
   });
 </script>

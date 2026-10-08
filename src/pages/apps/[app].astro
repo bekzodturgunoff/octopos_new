@@ -112,23 +112,23 @@ function frameLabel(url: string): string {
           }
         </dl>
 
-        <div class="mt-[24px] flex flex-col gap-2 sm:flex-row">
+        <div class="mt-[24px] grid grid-cols-2 gap-2">
           <button
             type="button"
             data-plan-trigger="starter"
-            class="flex h-[44px] flex-1 items-center justify-center rounded-[99px] bg-accent px-5 font-geist-mono text-[12px] font-medium tracking-[0.72px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active"
+            class="flex min-h-[44px] w-full items-center justify-center rounded-[99px] bg-accent px-4 py-2.5 text-center font-geist-mono text-[11px] leading-[1.2] font-medium tracking-[0.4px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active sm:text-[12px]"
           >
             <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}
-              >Bepul sinab ko'rish&nbsp;&nbsp;→</span
+              >Bepul sinab ko'rish →</span
             >
           </button>
           <a
             href={`/apps/${next.slug}`}
-            class="flex h-[44px] flex-1 items-center justify-center rounded-[99px] border border-hairline px-5 font-geist-mono text-[12px] font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:border-link hover:text-link"
+            class="flex min-h-[44px] w-full items-center justify-center rounded-[99px] border border-hairline px-4 py-2.5 text-center font-geist-mono text-[11px] leading-[1.2] font-medium tracking-[0.4px] text-ink transition-colors duration-[350ms] ease-far hover:border-link hover:text-link sm:text-[12px]"
           >
             <span
               data-i18n={has("cta.next") ? "cta.next" : undefined}
-              data-name={next.name}>Keyingi — {next.name}&nbsp;›</span
+              data-name={next.name}>Keyingi — {next.name} ›</span
             >
           </a>
         </div>
@@ -145,7 +145,7 @@ function frameLabel(url: string): string {
                   const useKey = has(frameKey) && app.frames?.[base] != null;
                   return (
                     <figure>
-                      <div class="overflow-hidden rounded-2xl">
+                      <div class="overflow-hidden rounded-none sm:rounded-2xl">
                         <img
                           src={src}
                           alt={`${app.name} — ${frameLabel(src)}`}

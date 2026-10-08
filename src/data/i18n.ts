@@ -1090,6 +1090,12 @@ export const STRINGS: Record<string, Dict> = {
     tr: "Kredi kartı gerekmez",
   },
   "plans.perMonth": { en: "/mo", ru: "/мес", ko: "/월", tr: "/ay" },
+  "plans.perMonthUzs": {
+    en: "UZS/mo",
+    ru: "сум/мес",
+    ko: "so'm/월",
+    tr: "so'm/ay",
+  },
   "plans.perYear": { en: "/yr", ru: "/год", ko: "/년", tr: "/yıl" },
   "plans.locations": {
     en: "{n} locations",

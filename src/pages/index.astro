@@ -3,21 +3,22 @@ import Layout from "../layouts/Layout.astro";
 import TopNav from "../components/TopNav.astro";
 import AgentDownload from "../components/AgentDownload.astro";
 import { apps, imagesFor } from "../data/apps";
+import AppIcon from "../components/AppIcon.astro";
 import { has } from "../data/i18n";
 
-const cards = apps.map((app) => ({ app, images: imagesFor(app.slug) }));
+const cards = apps;
 const heroImg = imagesFor("pos-restaurant")[0];
 
 const storeTiers = [
-  { name: "Start", price: "$65", n: 1000 },
-  { name: "Pro", price: "$179", n: 3000 },
-  { name: "Business", price: "$329", n: 6000 },
-  { name: "Enterprise", price: "$619", n: 10000 },
+  { name: "Start", price: "790 000", n: 1000 },
+  { name: "Pro", price: "2 190 000", n: 3000 },
+  { name: "Business", price: "3 990 000", n: 6000 },
+  { name: "Enterprise", price: "7 490 000", n: 10000 },
 ];
 const photoTiers = [
-  { n: 200, price: "$12" },
-  { n: 600, price: "$29" },
-  { n: 1500, price: "$57" },
+  { n: 200, price: "149 000" },
+  { n: 600, price: "349 000" },
+  { n: 1500, price: "690 000" },
 ];
 
 const solutions = [
@@ -131,7 +132,7 @@ const payLogos = [
           </div>
         </div>
 
-        <div class="mt-10 overflow-hidden rounded-2xl bg-card">
+        <div class="mt-10 overflow-hidden rounded-none bg-card sm:rounded-2xl">
           {
             heroImg ? (
               <img
@@ -171,57 +172,36 @@ const payLogos = [
           >
         </div>
 
-        <div class="mt-10 grid grid-cols-1 gap-[40px] md:grid-cols-2">
+        <div class="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {
-            cards.map(({ app, images }) => (
+            cards.map((app) => (
               <a
                 href={`/apps/${app.slug}`}
-                class="group relative block aspect-[8/5] overflow-hidden rounded-2xl bg-card"
+                class="group flex items-center gap-4 rounded-2xl border border-hairline bg-card/40 p-5 transition-colors duration-300 hover:border-link/40"
               >
-                {images[0] ? (
-                  <>
-                    <img
-                      src={images[0]}
-                      alt={`${app.name} — ekran ko'rinishi`}
-                      class="absolute inset-x-0 bottom-0 h-[calc(100%+3px)] w-full object-cover object-top transition-transform duration-[450ms] ease-far group-hover:scale-[1.03]"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <span class="pointer-events-none absolute inset-x-0 bottom-0 block h-1/2 bg-linear-to-t from-black/60 via-black/15 to-transparent" />
-                  </>
-                ) : (
-                  <span class="absolute inset-0 flex items-center justify-center font-geist-mono text-[12px] tracking-[0.72px] text-muted">
-                    Rasmlar tez orada
-                  </span>
-                )}
-
-                <span class="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-3 p-4 lg:p-5">
-                  <span class="min-w-0">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ink text-on-ink">
+                  <AppIcon slug={app.slug} class="h-5 w-5" />
+                </span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-geist-mono text-[11px] leading-4 tracking-[0.72px] text-muted">
+                    {app.no} ·{" "}
                     <span
-                      class={`block font-geist-mono text-[12px] leading-4 tracking-[0.72px] ${images[0] ? "text-white/75" : "text-muted"}`}
+                      data-i18n={
+                        has(`v.${app.tur}`) ? `v.${app.tur}` : undefined
+                      }
                     >
-                      {app.no} ·{" "}
-                      <span
-                        data-i18n={
-                          has(`v.${app.tur}`) ? `v.${app.tur}` : undefined
-                        }
-                      >
-                        {app.tur}
-                      </span>
-                    </span>
-                    <span
-                      class={`mt-1 block font-inter text-[17px] leading-[1.3] font-medium ${images[0] ? "text-[#fafafa]" : "text-ink"}`}
-                    >
-                      {app.name}
+                      {app.tur}
                     </span>
                   </span>
-                  <span
-                    class={`shrink-0 font-geist-mono text-[12px] leading-4 tracking-[0.72px] ${images[0] ? "text-white/60" : "text-muted"}`}
-                    data-i18n="imgCount"
-                    data-n={images.length}
-                  >
-                    {images.length} rasm
+                  <span class="mt-0.5 block truncate font-inter text-[16px] leading-[1.3] font-medium text-ink">
+                    {app.name}
                   </span>
+                </span>
+                <span
+                  class="shrink-0 font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted transition-transform duration-300 ease-far group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                >
+                  →
                 </span>
               </a>
             ))
@@ -286,7 +266,7 @@ const payLogos = [
 
         <div class="mt-12 grid gap-x-12 gap-y-10 md:grid-cols-2">
           {
-            cards.map(({ app }) => (
+            cards.map((app) => (
               <div class="border-t border-hairline pt-5">
                 <div class="flex items-baseline justify-between gap-4">
                   <div>
@@ -529,7 +509,7 @@ const payLogos = [
                       >
                       <span
                         class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
-                        data-i18n="plans.perMonth">/oy</span
+                        data-i18n="plans.perMonthUzs">so'm/oy</span
                       >
                     </p>
                     <p
@@ -590,11 +570,11 @@ const payLogos = [
               </h3>
               <p class="flex items-baseline gap-1">
                 <span class="font-geist text-[17px] font-medium text-ink"
-                  >$32</span
+                  >390 000</span
                 >
                 <span
                   class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
-                  data-i18n="plans.perMonth">/oy</span
+                  data-i18n="plans.perMonthUzs">so'm/oy</span
                 >
               </p>
             </div>
@@ -669,7 +649,7 @@ const payLogos = [
                       >
                       <span
                         class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
-                        data-i18n="plans.perMonth">/oy</span
+                        data-i18n="plans.perMonthUzs">so'm/oy</span
                       >
                     </span>
                   </li>
@@ -966,6 +946,24 @@ const payLogos = [
       const cta =
         amount === 0 ? L("plans.startFree", lang) : L("plans.getStarted", lang);
 
+      const quotas: any[] = Array.isArray(plan.quotas) ? plan.quotas : [];
+      const quotaMax = (meter: string): number => {
+        const matches = quotas.filter((q) => q?.meter === meter);
+        if (!matches.length) return 0;
+        return Math.max(...matches.map((q) => Number(q.max) || 0));
+      };
+      const chip = (label: string, n: number): string =>
+        n > 0
+          ? `<span class="rounded-full border border-hairline px-2.5 py-1 font-geist-mono text-[10.5px] leading-none tracking-[0.3px] text-muted">${esc(label.replace("{n}", String(n)))}</span>`
+          : "";
+      const chips = [
+        chip(L("plans.locations", lang), quotaMax("location")),
+        chip(L("plans.aiPhotos", lang), quotaMax("imageGeneration")),
+        chip(L("plans.onlineOrders", lang), quotaMax("order")),
+      ]
+        .filter(Boolean)
+        .join("");
+
       const feats = (plan.features ?? [])
         .map(
           (f: any) =>
@@ -982,6 +980,7 @@ const payLogos = [
           <span class="font-geist-mono text-[11px] tracking-[0.72px] text-muted">${esc(suffix)}</span>
         </div>
         ${note}
+        ${chips ? `<div class="mt-4 flex flex-wrap gap-1.5">${chips}</div>` : ""}
         <div class="mt-5 h-px w-full bg-hairline"></div>
         <ul class="mt-5 flex flex-col gap-2.5">${feats}</ul>
         <div class="mt-auto pt-6">
