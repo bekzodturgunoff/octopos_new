@@ -77,38 +77,6 @@ export const STRINGS: Record<string, Dict> = {
     tr: "✓ Kredi kartı gerekmez · ✓ Bugün başla · ✓ Çevrimdışı çalışır",
   },
 
-  /* ---------- stats ---------- */
-  "stats.eyebrow": {
-    en: "In numbers",
-    ru: "В цифрах",
-    ko: "숫자로",
-    tr: "Rakamlarla",
-  },
-  "stats.l1": {
-    en: "Active restaurants",
-    ru: "Активных ресторанов",
-    ko: "활성 레스토랑",
-    tr: "Aktif restoranlar",
-  },
-  "stats.l2": {
-    en: "Apps",
-    ru: "Приложений",
-    ko: "앱",
-    tr: "Uygulama",
-  },
-  "stats.l3": {
-    en: "Languages",
-    ru: "Языки",
-    ko: "언어",
-    tr: "Diller",
-  },
-  "stats.l4": {
-    en: "To get started",
-    ru: "Чтобы начать",
-    ko: "시작 비용",
-    tr: "Başlamak için",
-  },
-
   /* ---------- apps section / apps index ---------- */
   "apps.eyebrow": {
     en: "Apps",

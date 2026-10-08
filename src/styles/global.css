@@ -30,6 +30,10 @@
   --color-accent-active: oklch(79.99% 0.17 134.55);
   --color-accent-emphasis: oklch(28.69% 0.08386907740604355 135.05042975542813);
 
+  /* Primary surface: dark green on light, bright green on dark (kdsx apps). */
+  --color-accent-surface: var(--color-accent-emphasis);
+  --color-on-accent-surface: var(--color-accent);
+
   --color-error-bright: oklch(50.6% 0.193 27.7);
   --color-error-low: oklch(91.83% 0.04177126481295753 25.22590685781077);
 
@@ -40,20 +44,26 @@
   :root:not([data-theme="light"]) {
     --color-page: oklch(19.09% 0.009 137.85);
     --color-ink: oklch(98.09% 0.013 115.83);
+    --color-muted: oklch(82.4% 0.04 129.72);
     --color-hairline: oklch(32% 0.009 137.85);
     --color-link: oklch(85.7% 0.17 134.56);
     --color-on-ink: oklch(19.09% 0.009 137.85);
     --color-card: oklch(26% 0.009 137.85);
+    --color-accent-surface: var(--color-accent);
+    --color-on-accent-surface: var(--color-accent-emphasis);
   }
 }
 
 :root[data-theme="dark"] {
   --color-page: oklch(19.09% 0.009 137.85);
   --color-ink: oklch(98.09% 0.013 115.83);
+  --color-muted: oklch(82.4% 0.04 129.72);
   --color-hairline: oklch(32% 0.009 137.85);
   --color-link: oklch(85.7% 0.17 134.56);
   --color-on-ink: oklch(19.09% 0.009 137.85);
   --color-card: oklch(26% 0.009 137.85);
+  --color-accent-surface: var(--color-accent);
+  --color-on-accent-surface: var(--color-accent-emphasis);
 }
 
 @layer base {
@@ -88,21 +98,23 @@
   white-space: nowrap;
   border-radius: 999px;
   font-weight: 600;
-  background: var(--color-accent);
-  color: var(--color-accent-emphasis);
+  background: var(--color-accent-surface);
+  color: var(--color-on-accent-surface);
   transition:
     background-color 0.3s ease,
+    color 0.3s ease,
     transform 0.1s ease;
   cursor: pointer;
 }
 .btn-solid:hover {
   background: var(--color-accent-active);
+  color: var(--color-accent-emphasis);
 }
 .btn-solid:active {
   transform: scale(0.98);
 }
 .btn-solid:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-accent-surface);
   outline-offset: 2px;
 }
 .btn-solid:disabled {

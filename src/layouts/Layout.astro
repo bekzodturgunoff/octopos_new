@@ -68,9 +68,8 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString(
     {canonical && <meta property="og:url" content={canonical} />}
     {canonical && <meta property="og:image" content={new URL("/og.webp", Astro.site).toString()} />}
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon.ico" />
   </head>
   <body class="font-geist text-ink antialiased">
     <slot />

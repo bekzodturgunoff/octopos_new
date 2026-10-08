@@ -8,13 +8,6 @@ import { has } from "../data/i18n";
 const cards = apps.map((app) => ({ app, images: imagesFor(app.slug) }));
 const heroImg = imagesFor("pos-restaurant")[0];
 
-const stats = [
-  { v: "25+", k: "stats.l1", uz: "Faol restoran" },
-  { v: "8", k: "stats.l2", uz: "Ilova" },
-  { v: "5", k: "stats.l3", uz: "Tillar" },
-  { v: "$0", k: "stats.l4", uz: "Boshlash uchun" },
-];
-
 const solutions = [
   {
     uzT: "Restoran va kafelar",
@@ -148,37 +141,6 @@ const payLogos = [
                 Rasmlar tez orada
               </span>
             )
-          }
-        </div>
-      </div>
-    </section>
-
-    {/* ---------------- stats ---------------- */}
-    <section class="border-t border-hairline">
-      <div
-        class="mx-auto max-w-[1600px] border-b border-hairline px-5 py-10 lg:px-[32px]"
-      >
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="stats.eyebrow"
-        >
-          Raqamlarda
-        </p>
-        <div class="mt-8 grid grid-cols-2 gap-8 lg:grid-cols-4">
-          {
-            stats.map((s) => (
-              <div>
-                <p class="font-anton text-[52px] leading-none tracking-[-0.69px] lg:text-[76px]">
-                  {s.v}
-                </p>
-                <p
-                  class="mt-3 font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-                  data-i18n={s.k}
-                >
-                  {s.uz}
-                </p>
-              </div>
-            ))
           }
         </div>
       </div>
