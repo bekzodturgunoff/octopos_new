@@ -1,0 +1,215 @@
+---
+const LATEST_VERSION_URL =
+  "https://artifacts.octopos.uz/releases/octopos-api-spoke/latest";
+const FALLBACK_VERSION = "v0.0.24";
+
+// Fetch the latest published version at build time so download links always
+// point to the newest release. Falls back to a known-good version on failure.
+async function fetchLatestVersion(): Promise<string> {
+  try {
+    const res = await fetch(LATEST_VERSION_URL, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!res.ok) return FALLBACK_VERSION;
+    const text = (await res.text()).trim();
+    if (!/^v?\d+\.\d+\.\d+/.test(text)) return FALLBACK_VERSION;
+    return text.startsWith("v") ? text : `v${text}`;
+  } catch {
+    return FALLBACK_VERSION;
+  }
+}
+
+const VERSION = await fetchLatestVersion();
+const BASE_URL = `https://artifacts.octopos.uz/releases/octopos-api-spoke/${VERSION}`;
+
+const platforms = [
+  {
+    key: "windows",
+    nameKey: "dl.windows",
+    bodyKey: "dl.windowsBody",
+    body: "Agent va lokal serverni Windows xizmatlari sifatida o'rnatadi.",
+    img: "/os_images/icons8-windows-10.svg",
+    arch: { x64: "dl.winX64", arm64: "dl.winArm" },
+    files: {
+      x64: "octopos-api-spoke-x64.msi",
+      arm64: "octopos-api-spoke-arm64.msi",
+    },
+  },
+  {
+    key: "linux",
+    nameKey: "dl.linux",
+    bodyKey: "dl.linuxBody",
+    body: "Agent, lokal server va xizmat fayllarini o'z ichiga oladi.",
+    img: "/os_images/icons8-linux.svg",
+    arch: { x64: "dl.linX64", arm64: "dl.linArm" },
+    files: {
+      x64: "octopos-api-spoke-linux-amd64.tar.gz",
+      arm64: "octopos-api-spoke-linux-arm64.tar.gz",
+    },
+  },
+  {
+    key: "macos",
+    nameKey: "dl.macos",
+    bodyKey: "dl.macosBody",
+    body: "Agent, lokal server va xizmat fayllarini o'z ichiga oladi.",
+    img: "/os_images/icons8-apple-inc.svg",
+    invert: true,
+    arch: { x64: "dl.macX64", arm64: "dl.macArm" },
+    files: {
+      x64: "octopos-api-spoke-darwin-amd64.tar.gz",
+      arm64: "octopos-api-spoke-darwin-arm64.tar.gz",
+    },
+  },
+] as const;
+---
+
+<section
+  class="border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]"
+>
+  <div class="mx-auto max-w-[1600px]">
+    <h2
+      class="max-w-[1000px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+      data-i18n="dl.heading"
+    >
+      Octopos Agent-ni o'rnatish
+    </h2>
+    <p
+      class="mt-5 max-w-[760px] font-geist text-[13.5px] leading-[21px] text-muted"
+      data-i18n="dl.body"
+    >
+      Octopos Agent restorandagi kompyuterda ishlaydi va internet uzilganda ham
+      kassalar, printerlar va oshxona displeylarini bog'lab turadi. Bir marta
+      o'rnating; yangilanishlarni masofadan boshqaramiz.
+    </p>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-3">
+      {
+        platforms.map((p) => (
+          <div class="flex flex-col gap-4 rounded-2xl border border-hairline bg-card/40 p-6">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-card">
+              <img
+                src={p.img}
+                alt=""
+                aria-hidden="true"
+                width="24"
+                height="24"
+                class:list={[
+                  "h-6 w-6 object-contain",
+                  "invert" in p && p.invert && "dl-apple-icon",
+                ]}
+                loading="lazy"
+              />
+            </span>
+            <div class="flex flex-col gap-1.5">
+              <h3
+                class="font-geist text-[17px] leading-[1.3] font-medium"
+                data-i18n={p.nameKey}
+              >
+                {p.nameKey === "dl.windows"
+                  ? "Windows"
+                  : p.nameKey === "dl.linux"
+                    ? "Linux"
+                    : "macOS"}
+              </h3>
+              <p
+                class="font-geist text-[13.5px] leading-[21px] text-muted"
+                data-i18n={p.bodyKey}
+              >
+                {p.body}
+              </p>
+            </div>
+
+            <div class="mt-auto flex flex-col gap-3 border-t border-hairline pt-5">
+              <div class="flex justify-center">
+                <div
+                  class="inline-flex rounded-full border border-hairline p-1 font-geist-mono text-[12px] tracking-[0.72px]"
+                  role="group"
+                  aria-label="Architecture"
+                >
+                  <button
+                    type="button"
+                    data-arch="x64"
+                    aria-pressed="true"
+                    class="dl-arch rounded-full bg-ink px-4 py-1.5 text-on-ink transition-colors duration-300"
+                    data-i18n={p.arch.x64}
+                  >
+                    {p.arch.x64 === "dl.winX64"
+                      ? "x64"
+                      : p.arch.x64 === "dl.linX64"
+                        ? "AMD64"
+                        : "Intel"}
+                  </button>
+                  <button
+                    type="button"
+                    data-arch="arm64"
+                    aria-pressed="false"
+                    class="dl-arch rounded-full px-4 py-1.5 text-muted transition-colors duration-300"
+                    data-i18n={p.arch.arm64}
+                  >
+                    {p.arch.arm64 === "dl.macArm" ? "Apple Silicon" : "ARM64"}
+                  </button>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href={`${BASE_URL}/${p.files.x64}`}
+                  target="_blank"
+                  rel="noopener"
+                  class="btn-solid h-[44px] w-full items-center justify-center gap-2 px-6 font-geist-mono text-[12px] tracking-[0.72px] sm:w-auto"
+                  data-dl-link
+                  data-arch-url-x64={`${BASE_URL}/${p.files.x64}`}
+                  data-arch-url-arm64={`${BASE_URL}/${p.files.arm64}`}
+                >
+                  <svg
+                    class="h-4 w-4"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    ><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                      ></path><path d="m7 10 5 5 5-5"></path><path
+                        d="M12 15V3"></path></svg
+                  >
+                  <span data-i18n="dl.download">Yuklab olish</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-dl-link]").forEach((link) => {
+    const card = link.closest(".rounded-2xl");
+    if (!card) return;
+    const btns = card.querySelectorAll<HTMLButtonElement>("[data-arch]");
+
+    const applyArch = () => {
+      const active = card.querySelector('[data-arch][aria-pressed="true"]');
+      const arch = active?.getAttribute("data-arch") ?? "x64";
+      const url = link.getAttribute(`data-arch-url-${arch}`);
+      if (url) link.setAttribute("href", url);
+    };
+
+    btns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btns.forEach((b) => {
+          const on = b === btn;
+          b.setAttribute("aria-pressed", String(on));
+          b.classList.toggle("bg-ink", on);
+          b.classList.toggle("text-on-ink", on);
+          b.classList.toggle("text-muted", !on);
+        });
+        applyArch();
+      });
+    });
+
+    applyArch();
+  });
+</script>

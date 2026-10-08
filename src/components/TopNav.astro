@@ -1,0 +1,307 @@
+---
+import logoDark from "../assets/logo_dark.png";
+import logoLight from "../assets/logo_light.png";
+import { LANGS } from "../data/i18n";
+
+const path = Astro.url.pathname;
+const links = [
+  { href: "/apps", key: "nav.apps" },
+  { href: "/#solutions", key: "nav.solutions" },
+  { href: "/#plans", key: "nav.pricing" },
+  { href: "/#contact", key: "nav.contact" },
+];
+---
+
+<header
+  class="sticky top-0 z-50 w-full border-b border-hairline bg-page/90 backdrop-blur-md"
+>
+  <div
+    class="mx-auto flex h-[56px] max-w-[1600px] items-center justify-between gap-4 px-5 lg:px-[32px]"
+  >
+    <a href="/" class="flex shrink-0 items-center gap-2.5">
+      <img
+        src={logoDark.src}
+        alt="Octopos"
+        width="32"
+        height="32"
+        class="logo-dark block h-8 w-8"
+        loading="eager"
+        fetchpriority="high"
+      />
+      <img
+        src={logoLight.src}
+        alt=""
+        width="32"
+        height="32"
+        class="logo-light block h-8 w-8"
+        aria-hidden="true"
+        loading="eager"
+      />
+      <span
+        class="font-geist text-[15px] leading-none font-semibold tracking-[-0.2px] text-ink"
+        >Octopos</span
+      >
+    </a>
+
+    <div class="flex items-center gap-3 lg:gap-5">
+      <nav class="hidden items-center gap-5 lg:flex" aria-label="Primary">
+        {
+          links.map((l) => (
+            <a
+              href={l.href}
+              data-i18n={l.key}
+              class:list={[
+                "font-geist-mono text-[12px] leading-4 tracking-[0.72px] transition-colors duration-[350ms] ease-far hover:text-link",
+                path === l.href ? "text-ink" : "text-ink/80",
+              ]}
+            >
+              {l.key === "nav.apps"
+                ? "Ilovalar"
+                : l.key === "nav.solutions"
+                  ? "Yechimlar"
+                  : l.key === "nav.pricing"
+                    ? "Narxlar"
+                    : "Aloqa"}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="relative">
+        <button
+          type="button"
+          data-lang-toggle
+          aria-label="Language"
+          data-i18n-attr="aria-label:nav.lang"
+          aria-haspopup="true"
+          class="flex h-9 items-center gap-1.5 rounded-full border border-hairline px-3 font-geist-mono text-[12px] leading-3 font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:text-link"
+        >
+          <span data-lang-code>UZ</span>
+          <svg
+            class="h-3 w-3 opacity-60"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            ><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"
+            ></path></svg
+          >
+        </button>
+        <div
+          data-lang-menu
+          class="absolute top-[calc(100%+8px)] right-0 hidden w-[170px] overflow-hidden rounded-2xl border border-hairline bg-page py-1 shadow-lg"
+        >
+          {
+            LANGS.map((l) => (
+              <button
+                type="button"
+                data-set-lang={l.code}
+                class="flex w-full items-center justify-between gap-3 px-4 py-2.5 font-geist text-[13px] text-ink transition-colors duration-200 hover:bg-card"
+              >
+                <span>{l.native}</span>
+                <span class="font-geist-mono text-[11px] tracking-[0.72px] text-muted">
+                  {l.code}
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <button
+        type="button"
+        data-theme-cycle
+        aria-label="Toggle theme"
+        class="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link"
+      >
+        <span
+          data-icon="light"
+          class="absolute inset-0 flex items-center justify-center transition-transform duration-200 scale-100"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><circle cx="12" cy="12" r="5"></circle><path
+              d="M12 1v2m0 18v2M4.22 4.22L5.64 5.64m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78L5.64 18.36m12.72-12.72l1.42 1.42"
+              stroke-linecap="round"></path></svg
+          >
+        </span>
+        <span
+          data-icon="dark"
+          class="absolute inset-0 flex items-center justify-center transition-transform duration-200 scale-0"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><path
+              d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg
+          >
+        </span>
+      </button>
+
+      <button
+        type="button"
+        data-burger
+        aria-label="Menu"
+        data-i18n-attr="aria-label:nav.menu"
+        aria-expanded="false"
+        class="flex h-9 w-9 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link lg:hidden"
+      >
+        <svg
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          ><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"></path></svg
+        >
+      </button>
+    </div>
+  </div>
+
+  <div
+    data-mobile-menu
+    class="hidden border-t border-hairline bg-page px-5 py-4 lg:hidden"
+  >
+    <nav class="flex flex-col gap-4" aria-label="Mobile">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            data-i18n={l.key}
+            class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-ink"
+          >
+            {l.key === "nav.apps"
+              ? "Ilovalar"
+              : l.key === "nav.solutions"
+                ? "Yechimlar"
+                : l.key === "nav.pricing"
+                  ? "Narxlar"
+                  : "Aloqa"}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+</header>
+
+<script>
+  import { applyLang, getLang, setLang, type Lang } from "../data/i18n";
+
+  /* ---------- theme ---------- */
+  const THEME_KEY = "theme";
+  const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+  const DARK_COLOR = "oklch(19.09% 0.009 137.85)";
+  const LIGHT_COLOR = "oklch(98.09% 0.013 115.83)";
+  const html = document.documentElement;
+
+  const getCookieTheme = () => {
+    const m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : null;
+  };
+  const getStoredTheme = () => {
+    let v;
+    try {
+      v = localStorage.getItem(THEME_KEY);
+    } catch (_) {}
+    if (!v) v = getCookieTheme() || undefined;
+    if (v === "dark" || v === "light") return v;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+  const setStoredTheme = (v: string) => {
+    try {
+      localStorage.setItem(THEME_KEY, v);
+    } catch (_) {}
+    document.cookie = `theme=${encodeURIComponent(v)}; path=/; max-age=${COOKIE_MAX_AGE}; SameSite=Lax`;
+  };
+  const syncThemeArtifacts = (effective: string) => {
+    html.setAttribute("data-theme", effective);
+    html.style.colorScheme = effective;
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta)
+      meta.setAttribute(
+        "content",
+        effective === "dark" ? DARK_COLOR : LIGHT_COLOR,
+      );
+    const cs = document.querySelector('meta[name="color-scheme"]');
+    if (cs) cs.setAttribute("content", effective);
+  };
+  const updateThemeUI = (mode: string) => {
+    document.querySelectorAll("[data-theme-cycle]").forEach((btn) => {
+      btn.setAttribute("aria-label", `Theme: ${mode}`);
+      btn.querySelectorAll("[data-icon]").forEach((el) => {
+        const show = el.getAttribute("data-icon") === mode;
+        el.classList.toggle("scale-0", !show);
+        el.classList.toggle("scale-100", show);
+      });
+    });
+  };
+  const applyTheme = (mode: string) => {
+    syncThemeArtifacts(mode);
+    updateThemeUI(mode);
+  };
+
+  applyTheme(getStoredTheme());
+  document.querySelectorAll("[data-theme-cycle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next = getStoredTheme() === "dark" ? "light" : "dark";
+      setStoredTheme(next);
+      applyTheme(next);
+    });
+  });
+
+  /* ---------- language ---------- */
+  const codeEl = document.querySelector<HTMLElement>("[data-lang-code]");
+  const menu = document.querySelector<HTMLElement>("[data-lang-menu]");
+  const toggle = document.querySelector<HTMLElement>("[data-lang-toggle]");
+
+  const syncLangUI = (l: Lang) => {
+    if (codeEl) codeEl.textContent = l.toUpperCase();
+    document.querySelectorAll<HTMLElement>("[data-set-lang]").forEach((b) => {
+      b.classList.toggle(
+        "text-link",
+        b.getAttribute("data-set-lang") === l,
+      );
+    });
+  };
+
+  const initial = getLang();
+  applyLang(initial);
+  syncLangUI(initial);
+
+  const closeMenu = () => menu?.classList.add("hidden");
+
+  toggle?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menu?.classList.toggle("hidden");
+  });
+  document.addEventListener("click", (e) => {
+    if (menu && !menu.contains(e.target as Node)) closeMenu();
+  });
+
+  document.querySelectorAll<HTMLElement>("[data-set-lang]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const l = btn.getAttribute("data-set-lang") as Lang;
+      setLang(l);
+      applyLang(l);
+      syncLangUI(l);
+      closeMenu();
+    });
+  });
+
+  /* ---------- mobile menu ---------- */
+  const burger = document.querySelector<HTMLElement>("[data-burger]");
+  const mobile = document.querySelector<HTMLElement>("[data-mobile-menu]");
+  burger?.addEventListener("click", () => {
+    const open = mobile?.classList.toggle("hidden") === false;
+    burger.setAttribute("aria-expanded", String(open));
+  });
+</script>

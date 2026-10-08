@@ -1,0 +1,388 @@
+---
+const trialAPIBaseURL =
+  import.meta.env.PUBLIC_TRIAL_API_BASE_URL || "https://api.octopos.uz";
+---
+
+<div
+  id="plan-wizard"
+  class="fixed inset-0 z-[60] hidden"
+  data-api-base={trialAPIBaseURL}
+>
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+  <div class="relative mx-auto my-10 max-w-lg px-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="wizard-title"
+      class="rounded-3xl border border-hairline bg-page p-5 shadow-2xl md:p-8"
+    >
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0">
+          <h3
+            id="wizard-title"
+            data-i18n="wizard.title"
+            class="font-geist text-xl font-semibold text-ink"
+            >Octopos akkauntini yarating</h3
+          >
+          <p
+            id="wizard-subtitle"
+            data-i18n="wizard.subtitle"
+            class="mt-1 font-geist text-sm text-muted"
+            >Restorangiz haqida ayting — biz shaxsiy demo tayyorlaymiz.</p
+          >
+        </div>
+        <button
+          type="button"
+          id="wizard-close"
+          aria-label="Yopish"
+          data-i18n-attr="aria-label:wizard.close"
+          class="btn-ghost ml-4 h-10 w-10 shrink-0 p-0 text-ink"
+        >
+          <svg
+            class="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            ><path d="M6 6l12 12M6 18L18 6" stroke-linecap="round"></path></svg
+          >
+        </button>
+      </div>
+
+      <div
+        id="wizard-error"
+        class="wizard-error mt-4 hidden rounded-xl p-4 font-geist text-sm"
+        role="alert"
+        aria-live="assertive"
+        tabindex="-1"
+      >
+        <p class="font-semibold" data-i18n="wizard.errorTitle">
+          Yuborishda xatolik
+        </p>
+        <p class="mt-1" data-i18n="wizard.errorBody">
+          Afsus, bizda nosozlik. Tez yechim uchun support@octopos.uz manziliga
+          yozing
+        </p>
+      </div>
+
+      <form id="wizard-form" class="mt-6 space-y-4">
+        <div class="sr-only" aria-hidden="true">
+          <span data-step="1"></span>
+          <span data-step="2"></span>
+          <span data-step="3"></span>
+          <span data-step="4"></span>
+          <span data-step="5"></span>
+          <span data-step="6"></span>
+          <span data-step="7"></span>
+        </div>
+        <div>
+          <label
+            for="businessName"
+            data-i18n="wizard.businessLabel"
+            class="block font-geist text-sm font-medium text-ink"
+            >Restoran nomi</label
+          >
+          <input
+            id="businessName"
+            name="businessName"
+            type="text"
+            required
+            class="mt-2 w-full rounded-xl border border-hairline bg-page px-4 py-3 font-geist shadow-sm outline-none placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            placeholder="masalan, The Burger Joint"
+            data-i18n-attr="placeholder:wizard.businessPlaceholder"
+          />
+        </div>
+
+        <cap-widget data-cap-api-endpoint="https://captcha.octopos.uz/591f8342ea"
+        ></cap-widget>
+        <button
+          id="wizard-submit"
+          type="submit"
+          class="btn-solid mt-2 w-full px-6 py-3 font-geist text-sm"
+          data-i18n="wizard.startTrial"
+          >Ulanish</button
+        >
+      </form>
+
+      <div id="wizard-welcome-back" class="mt-6 hidden">
+        <button
+          type="button"
+          id="wizard-continue"
+          class="btn-solid w-full px-6 py-3 font-geist text-sm"
+          data-i18n="wizard.continue"
+          >Boshqaruv paneliga o'tish</button
+        >
+        <button
+          type="button"
+          id="wizard-start-fresh"
+          class="mt-3 w-full text-center font-geist text-sm text-muted underline hover:text-ink"
+          data-i18n="wizard.startFresh"
+          >Yangi akkaunt yaratish</button
+        >
+      </div>
+
+      <div
+        id="wizard-loading"
+        class="mt-6 hidden rounded-xl border border-hairline bg-page p-4 font-geist text-sm text-ink"
+      >
+        <div class="flex items-center gap-3">
+          <span
+            class="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent"
+          ></span>
+          <p data-i18n="wizard.creatingKitchen">Loyihangiz tayyorlanmoqda...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import "cap-widget";
+</script>
+
+<script>
+  import { STRINGS, getLang, type Lang } from "../data/i18n";
+
+  const UZ: Record<string, string> = {
+    "wizard.startTrial": "Ulanish",
+    "wizard.proceed":
+      "Ro'yxatdan o'tishni davom ettirish uchun tugmani bosing...",
+    "wizard.submitting": "Qayta ishlanmoqda...",
+    "wizard.creatingKitchen": "Loyihangiz tayyorlanmoqda...",
+    "wizard.close": "Yopish",
+    "wizard.welcomeBackTitle": "Yana xush kelibsiz",
+    "wizard.welcomeBackBody":
+      "Siz allaqachon «{name}» uchun sinov akkauntini yaratgansiz.",
+    "wizard.continue": "Boshqaruv paneliga o'tish",
+    "wizard.startFresh": "Yangi akkaunt yaratish",
+  };
+
+  const L = (k: string): string => {
+    const lang = getLang();
+    return lang === "uz"
+      ? (UZ[k] ?? "")
+      : (STRINGS[k]?.[lang as Lang] ?? UZ[k] ?? "");
+  };
+
+  const modal = document.getElementById("plan-wizard");
+  const form = document.getElementById("wizard-form") as HTMLFormElement | null;
+  const closeBtn = document.getElementById("wizard-close");
+  const submitBtn = document.getElementById("wizard-submit") as
+    | HTMLButtonElement
+    | null;
+  const loadingState = document.getElementById("wizard-loading");
+  const errorBox = document.getElementById("wizard-error");
+  const widget = document.querySelector("cap-widget");
+  const welcomeBack = document.getElementById("wizard-welcome-back");
+  const continueBtn = document.getElementById("wizard-continue");
+  const startFreshBtn = document.getElementById("wizard-start-fresh");
+  const titleEl = document.getElementById("wizard-title");
+  const subtitleEl = document.getElementById("wizard-subtitle");
+
+  if (modal && form && submitBtn) {
+    const defaultTitle = titleEl?.textContent ?? "";
+    const defaultSubtitle = subtitleEl?.textContent ?? "";
+
+    const showSignupHeader = () => {
+      if (titleEl) titleEl.textContent = L("wizard.title") || defaultTitle;
+      if (subtitleEl)
+        subtitleEl.textContent = L("wizard.subtitle") || defaultSubtitle;
+    };
+
+    const TRIAL_KEY = "octopos-trial";
+    const TRIAL_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+    const readSavedTrial = () => {
+      try {
+        const saved = JSON.parse(localStorage.getItem(TRIAL_KEY) || "null");
+        if (saved && saved.dash && Date.now() - saved.createdAt < TRIAL_TTL_MS)
+          return saved;
+        localStorage.removeItem(TRIAL_KEY);
+      } catch (_) {}
+      return null;
+    };
+
+    const apiBaseURL = (
+      modal.getAttribute("data-api-base") || "https://api.octopos.uz"
+    ).replace(/\/$/, "");
+
+    let lastActive: Element | null = null;
+    let keydownHandler: ((e: KeyboardEvent) => void) | null = null;
+    let token: string | null = null;
+    let proceedHandler: (() => void) | null = null;
+
+    widget?.addEventListener("solve", (e) => {
+      const detail = (e as CustomEvent<{ token: string }>).detail;
+      token = detail?.token ?? null;
+      if (token) submitBtn!.disabled = false;
+    });
+
+    const showError = () => {
+      errorBox?.classList.remove("hidden");
+      try {
+        errorBox?.focus();
+      } catch (_) {}
+    };
+    const hideError = () => errorBox?.classList.add("hidden");
+
+    const open = () => {
+      submitBtn!.disabled = true;
+      lastActive = document.activeElement as Element | null;
+      modal!.classList.remove("hidden");
+      document.documentElement.classList.add("overflow-hidden");
+      hideError();
+      keydownHandler = (e) => {
+        if (e.key === "Escape") close();
+      };
+      document.addEventListener("keydown", keydownHandler);
+
+      const saved = readSavedTrial();
+      if (saved && welcomeBack) {
+        form!.classList.add("hidden");
+        if (titleEl)
+          titleEl.textContent = L("wizard.welcomeBackTitle") || defaultTitle;
+        if (subtitleEl)
+          subtitleEl.textContent = (
+            L("wizard.welcomeBackBody") || ""
+          ).replace("{name}", saved.name || "");
+        welcomeBack.classList.remove("hidden");
+        requestAnimationFrame(() => continueBtn?.focus());
+      } else {
+        showSignupHeader();
+        welcomeBack?.classList.add("hidden");
+        form!.classList.remove("hidden");
+        requestAnimationFrame(() => {
+          const first = form!.querySelector("input");
+          first?.focus();
+        });
+      }
+    };
+
+    const close = () => {
+      modal!.classList.add("hidden");
+      document.documentElement.classList.remove("overflow-hidden");
+      hideError();
+      loadingState?.classList.add("hidden");
+      welcomeBack?.classList.add("hidden");
+      form!.classList.remove("hidden");
+      submitBtn!.disabled = false;
+      submitBtn!.type = "submit";
+      submitBtn!.textContent = L("wizard.startTrial");
+
+      if (proceedHandler) {
+        submitBtn!.removeEventListener("click", proceedHandler);
+        proceedHandler = null;
+      }
+      if (keydownHandler) {
+        document.removeEventListener("keydown", keydownHandler);
+        keydownHandler = null;
+      }
+      if (token) {
+        submitBtn!.disabled = true;
+        (widget as HTMLElement & { reset?: () => void })?.reset?.();
+        token = null;
+      }
+      if (lastActive && "focus" in lastActive) {
+        try {
+          (lastActive as HTMLElement).focus();
+        } catch (_) {}
+      }
+    };
+
+    document.addEventListener("click", (e) => {
+      const target =
+        e.target instanceof Element
+          ? e.target.closest("[data-plan-trigger]")
+          : null;
+      if (!target) return;
+      e.preventDefault();
+      open();
+    });
+
+    continueBtn?.addEventListener("click", () => {
+      const saved = readSavedTrial();
+      if (saved?.dash) window.open(saved.dash, "_blank");
+      close();
+    });
+
+    startFreshBtn?.addEventListener("click", () => {
+      showSignupHeader();
+      welcomeBack?.classList.add("hidden");
+      form!.classList.remove("hidden");
+      form!.querySelector("input")?.focus();
+    });
+
+    closeBtn?.addEventListener("click", close);
+    modal!.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+
+    form!.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideError();
+
+      const data = new FormData(form!);
+      const businessName = String(data.get("businessName") || "").trim();
+      if (!businessName) {
+        showError();
+        return;
+      }
+
+      submitBtn!.textContent = L("wizard.submitting");
+      loadingState?.classList.remove("hidden");
+
+      let handled = false;
+
+      try {
+        const res = await fetch(`${apiBaseURL}/tenants.create`, {
+          method: "post",
+          credentials: "include",
+          headers: {
+            "content-type": "application/json",
+            accept: "application/json",
+            "X-Cap-Token": token ?? "",
+          },
+          body: JSON.stringify({ name: businessName }),
+        });
+
+        const jsonRes = await res.json();
+
+        if (jsonRes.id) {
+          loadingState?.classList.add("hidden");
+          handled = true;
+          if (jsonRes.apps?.dash) {
+            try {
+              localStorage.setItem(
+                TRIAL_KEY,
+                JSON.stringify({
+                  name: businessName,
+                  dash: jsonRes.apps.dash,
+                  createdAt: Date.now(),
+                }),
+              );
+            } catch (_) {}
+          }
+          submitBtn!.type = "button";
+          submitBtn!.textContent = L("wizard.proceed");
+          proceedHandler = () => {
+            window.open(jsonRes.apps?.dash, "_blank");
+            close();
+          };
+          submitBtn!.addEventListener("click", proceedHandler, {
+            once: true,
+          });
+          return;
+        }
+      } catch (err) {
+        console.log("Error while submitting data.", err);
+      }
+
+      if (!handled) {
+        loadingState?.classList.add("hidden");
+        submitBtn!.disabled = false;
+        submitBtn!.textContent = L("wizard.startTrial");
+        showError();
+      }
+    });
+  }
+</script>

@@ -1,0 +1,189 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TopNav from "../../components/TopNav.astro";
+import { apps, imagesFor, type App } from "../../data/apps";
+import { has } from "../../data/i18n";
+
+interface Props {
+  app: App;
+  images: string[];
+}
+
+export function getStaticPaths() {
+  return apps.map((app) => ({
+    params: { app: app.slug },
+    props: { app, images: imagesFor(app.slug) },
+  }));
+}
+
+const { app, images } = Astro.props;
+const total = apps.length;
+const idx = apps.findIndex((a) => a.slug === app.slug);
+const next = apps[(idx + 1) % apps.length];
+
+function frameBase(url: string): string {
+  const file = url.split("/").pop() ?? "";
+  return file.replace(/\.[a-z0-9]+$/i, "");
+}
+
+function frameLabel(url: string): string {
+  const base = frameBase(url);
+  const dict = app.frames?.[base];
+  if (dict) return dict;
+  const stripped = base.replace(/^[^-]+-/, "");
+  const label = (stripped || base).replace(/[-_]+/g, " ").trim();
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+---
+
+<Layout title={`${app.name} — Octopos`} description={app.desc}>
+  <TopNav />
+
+  <div
+    class="mx-auto max-w-[1600px] px-5 pt-[18px] pb-[120px] lg:px-[32px] lg:pt-[31px] lg:pb-[150px]"
+  >
+    <div class="flex items-center justify-between gap-4">
+      <a
+        href="/apps"
+        data-i18n={has("common.back") ? "common.back" : undefined}
+        class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted transition-colors duration-[350ms] ease-far hover:text-link"
+        >← Ilovalar</a
+      >
+      <span
+        class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-ink"
+        >{app.no} — {String(total).padStart(2, "0")}</span
+      >
+    </div>
+
+    <div class="mt-10 grid grid-cols-1 gap-y-12 lg:mt-[41px] lg:grid-cols-[460px_1fr] lg:gap-x-16">
+      <aside class="self-start lg:sticky lg:top-[110px]">
+        <h1
+          class="font-anton text-[84px] leading-[0.84] tracking-[-0.69px] lg:text-[138px]"
+        >
+          {app.no}
+        </h1>
+
+        <div class="mt-[20px] h-px w-full bg-hairline" />
+
+        <h2
+          class="mt-[20px] font-geist text-[22px] leading-[1.12] font-medium tracking-[-0.405px] lg:text-[27px]"
+        >
+          {app.name}
+        </h2>
+        <p
+          class="mt-[16px] font-geist text-[13.5px] leading-[21px] text-muted"
+          data-i18n={`app.${app.slug}.desc`}
+        >
+          {app.desc}
+        </p>
+
+        <dl class="mt-[24px] grid grid-cols-2 border-t border-hairline">
+          {
+            app.meta.map((row, i) => {
+              const labelKey = `meta.${row.label}`;
+              const valueKey = `v.${row.value}`;
+              return (
+                <div
+                  class:list={[
+                    "border-b border-hairline py-[10px]",
+                    i % 2 === 0 ? "border-r pr-4" : "pl-4",
+                  ]}
+                >
+                  <dt
+                    class="font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-muted"
+                    data-i18n={has(labelKey) ? labelKey : undefined}
+                  >
+                    {row.label}
+                  </dt>
+                  <dd
+                    class="mt-[2px] font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-ink"
+                    data-i18n={has(valueKey) ? valueKey : undefined}
+                  >
+                    {row.value}
+                  </dd>
+                </div>
+              );
+            })
+          }
+          {
+            app.meta.length % 2 === 1 && (
+              <div class="border-b border-hairline" aria-hidden="true" />
+            )
+          }
+        </dl>
+
+        <div class="mt-[24px] flex flex-col gap-2 sm:flex-row">
+          <button
+            type="button"
+            data-plan-trigger="starter"
+            class="flex h-[44px] flex-1 items-center justify-center rounded-[99px] bg-accent px-5 font-geist-mono text-[12px] font-medium tracking-[0.72px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active"
+          >
+            <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}
+              >Bepul sinab ko'rish&nbsp;&nbsp;→</span
+            >
+          </button>
+          <a
+            href={`/apps/${next.slug}`}
+            class="flex h-[44px] flex-1 items-center justify-center rounded-[99px] border border-hairline px-5 font-geist-mono text-[12px] font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:border-link hover:text-link"
+          >
+            <span
+              data-i18n={has("cta.next") ? "cta.next" : undefined}
+              data-name={next.name}>Keyingi — {next.name}&nbsp;›</span
+            >
+          </a>
+        </div>
+      </aside>
+
+      <div class="relative min-w-0">
+        {
+          images.length > 0 ? (
+            <>
+              <div class="flex flex-col gap-[40px]">
+                {images.map((src, i) => {
+                  const base = frameBase(src);
+                  const frameKey = `frame.${app.slug}.${base}`;
+                  const useKey = has(frameKey) && app.frames?.[base] != null;
+                  return (
+                    <figure>
+                      <div class="overflow-hidden rounded-2xl">
+                        <img
+                          src={src}
+                          alt={`${app.name} — ${frameLabel(src)}`}
+                          class="block -mt-[3px] w-full h-auto"
+                          loading={i === 0 ? "eager" : "lazy"}
+                          fetchpriority={i === 0 ? "high" : "auto"}
+                          decoding="async"
+                        />
+                      </div>
+                      <figcaption class="mt-[14px] flex items-baseline justify-between gap-4 font-geist-mono text-[12px] leading-4 tracking-[0.72px]">
+                        <span
+                          class="text-muted"
+                          data-i18n={useKey ? frameKey : undefined}
+                        >
+                          {frameLabel(src)}
+                        </span>
+                        <span class="shrink-0 font-medium text-ink">
+                          {String(i + 1).padStart(2, "0")} /{" "}
+                          {String(images.length).padStart(2, "0")}
+                        </span>
+                      </figcaption>
+                    </figure>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            <div class="flex h-[420px] items-center justify-center border border-hairline lg:h-[560px]">
+              <span
+                class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+                data-i18n={has("imgPending") ? "imgPending" : undefined}
+              >
+                Rasmlar tez orada
+              </span>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</Layout>

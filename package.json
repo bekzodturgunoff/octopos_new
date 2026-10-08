@@ -1,0 +1,25 @@
+{
+  "name": "octopos_landing_v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/sitemap": "^3.7.2",
+    "@yeahuz/kdsx-tailwind": "0.0.12",
+    "astro": "^5.14.1",
+    "cap-widget": "^0.1.58",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "tailwindcss": "4.3.3"
+  },
+  "packageManager": "pnpm@10.7.0"
+}

@@ -1,0 +1,79 @@
+---
+import "../styles/global.css";
+import WizardForm from "../components/WizardForm.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
+---
+
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="oklch(98.09% 0.013 115.83)" />
+    <meta name="color-scheme" content="light" />
+    <script is:inline>
+      ;(function () {
+        try {
+          var stored;
+          try {
+            stored = localStorage.getItem("theme");
+          } catch (_) {}
+          if (!stored) {
+            var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
+            if (m) stored = decodeURIComponent(m[1]);
+          }
+          var resolved;
+          if (stored === "dark" || stored === "light") {
+            resolved = stored;
+          } else {
+            resolved = window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+          }
+          document.documentElement.setAttribute("data-theme", resolved);
+          document.documentElement.style.colorScheme = resolved;
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta)
+            meta.setAttribute(
+              "content",
+              resolved === "dark"
+                ? "oklch(19.09% 0.009 137.85)"
+                : "oklch(98.09% 0.013 115.83)",
+            );
+          var cs = document.querySelector('meta[name="color-scheme"]');
+          if (cs) cs.setAttribute("content", resolved);
+          document.cookie =
+            "theme=" +
+            encodeURIComponent(resolved) +
+            "; path=/; max-age=" +
+            60 * 60 * 24 * 365 +
+            "; SameSite=Lax";
+        } catch (e) {}
+      })();
+    </script>
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Octopos" />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    {canonical && <meta property="og:url" content={canonical} />}
+    {canonical && <meta property="og:image" content={new URL("/og.webp", Astro.site).toString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body class="font-geist text-ink antialiased">
+    <slot />
+    <WizardForm />
+  </body>
+</html>

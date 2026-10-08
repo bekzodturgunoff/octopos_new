@@ -1,0 +1,128 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import TopNav from "../../components/TopNav.astro";
+import { apps, imagesFor } from "../../data/apps";
+
+const cards = apps.map((app) => ({ app, images: imagesFor(app.slug) }));
+const first = cards[0];
+---
+
+<Layout
+  title="Ilovalar — Octopos"
+  description="Octopos ekotizimidagi sakkizta ilova: POS, KDS, dashbord, QR menyu, veb-do'kon va kuryer."
+>
+  <TopNav />
+
+  <div class="px-5 pt-[34px] pb-[120px] lg:px-[32px] lg:pt-[47px] lg:pb-[150px]">
+    <div>
+      <h1
+        class="font-anton text-[84px] leading-[0.84] tracking-[-0.69px] lg:text-[138px]"
+        data-i18n="nav.apps"
+      >
+        Ilovalar
+      </h1>
+
+      <div class="mt-[30px] flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4">
+        <p
+          class="max-w-[400px] font-geist text-[13.5px] leading-[21px] text-muted"
+          data-i18n="apps.body"
+        >
+          Sakkizta ilova, bitta sinxron tizim. Kartani bosing — ilova sahifasi
+          ochiladi.
+        </p>
+        <p
+          id="hover-label"
+          data-no={first.app.no}
+          data-name={first.app.name}
+          data-tur={first.app.tur}
+          class="font-geist-mono text-[12px] leading-4 font-medium tracking-[0.72px] text-ink"
+        >
+          {first.app.no} — {first.app.name} · {first.app.tur}
+        </p>
+      </div>
+
+      <div class="mt-[40px] grid grid-cols-1 gap-[40px] md:grid-cols-2">
+        {
+          cards.map(({ app, images }) => (
+            <a
+              href={`/apps/${app.slug}`}
+              data-no={app.no}
+              data-name={app.name}
+              data-tur={app.tur}
+              class="group relative block aspect-[8/5] overflow-hidden rounded-2xl bg-card"
+            >
+              {images[0] ? (
+                <>
+                  <img
+                    src={images[0]}
+                    alt={`${app.name} — ekran ko'rinishi`}
+                    class="absolute inset-x-0 bottom-0 h-[calc(100%+3px)] w-full object-cover object-top transition-transform duration-[450ms] ease-far group-hover:scale-[1.03]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="pointer-events-none absolute inset-x-0 bottom-0 block h-1/2 bg-linear-to-t from-black/60 via-black/15 to-transparent" />
+                </>
+              ) : (
+                <span
+                  class="absolute inset-0 flex items-center justify-center font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+                  data-i18n="imgPending"
+                >
+                  Rasmlar tez orada
+                </span>
+              )}
+
+              <span class="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-3 p-4 lg:p-5">
+                <span class="min-w-0">
+                  <span
+                    class={`block font-geist-mono text-[12px] leading-4 tracking-[0.72px] ${images[0] ? "text-white/75" : "text-muted"}`}
+                  >
+                    {app.no} ·{" "}
+                    <span data-i18n={`v.${app.tur}`}>{app.tur}</span>
+                  </span>
+                  <span
+                    class={`mt-1 block font-inter text-[17px] leading-[1.3] font-medium ${images[0] ? "text-[#fafafa]" : "text-ink"}`}
+                  >
+                    {app.name}
+                  </span>
+                </span>
+                <span
+                  class={`shrink-0 font-geist-mono text-[12px] leading-4 tracking-[0.72px] ${images[0] ? "text-white/60" : "text-muted"}`}
+                  data-i18n="imgCount"
+                  data-n={images.length}
+                >
+                  {images.length > 0 ? `${images.length} rasm` : ""}
+                </span>
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { tr } from "../../data/i18n";
+
+    const label = document.getElementById("hover-label");
+    const cards = document.querySelectorAll<HTMLElement>("a[data-tur]");
+
+    const info = (el: HTMLElement) => {
+      const tur = tr(`v.${el.dataset.tur}`) ?? el.dataset.tur ?? "";
+      return `${el.dataset.no} — ${el.dataset.name} · ${tur}`;
+    };
+    const syncDefault = () => {
+      if (label) label.textContent = info(label);
+    };
+
+    syncDefault();
+    document.addEventListener("langchange", syncDefault);
+
+    if (label) {
+      cards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          label.textContent = info(card);
+        });
+      });
+    }
+  </script>
+</Layout>
