@@ -1263,10 +1263,10 @@ export const STRINGS: Record<string, Dict> = {
 
   /* ---------- contact / footer ---------- */
   "ct.heading": {
-    en: "Let's start today",
-    ru: "Начнём сегодня",
-    ko: "오늘 시작하세요",
-    tr: "Bugün başlayalım",
+    en: "Shall we start today?",
+    ru: "Начнём сегодня?",
+    ko: "오늘 시작할까요?",
+    tr: "Bugün başlayalım mı?",
   },
   "ct.body": {
     en: "Request a demo or ask us anything — we reply on Telegram.",

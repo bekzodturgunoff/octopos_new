@@ -1,4 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "printf '@yeahuz:registry=https://npm.pkg.github.com/\\n//npm.pkg.github.com/:_authToken=%s\\n' \"$NODE_AUTH_TOKEN\" >> .npmrc && pnpm install"
-}
