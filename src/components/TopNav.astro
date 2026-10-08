@@ -201,20 +201,22 @@ const links = [
   const LIGHT_COLOR = "oklch(98.09% 0.013 115.83)";
   const html = document.documentElement;
 
-  const getCookieTheme = () => {
-    const m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
-    return m ? decodeURIComponent(m[1]) : null;
-  };
   const getStoredTheme = () => {
     let v;
     try {
       v = localStorage.getItem(THEME_KEY);
     } catch (_) {}
-    if (!v) v = getCookieTheme() || undefined;
     if (v === "dark" || v === "light") return v;
     return window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
+  };
+  const hasExplicitTheme = () => {
+    let v;
+    try {
+      v = localStorage.getItem(THEME_KEY);
+    } catch (_) {}
+    return v === "dark" || v === "light";
   };
   const setStoredTheme = (v: string) => {
     try {
@@ -250,6 +252,13 @@ const links = [
   };
 
   applyTheme(getStoredTheme());
+  if (!hasExplicitTheme()) {
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        applyTheme(e.matches ? "dark" : "light");
+      });
+  }
   document.querySelectorAll("[data-theme-cycle]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const next = getStoredTheme() === "dark" ? "light" : "dark";

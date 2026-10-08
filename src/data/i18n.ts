@@ -1264,12 +1264,6 @@ export const STRINGS: Record<string, Dict> = {
     ko: "고객 지원",
     tr: "Destek",
   },
-  "ct.addr": {
-    en: "12 Navoi Street, Namangan 160100",
-    ru: "улица Навои, 12, Наманган 160100",
-    ko: "나보이 거리 12, 나망간 160100",
-    tr: "Navoiy Caddesi 12, Namango 160100",
-  },
   "ft.tagline": {
     en: "Everything in one place — eight apps, one platform.",
     ru: "Всё в одном месте — восемь приложений, одна платформа.",

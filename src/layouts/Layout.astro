@@ -25,36 +25,30 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString(
           try {
             stored = localStorage.getItem("theme");
           } catch (_) {}
-          if (!stored) {
-            var m = document.cookie.match(/(?:^|; )theme=([^;]+)/);
-            if (m) stored = decodeURIComponent(m[1]);
-          }
-          var resolved;
-          if (stored === "dark" || stored === "light") {
-            resolved = stored;
+          var explicit = stored === "dark" || stored === "light";
+          var sync = function (resolved) {
+            document.documentElement.setAttribute("data-theme", resolved);
+            document.documentElement.style.colorScheme = resolved;
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta)
+              meta.setAttribute(
+                "content",
+                resolved === "dark"
+                  ? "oklch(19.09% 0.009 137.85)"
+                  : "oklch(98.09% 0.013 115.83)",
+              );
+            var cs = document.querySelector('meta[name="color-scheme"]');
+            if (cs) cs.setAttribute("content", resolved);
+          };
+          var mq = window.matchMedia("(prefers-color-scheme: dark)");
+          if (explicit) {
+            sync(stored);
           } else {
-            resolved = window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light";
+            sync(mq.matches ? "dark" : "light");
+            mq.addEventListener("change", function (e) {
+              sync(e.matches ? "dark" : "light");
+            });
           }
-          document.documentElement.setAttribute("data-theme", resolved);
-          document.documentElement.style.colorScheme = resolved;
-          var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta)
-            meta.setAttribute(
-              "content",
-              resolved === "dark"
-                ? "oklch(19.09% 0.009 137.85)"
-                : "oklch(98.09% 0.013 115.83)",
-            );
-          var cs = document.querySelector('meta[name="color-scheme"]');
-          if (cs) cs.setAttribute("content", resolved);
-          document.cookie =
-            "theme=" +
-            encodeURIComponent(resolved) +
-            "; path=/; max-age=" +
-            60 * 60 * 24 * 365 +
-            "; SameSite=Lax";
         } catch (e) {}
       })();
     </script>
