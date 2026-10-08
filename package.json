@@ -12,7 +12,6 @@
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/sitemap": "^3.7.2",
-    "@yeahuz/kdsx-tailwind": "0.0.12",
     "astro": "^5.14.1",
     "cap-widget": "^0.1.58",
     "typescript": "^5.9.3"

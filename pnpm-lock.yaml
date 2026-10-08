@@ -14,9 +14,6 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.2
         version: 3.7.4
-      '@yeahuz/kdsx-tailwind':
-        specifier: 0.0.12
-        version: 0.0.12
       astro:
         specifier: ^5.14.1
         version: 5.18.2(@types/node@24.19.1)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.64.2)(typescript@5.9.3)(yaml@2.9.1)
@@ -916,10 +913,6 @@ packages:
 
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
-
-  '@yeahuz/kdsx-tailwind@0.0.12':
-    resolution: {integrity: sha512-8op65Guo/DN0mgueDMgc8CZ1LjqHrX5uxneqpQMTbjYfozN8NAuJzBN9L2djNHm4bQnOwtzRtd8GmVx9t2Njvw==, tarball: https://npm.pkg.github.com/download/@yeahuz/kdsx-tailwind/0.0.12/ba1810359c8e2573ef2550e1f1b51fc469ed3eb7}
-    engines: {node: '>=18'}
 
   acorn@8.19.0:
     resolution: {integrity: sha512-oJlA3XiRm7Cyk6qFD2Jn8ak9B7jSy0qy00ADO3+8dpT0LSjFihQYv4C02LFCSYJV3Q37xYwwRy5m+IpIiUzqWw==}
@@ -2911,8 +2904,6 @@ snapshots:
       vscode-uri: 3.2.0
 
   '@vscode/l10n@0.0.18': {}
-
-  '@yeahuz/kdsx-tailwind@0.0.12': {}
 
   acorn@8.19.0: {}
 
