@@ -20,6 +20,11 @@ export const LANGS = [
 export type Lang = (typeof LANGS)[number]["code"];
 export type Dict = Partial<Record<Lang, string>>;
 
+/** All route locales. `uz` is the default and lives at the site root. */
+export const LOCALES = ["uz", "en", "ru", "ko", "tr"] as const;
+/** Locales that get a URL prefix (`/en`, `/ru`, `/ko`, `/tr`). */
+export const PREFIXED_LOCALES = ["en", "ru", "ko", "tr"] as const;
+
 export const STRINGS: Record<string, Dict> = {
   /* ---------- top nav ---------- */
   "nav.apps": { en: "Apps", ru: "Приложения", ko: "앱", tr: "Uygulamalar" },
@@ -1472,6 +1477,32 @@ export const STRINGS: Record<string, Dict> = {
     ko: "다운로드",
     tr: "İndir",
   },
+
+  /* ---------- SEO: page titles + descriptions ---------- */
+  "meta.home.title": {
+    en: "Octopos — One platform, eight apps",
+    ru: "Octopos — Одна платформа, восемь приложений",
+    ko: "Octopos — 하나의 플랫폼, 여덟 개의 앱",
+    tr: "Octopos — Tek platform, sekiz uygulama",
+  },
+  "meta.home.desc": {
+    en: "POS, KDS, dashboard, QR menu, web store and courier dispatcher — one subscription, one data source. A complete system for restaurants in Uzbekistan.",
+    ru: "POS, KDS, дашборд, QR-меню, веб-магазин и диспетчер курьеров — одна подписка, один источник данных. Полное решение для ресторанов в Узбекистане.",
+    ko: "POS, KDS, 대시보드, QR 메뉴, 웹 스토어, 쿠리어 디스패처 — 하나의 구독, 하나의 데이터 소스. 우즈베키스탄 레스토랑을 위한 완벽한 시스템.",
+    tr: "POS, KDS, gösterge paneli, QR menü, web mağaza ve kuryer dağıtıcısı — tek abonelik, tek veri kaynağı. Özbekistan'daki restoranlar için eksiksiz bir sistem.",
+  },
+  "meta.apps.title": {
+    en: "Apps — Octopos",
+    ru: "Приложения — Octopos",
+    ko: "앱 — Octopos",
+    tr: "Uygulamalar — Octopos",
+  },
+  "meta.apps.desc": {
+    en: "The eight apps in the Octopos ecosystem: POS, KDS, dashboard, QR menu, web store and courier.",
+    ru: "Восемь приложений экосистемы Octopos: POS, KDS, дашборд, QR-меню, веб-магазин и курьер.",
+    ko: "Octopos 생태계의 여덟 개 앱: POS, KDS, 대시보드, QR 메뉴, 웹 스토어, 쿠리어.",
+    tr: "Octopos ekosistemindeki sekiz uygulama: POS, KDS, gösterge paneli, QR menü, web mağaza ve kuryer.",
+  },
 };
 
 /* ---------------- runtime ---------------- */
@@ -1483,12 +1514,28 @@ export function isLang(v: unknown): v is Lang {
   );
 }
 
+/** Current locale is decided by the URL path (`/en/...`), so each language
+ *  is a real, crawlable URL. Uzbek is the default at the site root. */
 export function getLang(): Lang {
   try {
-    const v = localStorage.getItem("lang");
-    if (isLang(v)) return v;
+    const seg = location.pathname.split("/")[1] ?? "";
+    if ((PREFIXED_LOCALES as readonly string[]).includes(seg)) return seg as Lang;
   } catch (_) {}
   return "uz";
+}
+
+/** Build the URL for `lang` from any current path (strips an existing
+ *  locale prefix first). Used by the language switcher for navigation. */
+export function localizePath(lang: Lang, pathname?: string): string {
+  let p = pathname ?? "/";
+  if (typeof location !== "undefined" && pathname === undefined) {
+    p = location.pathname;
+  }
+  const parts = p.split("/");
+  if ((LOCALES as readonly string[]).includes(parts[1] ?? "")) parts.splice(1, 1);
+  const rest = parts.join("/") || "/";
+  if (lang === "uz") return rest.startsWith("/") ? rest : `/${rest}`;
+  return `/${lang}${rest.startsWith("/") ? rest : `/${rest}`}`;
 }
 
 export function setLang(l: Lang): void {

@@ -192,7 +192,7 @@ const links = [
 </header>
 
 <script>
-  import { applyLang, getLang, setLang, type Lang } from "../data/i18n";
+  import { applyLang, getLang, localizePath, type Lang } from "../data/i18n";
 
   /* ---------- theme ---------- */
   const THEME_KEY = "theme";
@@ -299,10 +299,9 @@ const links = [
   document.querySelectorAll<HTMLElement>("[data-set-lang]").forEach((btn) => {
     btn.addEventListener("click", () => {
       const l = btn.getAttribute("data-set-lang") as Lang;
-      setLang(l);
-      applyLang(l);
-      syncLangUI(l);
       closeMenu();
+      if (l === getLang()) return;
+      window.location.assign(localizePath(l));
     });
   });
 
