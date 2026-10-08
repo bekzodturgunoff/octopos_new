@@ -51,6 +51,8 @@
     --color-card: oklch(26% 0.009 137.85);
     --color-accent-surface: var(--color-accent);
     --color-on-accent-surface: var(--color-accent-emphasis);
+    --color-error-bright: oklch(83.83% 0.089 26.76);
+    --color-error-low: oklch(25.2% 0.011 91.73);
   }
 }
 
@@ -64,6 +66,8 @@
   --color-card: oklch(26% 0.009 137.85);
   --color-accent-surface: var(--color-accent);
   --color-on-accent-surface: var(--color-accent-emphasis);
+  --color-error-bright: oklch(83.83% 0.089 26.76);
+  --color-error-low: oklch(25.2% 0.011 91.73);
 }
 
 @layer base {

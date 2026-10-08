@@ -40,12 +40,6 @@ export const STRINGS: Record<string, Dict> = {
   "nav.menu": { en: "Menu", ru: "Меню", ko: "메뉴", tr: "Menü" },
 
   /* ---------- hero ---------- */
-  "hero.eyebrow": {
-    en: "The complete system for restaurants",
-    ru: "Полная система для ресторанов",
-    ko: "레스토랑을 위한 올인원 시스템",
-    tr: "Restoranlar için eksiksiz sistem",
-  },
   "hero.title1": {
     en: "One platform.",
     ru: "Одна платформа.",
@@ -78,12 +72,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- apps section / apps index ---------- */
-  "apps.eyebrow": {
-    en: "Apps",
-    ru: "Приложения",
-    ko: "앱",
-    tr: "Uygulamalar",
-  },
   "apps.heading": {
     en: "Eight apps, one synced system.",
     ru: "Восемь приложений, одна синхронная система.",
@@ -116,12 +104,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- solutions ---------- */
-  "sol.eyebrow": {
-    en: "Solutions",
-    ru: "Решения",
-    ko: "솔루션",
-    tr: "Çözümler",
-  },
   "sol.heading": {
     en: "Ready-made solutions for your business",
     ru: "Готовые решения для вашего бизнеса",
@@ -178,12 +160,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- features ---------- */
-  "feat.eyebrow": {
-    en: "Features",
-    ru: "Возможности",
-    ko: "기능",
-    tr: "Özellikler",
-  },
   "feat.heading": {
     en: "What can each app do?",
     ru: "Что умеет каждое приложение?",
@@ -1026,12 +1002,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- logos ---------- */
-  "logos.eyebrow": {
-    en: "Trusted by",
-    ru: "Нам доверяют",
-    ko: "신뢰",
-    tr: "Güvenilen",
-  },
   "logos.heading": {
     en: "Restaurants already running on Octopos",
     ru: "Рестораны, которые уже работают на Octopos",
@@ -1046,12 +1016,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- integrations ---------- */
-  "int.eyebrow": {
-    en: "Integrations",
-    ru: "Интеграции",
-    ko: "연동",
-    tr: "Entegrasyonlar",
-  },
   "int.heading": {
     en: "Works with payments and services",
     ru: "Работает с платежами и сервисами",
@@ -1066,12 +1030,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- plans ---------- */
-  "plans.eyebrow": {
-    en: "Pricing",
-    ru: "Тарифы",
-    ko: "요금제",
-    tr: "Fiyatlar",
-  },
   "plans.heading": {
     en: "One transparent subscription",
     ru: "Одна прозрачная подписка",
@@ -1154,12 +1112,6 @@ export const STRINGS: Record<string, Dict> = {
   },
 
   /* ---------- add-ons ---------- */
-  "add.eyebrow": {
-    en: "Add-ons",
-    ru: "Дополнения",
-    ko: "추가 기능",
-    tr: "Eklentiler",
-  },
   "add.heading": {
     en: "Extra services",
     ru: "Дополнительные сервисы",
@@ -1173,25 +1125,121 @@ export const STRINGS: Record<string, Dict> = {
     tr: "Çevrimiçi mağaza",
   },
   "add.b1": {
-    en: "Under your own domain and brand.",
-    ru: "Под вашим доменом и брендом.",
-    ko: "자기 도메인과 브랜드로.",
-    tr: "Kendi alan adınız ve markanızla.",
+    en: "Ordering from your own website and Telegram, with no commission. Tiers differ only in how many online orders are included.",
+    ru: "Собственный сайт и заказы в Telegram без комиссии. Уровни отличаются только количеством включённых онлайн-заказов.",
+    ko: "수수료 없는 자체 웹사이트와 텔레그램 주문. 등급은 포함된 온라인 주문 수만 다릅니다.",
+    tr: "Komisyonsuz kendi web siteniz ve Telegram siparişleri. Seviyeler yalnızca dahil olan online sipariş sayısında farklıdır.",
   },
   "add.b2": {
-    en: "Dispatcher panel, couriers via Telegram, live map and settlement — unlimited couriers.",
-    ru: "Панель диспетчера, курьеры через Telegram, живая карта и расчёты — без лимита курьеров.",
-    ko: "디스패처 패널, 텔레그램 쿠리어, 실시간 지도와 정산 — 쿠리어 수 무제한.",
-    tr: "Dağıtım paneli, Telegram kuryeleri, canlı harita ve hesaplaşma — sınırsız kurye.",
+    en: "Deliver with your own couriers: dispatch, courier app, live tracking and cash settlement.",
+    ru: "Доставляйте своими курьерами: диспетчерская, приложение курьера, отслеживание и расчёты наличными.",
+    ko: "자체 배달원으로 배달하세요: 배차, 배달원 앱, 실시간 추적, 현금 정산.",
+    tr: "Kendi kuryelerinizle teslim edin: sevk, kurye uygulaması, canlı takip ve nakit mutabakatı.",
+  },
+  "add.t3": {
+    en: "Photo Studio",
+    ru: "Фотостудия",
+    ko: "포토 스튜디오",
+    tr: "Fotoğraf Stüdyosu",
+  },
+  "add.b3": {
+    en: "Touch up, clean backgrounds, restyle and create photorealistic product photos in one consistent style.",
+    ru: "Ретушь, чистый фон, единый стиль и новые фотореалистичные снимки товаров.",
+    ko: "보정, 배경 정리, 스타일 통일, 실사 상품 사진 생성을 한 가지 스타일로.",
+    tr: "Rötuş, temiz arka plan, tek tip stil ve fotogerçekçi ürün fotoğrafları.",
+  },
+  "add.note": {
+    en: "Every plan already includes 50 online orders.",
+    ru: "В каждом тарифе уже есть 50 онлайн-заказов.",
+    ko: "모든 요금제에 온라인 주문 50건이 이미 포함됩니다.",
+    tr: "Her planda zaten 50 online sipariş vardır.",
+  },
+  "add.orders": {
+    en: "{n} online orders/mo",
+    ru: "{n} онлайн-заказов/мес",
+    ko: "온라인 주문 {n}건/월",
+    tr: "{n} online sipariş/ay",
+  },
+  "add.photos": {
+    en: "{n} photos/mo",
+    ru: "{n} фото/мес",
+    ko: "사진 {n}장/월",
+    tr: "{n} fotoğraf/ay",
+  },
+  "add.f1": {
+    en: "Your own domain",
+    ru: "Свой домен",
+    ko: "자체 도메인",
+    tr: "Kendi alan adınız",
+  },
+  "add.f2": {
+    en: "Your brand only",
+    ru: "Только ваш бренд",
+    ko: "오직 당신의 브랜드",
+    tr: "Sadece sizin markanız",
+  },
+  "add.f3": {
+    en: "No commission",
+    ru: "Без комиссии",
+    ko: "수수료 없음",
+    tr: "Komisyonsuz",
+  },
+  "add.d1": {
+    en: "Dispatch panel",
+    ru: "Панель диспетчера",
+    ko: "디스패치 패널",
+    tr: "Sevk paneli",
+  },
+  "add.d2": {
+    en: "Telegram couriers",
+    ru: "Курьеры в Telegram",
+    ko: "텔레그램 배달원",
+    tr: "Telegram kuryeleri",
+  },
+  "add.d3": {
+    en: "Live GPS",
+    ru: "Живой GPS",
+    ko: "실시간 GPS",
+    tr: "Canlı GPS",
+  },
+  "add.d4": {
+    en: "Cash settlement",
+    ru: "Расчёты наличными",
+    ko: "현금 정산",
+    tr: "Nakit mutabakatı",
+  },
+  "add.d5": {
+    en: "Unlimited couriers",
+    ru: "Безлимит курьеров",
+    ko: "무제한 배달원",
+    tr: "Sınırsız kurye",
+  },
+  "add.s1": {
+    en: "Touch up",
+    ru: "Ретушь",
+    ko: "보정",
+    tr: "Rötuş",
+  },
+  "add.s2": {
+    en: "Clean backgrounds",
+    ru: "Чистый фон",
+    ko: "배경 정리",
+    tr: "Temiz arka plan",
+  },
+  "add.s3": {
+    en: "Consistent style",
+    ru: "Единый стиль",
+    ko: "스타일 통일",
+    tr: "Tek tip stil",
+  },
+  "add.s4": {
+    en: "Photorealistic shots",
+    ru: "Фотореалистичные снимки",
+    ko: "실사 상품 사진",
+    tr: "Fotogerçekçi çekimler",
   },
 
   /* ---------- contact / footer ---------- */
-  "ct.eyebrow": {
-    en: "Contact",
-    ru: "Контакты",
-    ko: "연락처",
-    tr: "İletişim",
-  },
   "ct.heading": {
     en: "Let's start today",
     ru: "Начнём сегодня",
@@ -1228,6 +1276,7 @@ export const STRINGS: Record<string, Dict> = {
     ko: "모든 것이 한 곳에 — 여덟 개의 앱, 하나의 플랫폼.",
     tr: "Her şey bir arada — sekiz uygulama, tek platform.",
   },
+  "ft.contact": { en: "Contact", ru: "Контакты", ko: "연락처", tr: "İletişim" },
   "ft.product": { en: "Product", ru: "Продукт", ko: "제품", tr: "Ürün" },
   "ft.company": { en: "Company", ru: "Компания", ko: "회사", tr: "Şirket" },
   "ft.docs": { en: "Docs", ru: "Документация", ko: "문서", tr: "Dokümanlar" },

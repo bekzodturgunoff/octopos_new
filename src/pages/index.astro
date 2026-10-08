@@ -8,6 +8,18 @@ import { has } from "../data/i18n";
 const cards = apps.map((app) => ({ app, images: imagesFor(app.slug) }));
 const heroImg = imagesFor("pos-restaurant")[0];
 
+const storeTiers = [
+  { name: "Start", price: "$65", n: 1000 },
+  { name: "Pro", price: "$179", n: 3000 },
+  { name: "Business", price: "$329", n: 6000 },
+  { name: "Enterprise", price: "$619", n: 10000 },
+];
+const photoTiers = [
+  { n: 200, price: "$12" },
+  { n: 600, price: "$29" },
+  { n: 1500, price: "$57" },
+];
+
 const solutions = [
   {
     uzT: "Restoran va kafelar",
@@ -82,15 +94,9 @@ const payLogos = [
     {/* ---------------- hero ---------------- */}
     <section class="px-5 pt-[44px] pb-[56px] lg:px-[32px] lg:pt-[68px] lg:pb-[72px]">
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="hero.eyebrow"
-        >
-          Restoranlar uchun to'liq tizim
-        </p>
 
         <h1
-          class="mt-5 font-anton text-[64px] leading-[0.86] tracking-[-0.69px] lg:text-[138px]"
+          class="font-anton text-[64px] leading-[0.86] tracking-[-0.69px] lg:text-[138px]"
         >
           <span class="block" data-i18n="hero.title1">Bitta platforma.</span>
           <span class="block" data-i18n="hero.title2">Sakkizta ilova.</span>
@@ -151,14 +157,8 @@ const payLogos = [
       <div class="mx-auto max-w-[1600px]">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p
-              class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-              data-i18n="apps.eyebrow"
-            >
-              Ilovalar
-            </p>
             <h2
-              class="mt-4 max-w-[900px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+              class="max-w-[900px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
               data-i18n="apps.heading"
             >
               Sakkizta ilova, bitta sinxron tizim.
@@ -236,14 +236,8 @@ const payLogos = [
       class="scroll-mt-[70px] border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]"
     >
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="sol.eyebrow"
-        >
-          Yechimlar
-        </p>
         <h2
-          class="mt-4 max-w-[1000px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+          class="max-w-[1000px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
           data-i18n="sol.heading"
         >
           Biznesingiz uchun tayyor yechimlar
@@ -283,14 +277,8 @@ const payLogos = [
     {/* ---------------- features ---------------- */}
     <section class="border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]">
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="feat.eyebrow"
-        >
-          Imkoniyatlar
-        </p>
         <h2
-          class="mt-4 font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+          class="font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
           data-i18n="feat.heading"
         >
           Har ilova nima qila oladi?
@@ -344,14 +332,8 @@ const payLogos = [
     {/* ---------------- trusted logos ---------------- */}
     <section class="border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]">
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="logos.eyebrow"
-        >
-          Ishonch
-        </p>
         <h2
-          class="mt-4 max-w-[1000px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+          class="max-w-[1000px] font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
           data-i18n="logos.heading"
         >
           Octopos-da ishlaydigan restoranlar
@@ -385,14 +367,8 @@ const payLogos = [
     {/* ---------------- integrations ---------------- */}
     <section class="border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]">
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="int.eyebrow"
-        >
-          Integratsiyalar
-        </p>
         <h2
-          class="mt-4 font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+          class="font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
           data-i18n="int.heading"
         >
           To'lov va xizmatlar bilan ishlaydi
@@ -432,14 +408,8 @@ const payLogos = [
       <div class="mx-auto max-w-[1600px]">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p
-              class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-              data-i18n="plans.eyebrow"
-            >
-              Narxlar
-            </p>
             <h2
-              class="mt-4 font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+              class="font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
               data-i18n="plans.heading"
             >
               Bitta shaffof obuna
@@ -518,37 +488,92 @@ const payLogos = [
     {/* ---------------- add-ons ---------------- */}
     <section class="border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]">
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="add.eyebrow"
-        >
-          Qo'shimchalar
-        </p>
         <h2
-          class="mt-4 font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
+          class="font-anton text-[46px] leading-[0.92] tracking-[-0.69px] lg:text-[86px]"
           data-i18n="add.heading"
         >
           Qo'shimcha xizmatlar
         </h2>
 
-        <div class="mt-10 grid gap-4 lg:grid-cols-2">
-          {/* online store */}
-          <div class="rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <h3
-                class="font-geist text-[19px] leading-[1.25] font-medium"
-                data-i18n="add.t1"
-              >
-                Onlayn do'kon
-              </h3>
-            </div>
+        <div class="mt-10 grid gap-4 lg:grid-cols-3">
+          {/* online store / website */}
+          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+            <h3
+              class="font-geist text-[19px] leading-[1.25] font-medium"
+              data-i18n="add.t1"
+            >
+              Onlayn do'kon
+            </h3>
             <p
-              class="mt-3 max-w-[520px] font-geist text-[13.5px] leading-[21px] text-muted"
+              class="mt-3 font-geist text-[13.5px] leading-[21px] text-muted"
               data-i18n="add.b1"
             >
-              O'z domeningiz va brendingiz ostida.
+              O'z saytingiz va Telegram orqali buyurtmalar, komissiyasiz.
+              Darajalar faqat kiritilgan onlayn buyurtmalar soni bilan farq
+              qiladi.
             </p>
 
+            <div class="mt-5 grid grid-cols-2 gap-2">
+              {
+                storeTiers.map((t) => (
+                  <div class="rounded-xl border border-hairline p-3">
+                    <p class="font-geist-mono text-[11px] tracking-[0.72px] text-muted">
+                      {t.name}
+                    </p>
+                    <p class="mt-1 flex items-baseline gap-1">
+                      <span class="font-geist text-[16px] font-medium text-ink"
+                        >{t.price}</span
+                      >
+                      <span
+                        class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                        data-i18n="plans.perMonth">/oy</span
+                      >
+                    </p>
+                    <p
+                      class="mt-1 font-geist text-[12px] leading-[16px] text-muted"
+                      data-i18n="add.orders"
+                      data-n={String(t.n)}
+                    >
+                      {t.n} ta onlayn buyurtma/oy
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
+
+            <p
+              class="mt-3 font-geist text-[12.5px] leading-[18px] text-muted"
+              data-i18n="add.note"
+            >
+              Barcha tariflarga 50 ta onlayn buyurtma kiritilgan.
+            </p>
+
+            <ul class="mt-5 flex flex-wrap gap-2">
+              {
+                [
+                  ["add.f1", "O'z domeningiz"],
+                  ["add.f2", "Faqat sizning brendingiz"],
+                  ["add.f3", "Komissiyasiz"],
+                ].map(([k, uz]) => (
+                  <li
+                    class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                    data-i18n={k}
+                  >
+                    {uz}
+                  </li>
+                ))
+              }
+            </ul>
+
+            <div class="mt-auto pt-6">
+              <button
+                type="button"
+                data-plan-trigger="starter"
+                class="flex h-[44px] items-center justify-center rounded-[99px] bg-accent px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active"
+              >
+                <span data-i18n="cta.tryFree">Bepul sinab ko'rish →</span>
+              </button>
+            </div>
           </div>
 
           {/* own delivery */}
@@ -560,20 +585,108 @@ const payLogos = [
               >
                 O'z yetkazib berish
               </h3>
+              <p class="flex items-baseline gap-1">
+                <span class="font-geist text-[17px] font-medium text-ink"
+                  >$32</span
+                >
+                <span
+                  class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+                  data-i18n="plans.perMonth">/oy</span
+                >
+              </p>
             </div>
             <p
-              class="mt-3 max-w-[520px] font-geist text-[13.5px] leading-[21px] text-muted"
+              class="mt-3 font-geist text-[13.5px] leading-[21px] text-muted"
               data-i18n="add.b2"
             >
-              Dispetcher paneli, Telegram orqali kuryerlar, jonli xarita va
-              hisob-kitob — kuryerlar soni cheksiz.
+              O'z kuryerlaringiz bilan yetkazing: dispetcherlik, kuryer
+              ilovasi, jonli kuzatuv va naqd hisob-kitob.
             </p>
 
             <ul class="mt-6 flex flex-wrap gap-2">
               {
-                ["Dispetcher paneli", "Telegram kuryerlar", "Jonli GPS", "Hisob-kitob", "Cheksiz kuryer"].map((x) => (
-                  <li class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted">
-                    {x}
+                [
+                  ["add.d1", "Dispetcher paneli"],
+                  ["add.d2", "Telegram kuryerlar"],
+                  ["add.d3", "Jonli GPS"],
+                  ["add.d4", "Hisob-kitob"],
+                  ["add.d5", "Cheksiz kuryer"],
+                ].map(([k, uz]) => (
+                  <li
+                    class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                    data-i18n={k}
+                  >
+                    {uz}
+                  </li>
+                ))
+              }
+            </ul>
+
+            <div class="mt-auto pt-6">
+              <button
+                type="button"
+                data-plan-trigger="starter"
+                class="flex h-[44px] items-center justify-center rounded-[99px] bg-accent px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active"
+              >
+                <span data-i18n="cta.tryFree">Bepul sinab ko'rish →</span>
+              </button>
+            </div>
+          </div>
+
+          {/* photo studio (AI) */}
+          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+            <h3
+              class="font-geist text-[19px] leading-[1.25] font-medium"
+              data-i18n="add.t3"
+            >
+              Fotostudiya
+            </h3>
+            <p
+              class="mt-3 font-geist text-[13.5px] leading-[21px] text-muted"
+              data-i18n="add.b3"
+            >
+              Retush, toza fon, yagona uslub va yangi fotorealistik mahsulot
+              suratlari.
+            </p>
+
+            <ul class="mt-5 flex flex-col gap-2">
+              {
+                photoTiers.map((t) => (
+                  <li class="flex items-center justify-between gap-3 rounded-xl border border-hairline px-3 py-2">
+                    <span
+                      class="font-geist text-[13px] text-ink"
+                      data-i18n="add.photos"
+                      data-n={String(t.n)}
+                    >
+                      {t.n} ta surat/oy
+                    </span>
+                    <span class="flex items-baseline gap-1">
+                      <span class="font-geist text-[15px] font-medium text-ink"
+                        >{t.price}</span
+                      >
+                      <span
+                        class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                        data-i18n="plans.perMonth">/oy</span
+                      >
+                    </span>
+                  </li>
+                ))
+              }
+            </ul>
+
+            <ul class="mt-5 flex flex-wrap gap-2">
+              {
+                [
+                  ["add.s1", "Retush"],
+                  ["add.s2", "Toza fon"],
+                  ["add.s3", "Yagona uslub"],
+                  ["add.s4", "Fotorealistik suratlar"],
+                ].map(([k, uz]) => (
+                  <li
+                    class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                    data-i18n={k}
+                  >
+                    {uz}
                   </li>
                 ))
               }
@@ -590,7 +703,6 @@ const payLogos = [
             </div>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -602,14 +714,8 @@ const payLogos = [
       class="scroll-mt-[70px] border-t border-hairline px-5 py-[64px] lg:px-[32px] lg:py-[96px]"
     >
       <div class="mx-auto max-w-[1600px]">
-        <p
-          class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-          data-i18n="ct.eyebrow"
-        >
-          Aloqa
-        </p>
         <h2
-          class="mt-4 font-anton text-[56px] leading-[0.88] tracking-[-0.69px] lg:text-[110px]"
+          class="font-anton text-[56px] leading-[0.88] tracking-[-0.69px] lg:text-[110px]"
           data-i18n="ct.heading"
         >
           Bugun boshlaymiz
@@ -674,6 +780,47 @@ const payLogos = [
           >
             Hammasi bir joyda — sakkiz ilova, bitta platforma.
           </p>
+
+            <p
+              class="mt-6 font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+              data-i18n="ft.payments"
+            >
+              To'lov usullari
+            </p>
+            <div class="mt-3 flex flex-wrap items-center gap-5">
+              <img
+                src="/payments/payme.webp"
+                alt="Payme"
+                class="h-5 w-auto"
+                width="62"
+                height="20"
+                loading="lazy"
+              />
+              <img
+                src="/payments/click.webp"
+                alt="Click"
+                class="pay-click h-5 w-auto"
+                width="79"
+                height="20"
+                loading="lazy"
+              />
+              <img
+                src="/payments/click-dark.svg"
+                alt="Click"
+                class="pay-click-dark hidden h-5 w-auto"
+                width="79"
+                height="20"
+                loading="lazy"
+              />
+              <img
+                src="/payments/dodo-payments.webp"
+                alt="Dodo Payments"
+                class="h-7 w-auto"
+                width="80"
+                height="32"
+                loading="lazy"
+              />
+            </div>
         </div>
 
         <div>
@@ -737,7 +884,7 @@ const payLogos = [
         <div>
           <p
             class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
-            data-i18n="ct.eyebrow"
+            data-i18n="ft.contact"
           >
             Aloqa
           </p>
@@ -763,48 +910,6 @@ const payLogos = [
         </div>
       </div>
 
-      <div class="mt-10 border-t border-hairline pt-6">
-        <p
-          class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
-          data-i18n="ft.payments"
-        >
-          To'lov usullari
-        </p>
-        <div class="mt-4 flex flex-wrap items-center gap-5">
-          <img
-            src="/payments/payme.webp"
-            alt="Payme"
-            class="h-5 w-auto"
-            width="62"
-            height="20"
-            loading="lazy"
-          />
-          <img
-            src="/payments/click.webp"
-            alt="Click"
-            class="pay-click h-5 w-auto"
-            width="79"
-            height="20"
-            loading="lazy"
-          />
-          <img
-            src="/payments/click-dark.svg"
-            alt="Click"
-            class="pay-click-dark hidden h-5 w-auto"
-            width="79"
-            height="20"
-            loading="lazy"
-          />
-          <img
-            src="/payments/dodo-payments.webp"
-            alt="Dodo Payments"
-            class="h-7 w-auto"
-            width="80"
-            height="32"
-            loading="lazy"
-          />
-        </div>
-      </div>
 
       <div
         class="mt-12 flex flex-wrap items-center justify-between gap-3 border-t border-hairline pt-6 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
@@ -878,15 +983,15 @@ const payLogos = [
           return `<li class="flex items-start gap-2.5"><svg class="mt-[3px] h-3.5 w-3.5 shrink-0 text-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="text-[13.5px] leading-[20px]"><span class="font-medium text-ink">${esc(f.name)}</span>${showDesc ? ` <span class="text-muted">${esc(f.description)}</span>` : ""}</span></li>`;
         })
         .join("");
-      return `<div class="relative flex flex-col gap-4 rounded-2xl border border-hairline bg-card/40 p-6 ${popular ? "ring-2 ring-accent" : ""}">
-        ${popular ? `<span class="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 font-geist-mono text-[10px] tracking-[0.72px] text-accent-emphasis">${esc(L("plans.popular", lang))}</span>` : ""}
+      return `<div class="relative flex flex-col gap-4 rounded-2xl border border-hairline bg-card/40 p-6 ${popular ? "ring-2 ring-accent-surface" : ""}">
+        ${popular ? `<span class="absolute -top-3 left-6 rounded-full bg-accent-surface px-3 py-1 font-geist-mono text-[10px] tracking-[0.72px] text-on-accent-surface">${esc(L("plans.popular", lang))}</span>` : ""}
         <p class="font-geist text-[15px] font-medium text-ink">${esc(plan.name)}</p>
         <div>
           <p class="flex items-baseline gap-1.5"><span class="font-anton text-[42px] leading-none tracking-tight text-ink">${esc(display)}</span><span class="font-geist-mono text-[12px] tracking-[0.72px] text-muted">${esc(suffix)}</span></p>
           ${note}
         </div>
         <ul class="flex flex-col gap-2.5">${feats}</ul>
-        <button type="button" data-plan-trigger="starter" class="mt-auto flex h-[42px] items-center justify-center rounded-[99px] ${popular ? "bg-accent text-accent-emphasis hover:bg-accent-active" : "border border-hairline text-ink hover:border-link hover:text-link"} font-geist-mono text-[12px] font-medium tracking-[0.72px] transition-colors duration-[300ms]">${esc(cta)}</button>
+        <button type="button" data-plan-trigger="starter" class="mt-auto flex h-[42px] items-center justify-center rounded-[99px] ${popular ? "bg-accent-surface text-on-accent-surface hover:bg-accent-active hover:text-accent-emphasis" : "border border-hairline text-ink hover:border-link hover:text-link"} font-geist-mono text-[12px] font-medium tracking-[0.72px] transition-colors duration-[300ms]">${esc(cta)}</button>
       </div>`;
     }
 

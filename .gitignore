@@ -1,8 +1,28 @@
+# dependencies
 node_modules/
+
+# build output
 dist/
 .astro/
-.DS_Store
-*.log
+
+# secrets — never commit registry tokens
+.npmrc
 .env
 .env.*
-.npmrc
+*.local
+
+# editors / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# logs & caches
+*.log
+npm-debug.log*
+.pnpm-store/
+.eslintcache
+*.tsbuildinfo
+coverage/
