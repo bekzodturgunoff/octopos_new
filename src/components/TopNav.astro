@@ -38,7 +38,7 @@ const links = [
         loading="eager"
       />
       <span
-        class="font-geist text-[15px] leading-none font-semibold tracking-[-0.2px] text-ink"
+        class="font-geist text-[16px] leading-none font-semibold tracking-[-0.2px] text-ink"
         >Octopos</span
       >
     </a>
@@ -51,7 +51,7 @@ const links = [
               href={l.href}
               data-i18n={l.key}
               class:list={[
-                "font-geist-mono text-[12px] leading-4 tracking-[0.72px] transition-colors duration-[350ms] ease-far hover:text-link",
+                "font-geist-mono text-[16px] leading-6 tracking-[0.72px] transition-colors duration-[350ms] ease-far hover:text-link",
                 path === l.href ? "text-ink" : "text-ink/80",
               ]}
             >
@@ -74,7 +74,7 @@ const links = [
           aria-label="Language"
           data-i18n-attr="aria-label:nav.lang"
           aria-haspopup="true"
-          class="flex h-9 items-center gap-1.5 rounded-full border border-hairline px-3 font-geist-mono text-[12px] leading-3 font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:text-link"
+          class="flex h-9 items-center gap-1.5 rounded-full border border-hairline px-3 font-geist-mono text-[16px] leading-6 font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:text-link"
         >
           <span data-lang-code>UZ</span>
           <svg
@@ -177,24 +177,19 @@ const links = [
   >
     <nav class="mx-auto flex max-w-[1600px] flex-col px-5" aria-label="Mobile">
       {
-        links.map((l, i) => (
+        links.map((l) => (
           <a
             href={l.href}
             data-i18n={l.key}
-            class="group flex items-center justify-between border-b border-hairline py-4 font-geist text-[17px] leading-none font-medium text-ink transition-colors duration-300 last:border-0 hover:text-link"
+            class="group flex items-center border-b border-hairline py-4 font-geist text-[16px] leading-none font-medium text-ink transition-colors duration-300 last:border-0 hover:text-link"
           >
-            <span>
-              {l.key === "nav.apps"
-                ? "Ilovalar"
-                : l.key === "nav.solutions"
-                  ? "Yechimlar"
-                  : l.key === "nav.pricing"
-                    ? "Narxlar"
-                    : "Aloqa"}
-            </span>
-            <span class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted">
-              {String(i + 1).padStart(2, "0")}
-            </span>
+            {l.key === "nav.apps"
+              ? "Ilovalar"
+              : l.key === "nav.solutions"
+                ? "Yechimlar"
+                : l.key === "nav.pricing"
+                  ? "Narxlar"
+                  : "Aloqa"}
           </a>
         ))
       }

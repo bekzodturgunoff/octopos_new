@@ -44,18 +44,11 @@ export const STRINGS: Record<string, Dict> = {
   "nav.lang": { en: "Language", ru: "Язык", ko: "언어", tr: "Dil" },
   "nav.menu": { en: "Menu", ru: "Меню", ko: "메뉴", tr: "Menü" },
 
-  /* ---------- hero ---------- */
-  "hero.title1": {
-    en: "One platform.",
-    ru: "Одна платформа.",
-    ko: "하나의 플랫폼.",
-    tr: "Tek platform.",
-  },
-  "hero.title2": {
-    en: "Eight apps.",
-    ru: "Восемь приложений.",
-    ko: "여덟 개의 앱.",
-    tr: "Sekiz uygulama.",
+  "hero.title": {
+    en: "Use the best one, boss!",
+    ru: "Используйте лучшее, шеф!",
+    ko: "최고만 쓰세요, 사장님!",
+    tr: "En iyisini kullan, patron!",
   },
   "hero.body": {
     en: "POS, KDS, dashboard, QR menu, web store and courier dispatcher — one subscription, one data source. Keeps working when the internet goes down.",

@@ -41,6 +41,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --color-page: oklch(19.09% 0.009 137.85);
     --color-ink: oklch(98.09% 0.013 115.83);
     --color-muted: oklch(82.4% 0.04 129.72);
@@ -54,6 +55,7 @@
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --color-page: oklch(19.09% 0.009 137.85);
   --color-ink: oklch(98.09% 0.013 115.83);
   --color-muted: oklch(82.4% 0.04 129.72);
@@ -67,12 +69,14 @@
 
 @layer base {
   html {
+    font-size: 16px;
     background-color: var(--color-page);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   body {
+    font-size: 16px;
     background-color: var(--color-page);
     color: var(--color-ink);
     font-family: var(--font-sans);
