@@ -1086,6 +1086,24 @@ export const STRINGS: Record<string, Dict> = {
   },
   "plans.perMonth": { en: "/mo", ru: "/мес", ko: "/월", tr: "/ay" },
   "plans.perYear": { en: "/yr", ru: "/год", ko: "/년", tr: "/yıl" },
+  "plans.locations": {
+    en: "{n} locations",
+    ru: "{n} локаций",
+    ko: "지점 {n}개",
+    tr: "{n} şube",
+  },
+  "plans.aiPhotos": {
+    en: "{n} AI photos/mo",
+    ru: "{n} AI фото/мес",
+    ko: "AI 사진 {n}장/월",
+    tr: "{n} AI fotoğraf/ay",
+  },
+  "plans.onlineOrders": {
+    en: "{n} online orders/mo",
+    ru: "{n} онлайн-заказов/мес",
+    ko: "온라인 주문 {n}건/월",
+    tr: "{n} online sipariş/ay",
+  },
   "plans.loading": {
     en: "Loading…",
     ru: "Загрузка…",
