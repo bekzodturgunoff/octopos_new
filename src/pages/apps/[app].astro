@@ -17,7 +17,6 @@ export function getStaticPaths() {
 }
 
 const { app, images } = Astro.props;
-const total = apps.length;
 const idx = apps.findIndex((a) => a.slug === app.slug);
 const next = apps[(idx + 1) % apps.length];
 
@@ -49,29 +48,20 @@ function frameLabel(url: string): string {
         class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted transition-colors duration-[350ms] ease-far hover:text-link"
         >← Ilovalar</a
       >
-      <span
-        class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-ink"
-        >{app.no} — {String(total).padStart(2, "0")}</span
-      >
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-y-12 lg:mt-[41px] lg:grid-cols-[460px_1fr] lg:gap-x-16">
       <aside class="self-start lg:sticky lg:top-[110px]">
         <h1
-          class="font-anton text-[84px] leading-[0.84] tracking-[-0.69px] lg:text-[138px]"
+          class="max-w-[440px] font-anton text-[52px] leading-[0.9] tracking-[-0.69px] lg:text-[72px]"
         >
-          {app.no}
+          {app.name}
         </h1>
 
         <div class="mt-[20px] h-px w-full bg-hairline" />
 
-        <h2
-          class="mt-[20px] font-geist text-[22px] leading-[1.12] font-medium tracking-[-0.405px] lg:text-[27px]"
-        >
-          {app.name}
-        </h2>
         <p
-          class="mt-[16px] font-geist text-[16px] leading-[24px] text-muted"
+          class="mt-[20px] font-geist text-[16px] leading-[24px] text-muted"
           data-i18n={`app.${app.slug}.desc`}
         >
           {app.desc}
