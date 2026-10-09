@@ -38,6 +38,12 @@
   --ease-far: cubic-bezier(0.22, 0.8, 0.25, 1);
 }
 
+@media (max-width: 639.98px) {
+  :root {
+    --radius-2xl: 3px;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
