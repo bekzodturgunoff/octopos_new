@@ -82,6 +82,12 @@ export const STRINGS: Record<string, Dict> = {
     ko: "하나의 동기화 시스템 속 여덟 개의 앱. 카드를 눌러 앱 페이지로 이동하세요.",
     tr: "Senkron bir sistemde sekiz uygulama. Uygulama sayfası için karta dokun.",
   },
+  "apps.desc": {
+    en: "Eight apps run as one ecosystem on a single source of truth: an order is taken at the table, cooked in the kitchen, handed to a courier and becomes a report. POS, KDS, dispatch, QR menu and web store — one platform, one subscription, seamless sync.",
+    ru: "Восемь приложений работают как одна экосистема на одном источнике данных: заказ принимается за столом, готовится на кухне, уходит к курьеру и превращается в отчёт. POS, KDS, диспетчер, QR-меню и веб-магазин — одна платформа, одна подписка, бесшовная синхронизация.",
+    ko: "여덟 개의 앱이 하나의 데이터 소스 위에서 하나의 생태계로 동작합니다: 주문은 테이블에서 받아 주방에서 조리되고, 택배를 거쳐 리포트가 됩니다. POS, KDS, 디스패치, QR 메뉴, 웹스토어 — 하나의 플랫폼, 하나의 구독, 끊김 없는 동기화.",
+    tr: "Sekiz uygulama tek veri kaynağı üzerinde tek bir ekosistem gibi çalışır: sipariş masada alınır, mutfakta pişer, kuryeye teslim edilir ve rapora dönüşür. POS, KDS, sevkıyat, QR menü ve web mağaza — tek platform, tek abonelik, kesintisiz senkronizasyon.",
+  },
   "apps.viewAll": {
     en: "All apps →",
     ru: "Все приложения →",
