@@ -135,7 +135,7 @@ function frameLabel(url: string): string {
                   const useKey = has(frameKey) && app.frames?.[base] != null;
                   return (
                     <figure>
-                      <div class="overflow-hidden rounded-none sm:rounded-2xl">
+                      <div class="overflow-hidden rounded-2xl">
                         <img
                           src={src}
                           alt={`${app.name} — ${frameLabel(src)}`}
