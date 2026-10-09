@@ -232,12 +232,44 @@
   animation-play-state: paused;
 }
 
+/* octopus hub micro-motion */
+@keyframes octo-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0.4deg);
+  }
+  50% {
+    transform: translateY(-4px) rotate(-0.4deg);
+  }
+}
+@keyframes octo-wiggle {
+  0%,
+  100% {
+    transform: translate(-0.22px, 0.14px) rotate(-0.4deg);
+  }
+  50% {
+    transform: translate(0.22px, -0.14px) rotate(0.4deg);
+  }
+}
+.octo-tile {
+  animation: octo-bob 4.6s ease-in-out infinite;
+}
+.octo-wire {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: octo-wiggle 5.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .row-title,
   a {
     transition: none !important;
   }
   .marquee-track {
+    animation: none;
+  }
+  .octo-tile,
+  .octo-wire {
     animation: none;
   }
 }
