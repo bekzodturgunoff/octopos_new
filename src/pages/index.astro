@@ -913,16 +913,33 @@ const payLogos = [
       );
 
     function card(plan: any, lang: string): string {
+      const want = lang === "uz" ? "UZS" : "USD";
       const popular = plan.name === "Growth" || plan.position === 3;
+      const cyclePlans = (plan.prices ?? []).filter(
+        (p: any) => p.billingCycle === cycle,
+      );
       const price =
-        (plan.prices ?? []).find((p: any) => p.billingCycle === cycle) ??
+        cyclePlans.find(
+          (p: any) => (p?.value?.currency || "").toUpperCase() === want,
+        ) ??
+        cyclePlans[0] ??
         plan.prices?.[0];
       const amount = price?.value?.majorAmount ?? 0;
       const suffix =
         cycle === "monthly"
           ? L("plans.perMonth", lang)
           : L("plans.perYear", lang);
-      const display = amount === 0 ? "$0" : (price?.value?.display ?? "$0");
+      let display =
+        amount === 0
+          ? want === "UZS"
+            ? "0"
+            : "$0"
+          : (price?.value?.display ?? "");
+      if (want === "UZS")
+        display = display.replace(
+          /\s*(so'?m|сум|soums?|uzs)\s*$/i,
+          "",
+        );
       const note =
         amount === 0
           ? `<p class="mt-3 font-geist text-[13px] text-muted">${esc(L("plans.noCard", lang))}</p>`
@@ -986,10 +1003,13 @@ const payLogos = [
       if (fetchedFor !== apiLang) {
         loading?.classList.remove("hidden");
         try {
-          const r = await fetch(`${API}/plans.get?lang=${apiLang}`, {
-            cache: "no-store",
-            headers: { "Accept-Language": apiLang },
-          });
+          const r = await fetch(
+            `${API}/plans.get?lang=${apiLang}${lang === "uz" ? "&currency=UZS" : ""}`,
+            {
+              cache: "no-store",
+              headers: { "Accept-Language": apiLang },
+            },
+          );
           const j: any = await r.json();
           plans = j.plans ?? [];
           fetchedFor = apiLang;
