@@ -20,8 +20,8 @@ const tentacles = ring.map(({ ang, rad }, i) => {
   const ox = 50 + rad * Math.cos(ang);
   const oy = 50 + rad * Math.sin(ang);
   const th2 = ang + dir * (0.42 + (i % 3) * 0.1);
-  const ix = 50 + 16 * Math.cos(th2);
-  const iy = 50 + 16 * Math.sin(th2);
+  const ix = 50 + 12 * Math.cos(th2);
+  const iy = 50 + 12 * Math.sin(th2);
   const bend = 22 + (i % 3) * 6;
   const c1x = ox + bend * Math.cos(ang + (dir * Math.PI) / 2);
   const c1y = oy + bend * Math.sin(ang + (dir * Math.PI) / 2);
@@ -191,7 +191,7 @@ const payLogos = [
 
         <div class="relative mx-auto mt-10 aspect-square w-[min(92vw,560px)]">
           <svg
-            class="pointer-events-none absolute inset-0 h-full w-full text-hairline"
+            class="pointer-events-none absolute inset-0 h-full w-full text-ink"
             viewBox="0 0 100 100"
             fill="none"
             aria-hidden="true"
@@ -201,10 +201,10 @@ const payLogos = [
                 <path
                   d={d}
                   stroke="currentColor"
-                  stroke-width="1.75"
+                  stroke-width="2"
                   stroke-linecap="round"
                   vector-effect="non-scaling-stroke"
-                  class="opacity-80"
+                  class="opacity-30"
                 />
               ))
             }
@@ -212,17 +212,26 @@ const payLogos = [
 
           <a
             href="/apps"
-            class="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ink text-on-ink shadow-[0_0_50px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-far hover:scale-[1.04]"
+            class="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 transition-transform duration-300 ease-far hover:scale-[1.04]"
             aria-label="Octopos"
           >
             <img
-              src={logoLight.src}
+              src={logoDark.src}
               alt="Octopos"
-              width="96"
-              height="96"
-              class="h-16 w-16 p-3 sm:h-20 sm:w-20 sm:p-3.5 lg:h-24 lg:w-24 lg:p-4"
+              width="128"
+              height="128"
+              class="logo-dark block h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32"
               loading="eager"
               fetchpriority="high"
+            />
+            <img
+              src={logoLight.src}
+              alt=""
+              width="128"
+              height="128"
+              class="logo-light block h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32"
+              aria-hidden="true"
+              loading="eager"
             />
           </a>
 
