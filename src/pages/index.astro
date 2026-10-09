@@ -24,6 +24,17 @@ const ring = apps.map((app, i) => {
   };
 });
 
+const mobileShift = [
+  "-translate-y-[calc(50%_+_7px)] sm:-translate-y-1/2",
+  "-translate-y-[calc(50%_+_7px)] sm:-translate-y-1/2",
+  "-translate-y-1/2",
+  "-translate-y-[calc(50%_-_7px)] sm:-translate-y-1/2",
+  "-translate-y-[calc(50%_-_7px)] sm:-translate-y-1/2",
+  "-translate-y-[calc(50%_-_7px)] sm:-translate-y-1/2",
+  "-translate-y-1/2",
+  "-translate-y-[calc(50%_+_7px)] sm:-translate-y-1/2",
+];
+
 const tentacles = ring.map(({ x: ox, y: oy }, i) => {
   const dx = ox - 50;
   const dy = oy - 50;
@@ -275,7 +286,7 @@ const payLogos = [
                 href={`/apps/${app.slug}`}
                 title={app.tur}
                 aria-label={`${app.name} — ${app.tur}`}
-                class="group absolute z-10 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center"
+                class={`group absolute z-10 flex -translate-x-1/2 flex-col items-center ${mobileShift[i]}`}
                 style={`left:${x.toFixed(2)}%;top:${y.toFixed(2)}%`}
               >
                 <div
