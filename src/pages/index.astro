@@ -10,25 +10,35 @@ import { has } from "../data/i18n";
 
 const heroImg = imagesFor("pos-restaurant")[0];
 
+const radOffsets = [36, 40, 33.5, 38.5, 34.5, 41, 34, 39.5];
+const angJitter = [0, -6, 5, -4, 7, -5, 4, -6];
+
 const ring = apps.map((app, i) => {
-  const ang = ((i * 45 - 90) * Math.PI) / 180;
-  return { app, ang, rad: 36, x: 50 + 36 * Math.cos(ang), y: 50 + 36 * Math.sin(ang) };
+  const ang = ((i * 45 - 90 + angJitter[i]) * Math.PI) / 180;
+  const rad = radOffsets[i];
+  return { app, ang, rad, x: 50 + rad * Math.cos(ang), y: 50 + rad * Math.sin(ang) };
 });
 
 const tentacles = ring.map(({ ang, rad }, i) => {
   const dir = i % 2 === 0 ? 1 : -1;
   const ox = 50 + rad * Math.cos(ang);
   const oy = 50 + rad * Math.sin(ang);
-  const th2 = ang + dir * (0.42 + (i % 3) * 0.1);
-  const ix = 50 + 12 * Math.cos(th2);
-  const iy = 50 + 12 * Math.sin(th2);
-  const bend = 22 + (i % 3) * 6;
-  const c1x = ox + bend * Math.cos(ang + (dir * Math.PI) / 2);
-  const c1y = oy + bend * Math.sin(ang + (dir * Math.PI) / 2);
-  const c2x = ix + bend * 0.7 * Math.cos(th2 + (dir * Math.PI) / 2);
-  const c2y = iy + bend * 0.7 * Math.sin(th2 + (dir * Math.PI) / 2);
-  const f = (n) => n.toFixed(2);
-  return `M ${f(ox)} ${f(oy)} C ${f(c1x)} ${f(c1y)} ${f(c2x)} ${f(c2y)} ${f(ix)} ${f(iy)}`;
+  const ix = 50 + 10 * Math.cos(ang);
+  const iy = 50 + 10 * Math.sin(ang);
+  const len = Math.hypot(ix - ox, iy - oy) || 1;
+  const px = (iy - oy) / len;
+  const py = -(ix - ox) / len;
+  const amp = 3.2 + (i % 3) * 0.7;
+  const pts = [];
+  const N = 16;
+  for (let s = 0; s <= N; s++) {
+    const t = s / N;
+    const off = dir * amp * Math.sin(t * Math.PI * 2);
+    const x = ox + (ix - ox) * t + px * off;
+    const y = oy + (iy - oy) * t + py * off;
+    pts.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
+  }
+  return `M ${pts.join(" L ")}`;
 });
 
 const storeTiers = [
