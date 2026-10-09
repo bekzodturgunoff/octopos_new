@@ -12,14 +12,14 @@ const heroImg = imagesFor("pos-restaurant")[0];
 
 const radOffsets = [37, 42, 33.5, 40, 35, 42.5, 34, 41];
 const angJitter = [0, -6, 5, -4, 7, -5, 4, -6];
-const hOffsets = [-4, -5, -5.5, -5, -3, 5.5, 5.5, 5.5];
+const hOffsets = [-4, -3, -3, -3, 0, 3, 3, 3];
 
 const ring = apps.map((app, i) => {
   const ang = ((i * 45 - 90 + angJitter[i]) * Math.PI) / 180;
   const rad = radOffsets[i];
   return {
     app,
-    x: 50 + rad * Math.cos(ang) + hOffsets[i],
+    x: 50 - rad * Math.cos(ang) + hOffsets[i],
     y: 50 + rad * Math.sin(ang),
   };
 });
@@ -246,7 +246,7 @@ const payLogos = [
 
           <a
             href="/apps"
-            class="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-hairline bg-page [box-shadow:0_0_0_7px_var(--color-page)] transition-transform duration-300 ease-far hover:scale-[1.04]"
+            class="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-hairline bg-page transition-transform duration-300 ease-far hover:scale-[1.04]"
             aria-label="Octopos"
           >
             <img
