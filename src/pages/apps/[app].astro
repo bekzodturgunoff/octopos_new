@@ -3,10 +3,25 @@ import Layout from "../../layouts/Layout.astro";
 import TopNav from "../../components/TopNav.astro";
 import { apps, imagesFor, type App } from "../../data/apps";
 import { has } from "../../data/i18n";
+import trims from "../../data/image-trims.json";
 
 interface Props {
   app: App;
   images: string[];
+}
+
+type Trim = { ar: number; l: number; r: number; t: number; b: number };
+const TRIMS = trims as Record<string, Trim>;
+const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
+function trimStyles(src: string): { wrap?: string; img?: string } {
+  const t = TRIMS[src];
+  if (!t) return {};
+  const hw = 1 - t.l - t.r;
+  const hh = 1 - t.t - t.b;
+  return {
+    wrap: `aspect-ratio:${t.ar}`,
+    img: `position:absolute;left:${pct(-t.l / hw)};top:${pct(-t.t / hh)};width:${pct(1 / hw)};height:${pct(1 / hh)};`,
+  };
 }
 
 export function getStaticPaths() {
@@ -39,7 +54,7 @@ function frameLabel(url: string): string {
   <TopNav />
 
   <div
-    class="mx-auto max-w-[1600px] px-5 pt-[18px] pb-[120px] lg:px-[32px] lg:pt-[31px] lg:pb-[150px]"
+    class="mx-auto max-w-[1600px] px-5 pt-[9px] pb-[60px] lg:px-[32px] lg:pt-[31px] lg:pb-[150px]"
   >
     <div class="flex items-center justify-between gap-4">
       <a
@@ -50,7 +65,7 @@ function frameLabel(url: string): string {
       >
     </div>
 
-    <div class="mt-10 grid grid-cols-1 gap-y-12 lg:mt-[41px] lg:grid-cols-[460px_1fr] lg:gap-x-16">
+    <div class="mt-10 grid grid-cols-1 gap-y-6 lg:mt-[41px] lg:grid-cols-[460px_1fr] lg:gap-x-16">
       <aside class="self-start lg:sticky lg:top-[110px]">
         <h1
           class="max-w-[440px] font-anton text-[clamp(36px,11vw,52px)] leading-[0.9] tracking-[-0.69px] [overflow-wrap:anywhere] lg:text-[72px]"
@@ -133,13 +148,21 @@ function frameLabel(url: string): string {
                   const base = frameBase(src);
                   const frameKey = `frame.${app.slug}.${base}`;
                   const useKey = has(frameKey) && app.frames?.[base] != null;
+                  const ts = trimStyles(src);
                   return (
                     <figure>
-                      <div class="overflow-hidden rounded-2xl">
+                      <div
+                        class="relative overflow-hidden rounded-2xl"
+                        style={ts.wrap}
+                      >
                         <img
                           src={src}
                           alt={`${app.name} — ${frameLabel(src)}`}
-                          class="block -mt-[3px] w-full h-auto"
+                          class:list={[
+                            "block max-w-none",
+                            TRIMS[src] ? "absolute" : "-mt-[3px] w-full h-auto",
+                          ]}
+                          style={ts.img}
                           loading={i === 0 ? "eager" : "lazy"}
                           fetchpriority={i === 0 ? "high" : "auto"}
                           decoding="async"
