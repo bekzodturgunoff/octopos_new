@@ -1,267 +1,744 @@
 {
- "/app_images/dash/dash-account.png": {
+ "/app_images/dash/dash-account.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-account.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-account.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-administration.png": {
+ "/app_images/dash/dash-administration.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-administration.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-administration.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-catalog-menu.png": {
+ "/app_images/dash/dash-catalog-menu.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-catalog-menu.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-catalog-menu.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-catalog.png": {
+ "/app_images/dash/dash-catalog.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-catalog.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-catalog.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-inventory.png": {
+ "/app_images/dash/dash-inventory.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-inventory.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-inventory.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-main.png": {
+ "/app_images/dash/dash-main.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-main.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-main.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-orders.png": {
+ "/app_images/dash/dash-orders.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-orders.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-orders.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-reports.png": {
+ "/app_images/dash/dash-reports.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-website-settings.png": {
+ "/app_images/dash/dash-website-settings.webp": {
   "w": 3632,
   "h": 2296,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-website-settings.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-website-settings.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/dash/dash-website.png": {
+ "/app_images/dash/dash-website.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-website.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-website.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-active-orders.png": {
+ "/app_images/kitchen/kitchen-active-orders.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-active-orders.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-active-orders.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-filter.png": {
+ "/app_images/kitchen/kitchen-filter.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-filter.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-filter.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-more-settings.png": {
+ "/app_images/kitchen/kitchen-more-settings.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-more-settings.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-more-settings.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-more.png": {
+ "/app_images/kitchen/kitchen-more.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-more.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-more.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-orders-size-adjuster.png": {
+ "/app_images/kitchen/kitchen-orders-size-adjuster.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-orders-size-adjuster.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-orders-size-adjuster.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-stop-list.png": {
+ "/app_images/kitchen/kitchen-stop-list.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-stop-list.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-stop-list.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/kitchen/kitchen-unactive-orders.png": {
+ "/app_images/kitchen/kitchen-unactive-orders.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/kitchen/kitchen-unactive-orders.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-unactive-orders.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/ods/ods-settings.png": {
+ "/app_images/ods/ods-settings.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/ods/ods-settings.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/ods/ods-settings.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/ods/ods.png": {
+ "/app_images/ods/ods.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/ods/ods.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/ods/ods.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-market/pos-market-checkout.png": {
+ "/app_images/pos-market/pos-market-checkout.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-market/pos-market-checkout.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-checkout.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-market/pos-market-delivery.png": {
+ "/app_images/pos-market/pos-market-delivery.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-market/pos-market-delivery.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-delivery.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-market/pos-market-notifications.png": {
+ "/app_images/pos-market/pos-market-notifications.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-market/pos-market-notifications.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-notifications.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-market/pos-market-orders.png": {
+ "/app_images/pos-market/pos-market-orders.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-market/pos-market-orders.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-orders.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-market/pos-market-settings.png": {
+ "/app_images/pos-market/pos-market-settings.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-market/pos-market-settings.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-settings.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-market/pos-market.png": {
+ "/app_images/pos-market/pos-market.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-market/pos-market.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-market/pos-market.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.png": {
+ "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.png": {
+ "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-checkout.png": {
+ "/app_images/pos-restaurant/pos-checkout.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-checkout.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-checkout.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-delivery-address.png": {
+ "/app_images/pos-restaurant/pos-delivery-address.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-address.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-address.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-delivery-job.png": {
+ "/app_images/pos-restaurant/pos-delivery-job.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-job.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-job.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-delivery-man-informations.png": {
+ "/app_images/pos-restaurant/pos-delivery-man-informations.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-man-informations.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-man-informations.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-floor-plan.png": {
+ "/app_images/pos-restaurant/pos-floor-plan.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-floor-plan.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-floor-plan.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-lock.png": {
+ "/app_images/pos-restaurant/pos-lock.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-lock.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-lock.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-main-view.png": {
+ "/app_images/pos-restaurant/pos-main-view.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-main-view.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-main-view.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-menu.png": {
+ "/app_images/pos-restaurant/pos-menu.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-menu.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-menu.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-more-business-day-register.png": {
+ "/app_images/pos-restaurant/pos-more-business-day-register.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-more-business-day-register.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-business-day-register.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-more-business-day.png": {
+ "/app_images/pos-restaurant/pos-more-business-day.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-more-business-day.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-business-day.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-more-settings-appearance.png": {
+ "/app_images/pos-restaurant/pos-more-settings-appearance.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-more-settings-appearance.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-settings-appearance.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-more-settings.png": {
+ "/app_images/pos-restaurant/pos-more-settings.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-more-settings.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-settings.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-more.png": {
+ "/app_images/pos-restaurant/pos-more.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-more.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-notifications-requests.png": {
+ "/app_images/pos-restaurant/pos-notifications-requests.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-notifications-requests.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-notifications-requests.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-notifications.png": {
+ "/app_images/pos-restaurant/pos-notifications.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-notifications.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-notifications.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-orders-filter.png": {
+ "/app_images/pos-restaurant/pos-orders-filter.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-orders-filter.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-orders-filter.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-orders.png": {
+ "/app_images/pos-restaurant/pos-orders.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-orders.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-orders.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/pos-restaurant/pos-stop-list.png": {
+ "/app_images/pos-restaurant/pos-stop-list.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/pos-restaurant/pos-stop-list.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-stop-list.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-about-us.png": {
+ "/app_images/website/website-about-us.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-about-us.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-about-us.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-checkout.png": {
+ "/app_images/website/website-checkout.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-checkout.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-checkout.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-contacts.png": {
+ "/app_images/website/website-contacts.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-contacts.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-contacts.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-delivery.png": {
+ "/app_images/website/website-delivery.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-delivery.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-delivery.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-hero.png": {
+ "/app_images/website/website-hero.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-hero.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-hero.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-locations.png": {
+ "/app_images/website/website-locations.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-locations.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-locations.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-menus-1.png": {
+ "/app_images/website/website-menus-1.webp": {
   "w": 3632,
   "h": 2296,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-menus-1.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-menus-1.w1280.webp",
+    "w": 1280
+   }
+  ]
  },
- "/app_images/website/website-menus-2.png": {
+ "/app_images/website/website-menus-2.webp": {
   "w": 3584,
   "h": 2240,
-  "variants": []
+  "variants": [
+   {
+    "u": "/app_images/website/website-menus-2.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/website/website-menus-2.w1280.webp",
+    "w": 1280
+   }
+  ]
  }
 }

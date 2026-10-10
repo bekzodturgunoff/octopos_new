@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TopNav from "../../components/TopNav.astro";
-import { apps, imagesFor, imgDims, type App } from "../../data/apps";
+import { apps, imagesFor, imgDims, imgSrcset, type App } from "../../data/apps";
 import { has } from "../../data/i18n";
 import trims from "../../data/image-trims.json";
 
@@ -168,6 +168,7 @@ function frameLabel(url: string): string {
                   const useKey = has(frameKey) && app.frames?.[base] != null;
                   const ts = trimStyles(src);
                   const dm = imgDims(src);
+                  const ss = imgSrcset(src);
                   return (
                     <figure>
                       <div
@@ -184,6 +185,8 @@ function frameLabel(url: string): string {
                           style={ts.img}
                           width={dm?.w}
                           height={dm?.h}
+                          srcset={ss}
+                          sizes="(max-width:1023px) calc(100vw - 40px), 1000px"
                           loading={i === 0 ? "eager" : "lazy"}
                           fetchpriority={i === 0 ? "high" : "auto"}
                           decoding="async"

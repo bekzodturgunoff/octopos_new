@@ -2,14 +2,17 @@
 import Layout from "../layouts/Layout.astro";
 import TopNav from "../components/TopNav.astro";
 import AgentDownload from "../components/AgentDownload.astro";
-import { apps, imagesFor, imgDims } from "../data/apps";
+import { apps, imagesFor, imgDims, imgSrcset } from "../data/apps";
 import AppIcon from "../components/AppIcon.astro";
-import logoLight from "../assets/logo_light.png";
-import logoDark from "../assets/logo_dark.png";
+import logoLight from "../assets/logo_light.webp";
+import logoDark from "../assets/logo_dark.webp";
 import { has } from "../data/i18n";
 
 const heroImg = imagesFor("pos-restaurant")[0];
 const heroMeta = heroImg ? imgDims(heroImg) : null;
+const heroSrcset = heroImg ? imgSrcset(heroImg) : null;
+const HERO_SIZES =
+  "(max-width:640px) 92vw, (max-width:1664px) calc(100vw - 64px), 1600px";
 
 const SITE_URL = "https://octopos.uz";
 const homeLd = [
@@ -167,7 +170,15 @@ const payLogos = [
   title="Octopos — Yagona platforma, sakkizta ilova"
   description="POS, KDS, boshqaruv paneli, QR-menyu, veb-do'kon va kuryerlar dispetcheri — yagona obuna, yagona ma'lumotlar manbasi. O'zbekistondagi restoranlar uchun to'liq tizim."
   jsonLd={homeLd}
-  preloadImage={heroImg}
+  preloadImage={
+    heroImg
+      ? {
+          href: heroImg,
+          srcset: heroSrcset ?? undefined,
+          sizes: HERO_SIZES,
+        }
+      : undefined
+  }
 >
   <TopNav />
 
@@ -221,6 +232,8 @@ const payLogos = [
                 class="block -mt-[3px] w-full h-auto"
                 width={heroMeta?.w}
                 height={heroMeta?.h}
+                srcset={heroSrcset}
+                sizes={HERO_SIZES}
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"

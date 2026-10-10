@@ -357,6 +357,7 @@ export function imagesFor(slug: string): string[] {
     };
     return readdirSync(join(process.cwd(), "public", "app_images", slug))
       .filter((f) => !f.startsWith("."))
+      .filter((f) => f.endsWith(".webp") && !/\.w\d+\.webp$/i.test(f))
       .sort(
         (a, b) =>
           rank(a) - rank(b) ||
@@ -369,10 +370,24 @@ export function imagesFor(slug: string): string[] {
   }
 }
 
-const META = imageMeta as Record<string, { w: number; h: number }>;
+interface ImgMeta {
+  w: number;
+  h: number;
+  variants: { u: string; w: number }[];
+}
+const META = imageMeta as Record<string, ImgMeta>;
 
 /** Intrinsic dimensions for a public image URL (CLS-safe width/height). */
 export function imgDims(url: string): { w: number; h: number } | null {
   const m = META[url];
   return m ? { w: m.w, h: m.h } : null;
+}
+
+/** Responsive srcset (800/1280 variants + full) for a public image URL. */
+export function imgSrcset(url: string): string | null {
+  const m = META[url];
+  if (!m) return null;
+  return [...m.variants.map((v) => `${v.u} ${v.w}w`), `${url} ${m.w}w`].join(
+    ", ",
+  );
 }
