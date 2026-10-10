@@ -1,5 +1,6 @@
 import { readdirSync } from "node:fs";
 import { join } from "node:path";
+import imageMeta from "./image-meta.json";
 
 export interface MetaRow {
   label: string;
@@ -35,7 +36,7 @@ export const apps: App[] = [
     name: "OctoPos",
     tur: "Restoran POS",
     devices: "Planshet · Kassa",
-    desc: "Jonli zal rejasi, soniyalarda tezkor buyurtma olish, bo'lib to'lash va qat'iy kassa intizomi. Planshet va monobloklar uchun.",
+    desc: "Real vaqt rejimidagi zal rejasi, soniyalarda buyurtma qabul qilish, hisobni bo'lib to'lash va qat'iy kassa nazorati. Planshet va monobloklar uchun.",
     order: [
       "main",
       "floor",
@@ -52,32 +53,32 @@ export const apps: App[] = [
       "screen",
     ],
     features: [
-      "Oflayn-first: internet uzilsa ham savdo to'xtamaydi",
-      "Stol va zal rejasi — drag&drop bo'limlar bilan",
-      "Chekni bo'lib to'lash va qisman to'lov",
-      "Menejer PIN'i: chiqim va qaytarish nazorati",
-      "ESC/POS chop etish va kassa chog'i boshqaruvi",
+      "Oflayn rejim: internet uzilsa ham savdo davom etadi",
+      "Stol va zal rejasi — bo'limlarni sudrab joylashtirish imkoniyati",
+      "Hisobni bo'lib to'lash va qisman to'lovlarni qabul qilish",
+      "Menejer PIN-kodi: bekor qilish va qaytarimlarni nazorat qilish",
+      "ESC/POS orqali chop etish va kassa tortmasini boshqarish",
     ],
     frames: {
-      "pos-main-view": "Zal va menyudan tezkor buyurtma olish",
-      "pos-floor-plan": "Stol rejasi: bo'limlar va holatlar bilan",
+      "pos-main-view": "Zal va menyu orqali buyurtmani tezkor qabul qilish",
+      "pos-floor-plan": "Zal rejasi: bo'limlar va stollar holati",
       "pos-menu": "Taomlar menyusi: bo'limlar va narxlar",
       "pos-orders": "Buyurtmalar ro'yxati va ularning holati",
-      "pos-orders-filter": "Buyurtmalarni holat bo'yicha filtrlash",
+      "pos-orders-filter": "Buyurtmalarni holatiga ko'ra filtrlash",
       "pos-checkout": "To'lov: naqd, karta va QR",
-      "pos-stop-list": "Sotuvni to'xtatish (stop-list)",
-      "pos-notifications": "Buyurtma va chiqim bildirishnomalari",
-      "pos-notifications-requests": "Mijoz so'rovlari: chaqiruv va chek",
+      "pos-stop-list": "Sotuvni to'xtatish ro'yxati",
+      "pos-notifications": "Buyurtma va kassa bildirishnomalari",
+      "pos-notifications-requests": "Mijoz so'rovlari: chaqiruv va hisob",
       "pos-delivery-address": "Yetkazib berish manzili xaritada",
       "pos-delivery-job": "Kuryerga topshirilgan buyurtma",
-      "pos-delivery-man-informations": "Kuryer ma'lumotlari va yetkazish holati",
+      "pos-delivery-man-informations": "Kuryer ma'lumotlari va yetkazib berish holati",
       "pos-more-settings": "Umumiy sozlamalar bo'limi",
       "pos-more-settings-appearance": "Ko'rinish va mavzu sozlamalari",
-      "pos-more-business-day": "Ish kuni: smena ochish va kassa",
+      "pos-more-business-day": "Ish kuni: smenani ochish va kassani boshqarish",
       "pos-more-business-day-register":
-        "Kassa hisoboti: sotuv va qoldiq tekshiruvi",
+        "Kassa hisoboti: savdo va qoldiqni tekshirish",
       "pos-more": "Qurilmalar va hisob bo'yicha ma'lumot",
-      "pos-lock": "Pin-kod bilan qulf ekrani",
+      "pos-lock": "PIN-kod bilan bloklash ekrani",
       "Screen Shot 2026-10-08 at 7.14.52 PM": "Ilovaning qo'shimcha ekrani",
       "Screen Shot 2026-10-08 at 7.15.10 PM": "Ilovaning qo'shimcha ekrani",
     },
@@ -87,7 +88,7 @@ export const apps: App[] = [
       { label: "Oflayn", value: "Ha — Lokal Server" },
       { label: "Tillar", value: "O'zbek · Rus · Ingliz" },
       { label: "Integratsiya", value: "Payme · Click" },
-      { label: "Chiqim", value: "ESC/POS · Kassa Chog'i" },
+      { label: "Chiqim", value: "ESC/POS · Kassa tortmasi" },
       { label: "Yordam", value: "Telegram" },
     ],
   },
@@ -97,13 +98,13 @@ export const apps: App[] = [
     name: "OctoPos",
     tur: "Market POS",
     devices: "Planshet · Kassa",
-    desc: "Bozor va market uchun OctoPos: buyurtmalar, cheklar va yetkazib berish boshqaruvi bilan. Restoran POS imkoniyatlari + savdo sig'imi uchun qo'shimcha funksiyalar.",
+    desc: "Bozor va do'konlar uchun OctoPos: buyurtmalar, cheklar va yetkazib berishni boshqarish. Restoran POS imkoniyatlariga qo'shimcha ravishda katta savdo hajmi uchun funksiyalar.",
     order: ["orders", "checkout", "delivery", "notifications", "settings"],
     features: [
-      "Barkod skaner va tort (og'irlik) bilan tezkor sotuv",
-      "Tovar qoldig'i va sotuvni to'xtatish (stop-list)",
-      "Qaytarish, almashtirish va do'konga qaytarish",
-      "Smena ochish/yopish va kassa hisoboti",
+      "Barkod skaneri va tarozi yordamida tezkor hisob-kitob",
+      "Tovar qoldig'i va sotuvni to'xtatish ro'yxati",
+      "Qaytarish, almashtirish va do'kon krediti",
+      "Smenani ochish/yopish va kassa hisobotlari",
       "Yetkazib berish buyurtmalarini boshqarish",
     ],
     frames: {
@@ -130,7 +131,7 @@ export const apps: App[] = [
     name: "OctoDash",
     tur: "Boshqaruv",
     devices: "Web · iOS · Android",
-    desc: "Real vaqtli daromad, xarajatlar, marja, ombor qoldig'i va bir nechta filiallar bo'yicha chuqur tahliliy hisobotlar.",
+    desc: "Daromad, xarajatlar, marja, ombor qoldig'i va bir nechta filial bo'yicha real vaqt rejimidagi chuqur tahlil.",
     order: [
       "main",
       "orders",
@@ -142,11 +143,11 @@ export const apps: App[] = [
       "website",
     ],
     features: [
-      "Foyda va zarar (P&L) paneli real vaqtda",
-      "Ombor, retsept va yo'qotishlar nazorati",
-      "Xodim rollari, ruxsatlar va oylik hisobi",
-      "Yetkazib berish dispetcher paneli jonli xarita bilan",
-      "Veb-sayt quruvchi va SEO sozlamalari",
+      "Real vaqt rejimidagi foyda va zarar (P&L) paneli",
+      "Ombor, retseptlar va yo'qotishlarni nazorat qilish",
+      "Xodim rollari, huquqlar va ish haqi hisoboti",
+      "Real vaqt xaritasiga ega yetkazib berish dispetcher paneli",
+      "Veb-sayt konstruktori va SEO sozlamalari",
     ],
     frames: {
       "dash-main": "Boshqaruv paneli: foyda, xarajat va trendlar",
@@ -176,7 +177,7 @@ export const apps: App[] = [
     name: "OctoKitchen",
     tur: "KDS Tizimi",
     devices: "TV · Planshet",
-    desc: "Qog'oz cheklarsiz aqlli oshxona. Taomlarni stansiyalar (bar, mangal, sovuq sex) bo'yicha saralash va tayyorlash taymerlari.",
+    desc: "Qog'ozsiz aqlli oshxona. Taomlarni stansiyalar (bar, gril, sovuq sex) bo'yicha saralash va tayyorlash vaqtini nazorat qilish.",
     order: [
       "active-orders",
       "orders-size",
@@ -196,11 +197,11 @@ export const apps: App[] = [
       { label: "Yordam", value: "Telegram" },
     ],
     features: [
-      "Stansiya bo'yicha jonli buyurtmalar taxtasi",
-      "Boshlash / pauza / yakunlash bosqichlari",
-      "Yangi buyurtma uchun ovozli signal",
-      "86-sonli ro'yxat: tugaganlarni to'xtatish",
-      "3–8 ustunli zichlik va sana filtrlari",
+      "Stansiyalar bo'yicha real vaqt rejimidagi buyurtmalar paneli",
+      "Boshlash / pauza / yakunlash jarayoni",
+      "Yangi buyurtmalar uchun ovozli bildirishnoma",
+      "86-ro'yxat: tugagan mahsulotlarni sotuvdan chiqarish",
+      "3–8 ustunli ko'rinish va sana filtrlari",
     ],
     frames: {
       "kitchen-active-orders": "Jonli buyurtmalar taxtasi (stansiya bo'yicha)",
@@ -218,7 +219,7 @@ export const apps: App[] = [
     name: "OctoDisplay",
     tur: "ODS Ekran",
     devices: "Smart TV · HDMI",
-    desc: "Mehmonlar va kuryerlar uchun zal ekranida katta shriftli tayyor bo'lgan buyurtmalar raqamlari va ovozli chaqiriq.",
+    desc: "Mehmonlar va kuryerlar uchun zal ekranida tayyor buyurtmalar raqamlarini katta shrift va ovozli chaqiriq bilan ko'rsatish.",
     order: ["settings"],
     meta: [
       { label: "Tur", value: "Berish ekrani" },
@@ -230,11 +231,11 @@ export const apps: App[] = [
       { label: "Yordam", value: "Telegram" },
     ],
     features: [
-      "Katta shriftli tayyor buyurtmalar raqamlari",
-      "Tayyor bo'lganda ovoz va yashil chegara",
+      "Tayyor buyurtmalar raqamlarini katta shrift bilan ko'rsatish",
+      "Buyurtma tayyor bo'lganda ovozli signal va yashil chegara",
       "Preparing / Ready ikki ustunli ekran",
-      "Bo'sh vaqtda media-slaydshow rejimi",
-      "Chiqishda avto-to'liq ekran rejimi",
+      "Faoliyat bo'lmaganda media-slaydshow",
+      "Avtomatik to'liq ekran kiosk rejimi",
     ],
     frames: {
       ods: "Tayyor buyurtmalar ekrani (TV uchun)",
@@ -247,7 +248,7 @@ export const apps: App[] = [
     name: "OctoOrder",
     tur: "QR Menyu",
     devices: "Telefon · QR",
-    desc: "Ilova o'rnatmasdan stoldagi QR kod orqali taomlarni fotosuratlar bilan ko'rish, savatga qo'shish va darhol to'lash.",
+    desc: "Ilova o'rnatmasdan, stol ustidagi QR-kod orqali taomlarni fotosuratlari bilan ko'rish, savatga qo'shish va darhol to'lash.",
     meta: [
       { label: "Tur", value: "QR Stol Menyusi" },
       { label: "Qurilmalar", value: "Telefon · Planshet" },
@@ -258,11 +259,11 @@ export const apps: App[] = [
       { label: "Yordam", value: "Telegram" },
     ],
     features: [
-      "QR kod — ilova o'rnatmasdan, brauzerda",
-      "Chaqriruv, chek so'rash va fikr qoldirish",
-      "Buyurtmani jonli kuzatish (qabul → tayyor)",
+      "QR-kod — ilovasiz, to'g'ridan-to'g'ri brauzerda",
+      "Ofitsiantni chaqirish, hisob so'rash va fikr bildirish",
+      "Buyurtma holatini real vaqtda kuzatish (qabul qilindi → tayyor)",
       "Ishonch rejimi: xodim buyurtmani tasdiqlaydi",
-      "Stolga qo'shilib yangi taom qo'shish",
+      "Xuddi shu stolga qo'shimcha taom buyurtma qilish",
     ],
   },
   {
@@ -271,7 +272,7 @@ export const apps: App[] = [
     name: "OctoStore",
     tur: "Veb-Do'kon",
     devices: "Web · PC",
-    desc: "O'z domen va brendingiz ostida ishlovchi tezyurar veb-sayt. Buyurtmalar to'g'ridan-to'g'ri umumiy kassaga integratsiya bo'ladi.",
+    desc: "O'z domeningiz va brendingiz ostida ishlaydigan tezkor veb-sayt. Buyurtmalar to'g'ridan-to'g'ri umumiy kassaga integratsiyalanadi.",
     order: [
       "hero",
       "menus",
@@ -282,11 +283,11 @@ export const apps: App[] = [
       "checkout",
     ],
     features: [
-      "O'z domen va brend ostida ishlash",
+      "O'z domeningiz va brendingiz ostida ishlash",
       "Payme, Click va Uzum orqali to'lov",
-      "Yetkazib berish: zona, narx va jonli kuzatuv",
+      "Yetkazib berish zonalari, narxlari va real vaqt kuzatuvi",
       "Telegram orqali kirish va buyurtmalar tarixi",
-      "SEO: sitemap, JSON-LD va hreflang tillar uchun",
+      "SEO: sayt xaritasi, JSON-LD va tillar uchun hreflang",
     ],
     frames: {
       "website-hero": "Saytning bosh sahifasi (hero)",
@@ -314,7 +315,7 @@ export const apps: App[] = [
     name: "OctoDispatch",
     tur: "Logistika",
     devices: "Telefon · Web",
-    desc: "Shaxsiy kuryerlarga buyurtmalarni taqsimlash, GPS orqali xaritada kuzatish va mijozga yetkazish vaqtini ko'rsatish.",
+    desc: "Buyurtmalarni o'z kuryerlaringizga taqsimlash, ularni GPS orqali xaritada kuzatish va mijozga taxminiy yetkazib berish vaqtini ko'rsatish.",
     meta: [
       { label: "Tur", value: "Kuryer Boshqaruvi" },
       { label: "Qurilmalar", value: "Telefon · Web" },
@@ -325,11 +326,11 @@ export const apps: App[] = [
       { label: "Yordam", value: "Telegram" },
     ],
     features: [
-      "Telegram orqali kuryer taklifi va tanlov (bid)",
-      "Jonli xaritada kuryerlar va manzillar",
-      "Naqd pul yig'ish va kuryer hisobi",
-      "Kuryerlar soni cheksiz — limit yo'q",
-      "Mashina turi va joylashuvni real vaqtda kuzatish",
+      "Telegram orqali kuryerlarga buyurtma taklifi yuborish",
+      "Real vaqt xaritasida kuryerlar va manzillar",
+      "Naqd pulni yig'ish va kuryerlar bilan hisob-kitob",
+      "Kuryerlar soni cheklanmagan",
+      "Transport turi va joylashuvni real vaqtda kuzatish",
     ],
   },
 ];
@@ -366,4 +367,12 @@ export function imagesFor(slug: string): string[] {
   } catch {
     return [];
   }
+}
+
+const META = imageMeta as Record<string, { w: number; h: number }>;
+
+/** Intrinsic dimensions for a public image URL (CLS-safe width/height). */
+export function imgDims(url: string): { w: number; h: number } | null {
+  const m = META[url];
+  return m ? { w: m.w, h: m.h } : null;
 }

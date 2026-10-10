@@ -1,7 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TopNav from "../../components/TopNav.astro";
-import { apps, imagesFor, type App } from "../../data/apps";
+import { apps, imagesFor, imgDims, type App } from "../../data/apps";
 import { has } from "../../data/i18n";
 import trims from "../../data/image-trims.json";
 
@@ -35,6 +35,24 @@ const { app, images } = Astro.props;
 const idx = apps.findIndex((a) => a.slug === app.slug);
 const next = apps[(idx + 1) % apps.length];
 
+const SITE_URL = "https://octopos.uz";
+const appLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: app.name,
+    description: app.desc,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    inLanguage: "uz",
+    author: {
+      "@type": "Organization",
+      name: "Octopos",
+      url: SITE_URL,
+    },
+  },
+];
+
 function frameBase(url: string): string {
   const file = url.split("/").pop() ?? "";
   return file.replace(/\.[a-z0-9]+$/i, "");
@@ -50,7 +68,7 @@ function frameLabel(url: string): string {
 }
 ---
 
-<Layout title={`${app.name} — Octopos`} description={app.desc}>
+<Layout title={`${app.name} — Octopos`} description={app.desc} jsonLd={appLd}>
   <TopNav />
 
   <div
@@ -124,7 +142,7 @@ function frameLabel(url: string): string {
             class="flex min-h-[44px] w-full items-center justify-center rounded-[99px] bg-accent px-4 py-2.5 text-center font-geist-mono text-[11px] leading-[1.2] font-medium tracking-[0.4px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active sm:text-[12px]"
           >
             <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}
-              >Bepul sinab ko'rish →</span
+              >Bepul sinab ko'ring →</span
             >
           </button>
           <a
@@ -149,6 +167,7 @@ function frameLabel(url: string): string {
                   const frameKey = `frame.${app.slug}.${base}`;
                   const useKey = has(frameKey) && app.frames?.[base] != null;
                   const ts = trimStyles(src);
+                  const dm = imgDims(src);
                   return (
                     <figure>
                       <div
@@ -163,6 +182,8 @@ function frameLabel(url: string): string {
                             TRIMS[src] ? "absolute" : "-mt-[3px] w-full h-auto",
                           ]}
                           style={ts.img}
+                          width={dm?.w}
+                          height={dm?.h}
                           loading={i === 0 ? "eager" : "lazy"}
                           fetchpriority={i === 0 ? "high" : "auto"}
                           decoding="async"
@@ -191,7 +212,7 @@ function frameLabel(url: string): string {
                 class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
                 data-i18n={has("imgPending") ? "imgPending" : undefined}
               >
-                Rasmlar tez orada
+                Rasmlar tez orada paydo bo'ladi
               </span>
             </div>
           )

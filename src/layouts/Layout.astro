@@ -5,10 +5,14 @@ import WizardForm from "../components/WizardForm.astro";
 interface Props {
   title: string;
   description?: string;
+  jsonLd?: Record<string, unknown>[];
+  preloadImage?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, jsonLd, preloadImage } = Astro.props;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
+const ld = (node: Record<string, unknown>) =>
+  JSON.stringify(node).replace(/<\//g, "<\\/");
 ---
 
 <!doctype html>
@@ -64,6 +68,12 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString(
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="shortcut icon" href="/favicon.ico" />
+    {preloadImage && (
+      <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />
+    )}
+    {jsonLd?.map((node) => (
+      <script is:inline type="application/ld+json" set:html={ld(node)} />
+    ))}
   </head>
   <body class="font-geist text-ink antialiased">
     <slot />

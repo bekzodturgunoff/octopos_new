@@ -1,0 +1,267 @@
+{
+ "/app_images/dash/dash-account.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-administration.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-catalog-menu.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-catalog.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-inventory.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-main.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-orders.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-reports.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/dash/dash-website-settings.png": {
+  "w": 3632,
+  "h": 2296,
+  "variants": []
+ },
+ "/app_images/dash/dash-website.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-active-orders.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-filter.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-more-settings.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-more.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-orders-size-adjuster.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-stop-list.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/kitchen/kitchen-unactive-orders.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/ods/ods-settings.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/ods/ods.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-market/pos-market-checkout.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-market/pos-market-delivery.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-market/pos-market-notifications.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-market/pos-market-orders.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-market/pos-market-settings.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-market/pos-market.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-checkout.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-delivery-address.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-delivery-job.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-delivery-man-informations.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-floor-plan.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-lock.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-main-view.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-menu.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-more-business-day-register.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-more-business-day.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-more-settings-appearance.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-more-settings.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-more.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-notifications-requests.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-notifications.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-orders-filter.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-orders.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/pos-restaurant/pos-stop-list.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-about-us.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-checkout.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-contacts.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-delivery.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-hero.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-locations.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ },
+ "/app_images/website/website-menus-1.png": {
+  "w": 3632,
+  "h": 2296,
+  "variants": []
+ },
+ "/app_images/website/website-menus-2.png": {
+  "w": 3584,
+  "h": 2240,
+  "variants": []
+ }
+}

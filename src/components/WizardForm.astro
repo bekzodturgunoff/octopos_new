@@ -22,13 +22,13 @@ const trialAPIBaseURL =
             id="wizard-title"
             data-i18n="wizard.title"
             class="font-geist text-xl font-semibold text-ink"
-            >Octopos akkauntini yarating</h3
+            >Octopos hisobini yarating</h3
           >
           <p
             id="wizard-subtitle"
             data-i18n="wizard.subtitle"
             class="mt-1 font-geist text-sm text-muted"
-            >Restorangiz haqida ayting — biz shaxsiy demo tayyorlaymiz.</p
+            >Restoraningiz haqida ma'lumot bering — siz uchun shaxsiy demo tayyorlaymiz.</p
           >
         </div>
         <button
@@ -57,11 +57,10 @@ const trialAPIBaseURL =
         tabindex="-1"
       >
         <p class="font-semibold" data-i18n="wizard.errorTitle">
-          Yuborishda xatolik
+          Yuborishda xatolik yuz berdi
         </p>
         <p class="mt-1" data-i18n="wizard.errorBody">
-          Afsus, bizda nosozlik. Tez yechim uchun support@octopos.uz manziliga
-          yozing
+          Texnik xatolik yuz berdi. Yordam uchun support@octopos.uz manziliga yozing.
         </p>
       </div>
 
@@ -100,7 +99,7 @@ const trialAPIBaseURL =
           type="submit"
           class="btn-solid mt-2 w-full px-6 py-3 font-geist text-sm"
           data-i18n="wizard.startTrial"
-          >Ulanish</button
+          >Boshlash</button
         >
       </form>
 
@@ -117,7 +116,7 @@ const trialAPIBaseURL =
           id="wizard-start-fresh"
           class="mt-3 w-full text-center font-geist text-sm text-muted underline hover:text-ink"
           data-i18n="wizard.startFresh"
-          >Yangi akkaunt yaratish</button
+          >Yangi hisob yaratish</button
         >
       </div>
 
@@ -137,14 +136,10 @@ const trialAPIBaseURL =
 </div>
 
 <script>
-  import "cap-widget";
-</script>
-
-<script>
   import { STRINGS, getLang, type Lang } from "../data/i18n";
 
   const UZ: Record<string, string> = {
-    "wizard.startTrial": "Ulanish",
+    "wizard.startTrial": "Boshlash",
     "wizard.proceed":
       "Ro'yxatdan o'tishni davom ettirish uchun tugmani bosing...",
     "wizard.submitting": "Qayta ishlanmoqda...",
@@ -152,9 +147,9 @@ const trialAPIBaseURL =
     "wizard.close": "Yopish",
     "wizard.welcomeBackTitle": "Yana xush kelibsiz",
     "wizard.welcomeBackBody":
-      "Siz allaqachon «{name}» uchun sinov akkauntini yaratgansiz.",
+      "Siz «{name}» uchun sinov hisobini allaqachon yaratgansiz.",
     "wizard.continue": "Boshqaruv paneliga o'tish",
-    "wizard.startFresh": "Yangi akkaunt yaratish",
+    "wizard.startFresh": "Yangi hisob yaratish",
   };
 
   const L = (k: string): string => {
@@ -211,6 +206,15 @@ const trialAPIBaseURL =
     let token: string | null = null;
     let proceedHandler: (() => void) | null = null;
 
+    // Captcha chunk loads only when the modal actually opens — not on page load.
+    let capLoading: Promise<unknown> | null = null;
+    const ensureCapWidget = () => {
+      if (!capLoading) {
+        capLoading = import("cap-widget").catch(() => undefined);
+      }
+      return capLoading;
+    };
+
     widget?.addEventListener("solve", (e) => {
       const detail = (e as CustomEvent<{ token: string }>).detail;
       token = detail?.token ?? null;
@@ -231,6 +235,7 @@ const trialAPIBaseURL =
       modal!.classList.remove("hidden");
       document.documentElement.classList.add("overflow-hidden");
       hideError();
+      ensureCapWidget();
       keydownHandler = (e) => {
         if (e.key === "Escape") close();
       };
