@@ -1029,38 +1029,38 @@
   "variants": []
  },
  "/payments/click.webp": {
-  "w": 1667,
-  "h": 422,
+  "w": 320,
+  "h": 81,
   "variants": []
  },
  "/payments/dodo-payments.webp": {
-  "w": 1024,
-  "h": 1001,
+  "w": 320,
+  "h": 313,
   "variants": []
  },
  "/payments/payme.webp": {
-  "w": 1668,
-  "h": 542,
+  "w": 320,
+  "h": 104,
   "variants": []
  },
  "/integrations/telegram.webp": {
-  "w": 3840,
-  "h": 3840,
+  "w": 320,
+  "h": 320,
   "variants": []
  },
  "/integrations/uzum-tezkor.webp": {
-  "w": 1000,
-  "h": 1000,
+  "w": 320,
+  "h": 320,
   "variants": []
  },
  "/integrations/yandex-eats.webp": {
-  "w": 1280,
-  "h": 1280,
+  "w": 320,
+  "h": 320,
   "variants": []
  },
  "/integrations/yandex-go.webp": {
-  "w": 1280,
-  "h": 1280,
+  "w": 320,
+  "h": 320,
   "variants": []
  }
 }
