@@ -533,10 +533,10 @@ export const STRINGS: Record<string, Dict> = {
     tr: "Canlı kat planı, saniyeler içinde sipariş, hesap bölme ve sıkı kasa disiplini. Tablet ve hepsi bir arada cihazlar için.",
   },
   "app.pos-market.desc": {
-    en: "OctoPos for bazaars and markets: orders, receipts and delivery management. Restaurant POS capabilities plus throughput features.",
-    ru: "OctoPos для базаров и магазинов: заказы, чеки и доставка. Возможности ресторанного POS плюс функции для оборота.",
-    ko: "바자르와 마켓을 위한 OctoPos: 주문, 영수증, 배달 관리. 레스토랑 POS 기능에 판매량 기능 추가.",
-    tr: "Pazar ve marketler için OctoPos: siparişler, fişler ve teslimat yönetimi. Restoran POS yetenekleri artı hacim özellikleri.",
+    en: "MarketPOS for bazaars and markets: orders, receipts and delivery management. Restaurant POS capabilities plus throughput features.",
+    ru: "MarketPOS для базаров и магазинов: заказы, чеки и доставка. Возможности ресторанного POS плюс функции для оборота.",
+    ko: "바자르와 마켓을 위한 MarketPOS: 주문, 영수증, 배달 관리. 레스토랑 POS 기능에 판매량 기능 추가.",
+    tr: "Pazar ve marketler için MarketPOS: siparişler, fişler ve teslimat yönetimi. Restoran POS yetenekleri artı hacim özellikleri.",
   },
   "app.dash.desc": {
     en: "Real-time revenue, costs, margins, stock and deep analytics across multiple locations.",
@@ -792,11 +792,11 @@ export const STRINGS: Record<string, Dict> = {
     ko: "종이 없음",
     tr: "Kağıtsız",
   },
-  "v.OctoPos · Oshxona": {
-    en: "OctoPos · Kitchen",
-    ru: "OctoPos · Кухня",
-    ko: "OctoPos · 주방",
-    tr: "OctoPos · Mutfak",
+  "v.RestaurantPOS · Oshxona": {
+    en: "RestaurantPOS · Kitchen",
+    ru: "RestaurantPOS · Кухня",
+    ko: "RestaurantPOS · 주방",
+    tr: "RestaurantPOS · Mutfak",
   },
 
   /* ---------- frame notes (screenshots) ---------- */
@@ -1441,8 +1441,8 @@ export const STRINGS: Record<string, Dict> = {
   "v.Payme · Click": { en: "Payme · Click", ru: "Payme · Click", ko: "Payme · Click", tr: "Payme · Click" },
   "v.Telegram": { en: "Telegram", ru: "Telegram", ko: "Telegram", tr: "Telegram" },
   "v.Excel · API": { en: "Excel · API", ru: "Excel · API", ko: "Excel · API", tr: "Excel · API" },
-  "v.OctoPos · OctoOrder": { en: "OctoPos · OctoOrder", ru: "OctoPos · OctoOrder", ko: "OctoPos · OctoOrder", tr: "OctoPos · OctoOrder" },
-  "v.OctoPos · Payme": { en: "OctoPos · Payme", ru: "OctoPos · Payme", ko: "OctoPos · Payme", tr: "OctoPos · Payme" },
+  "v.RestaurantPOS · Order": { en: "RestaurantPOS · Order", ru: "RestaurantPOS · Order", ko: "RestaurantPOS · Order", tr: "RestaurantPOS · Order" },
+  "v.RestaurantPOS · Payme": { en: "RestaurantPOS · Payme", ru: "RestaurantPOS · Payme", ko: "RestaurantPOS · Payme", tr: "RestaurantPOS · Payme" },
   "v.Telegram · Maps API": { en: "Telegram · Maps API", ru: "Telegram · Maps API", ko: "Telegram · Maps API", tr: "Telegram · Maps API" },
   "v.Full HD · 4K": { en: "Full HD · 4K", ru: "Full HD · 4K", ko: "Full HD · 4K", tr: "Full HD · 4K" },
 

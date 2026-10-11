@@ -33,7 +33,7 @@ export const apps: App[] = [
   {
     slug: "pos-restaurant",
     no: "01",
-    name: "OctoPos",
+    name: "RestaurantPOS",
     tur: "Restoran POS",
     devices: "Planshet · Kassa",
     desc: "Real vaqt rejimidagi zal rejasi, soniyalarda buyurtma qabul qilish, hisobni bo'lib to'lash va qat'iy kassa nazorati. Planshet va monobloklar uchun.",
@@ -95,10 +95,10 @@ export const apps: App[] = [
   {
     slug: "pos-market",
     no: "02",
-    name: "OctoPos",
+    name: "MarketPOS",
     tur: "Market POS",
     devices: "Planshet · Kassa",
-    desc: "Bozor va do'konlar uchun OctoPos: buyurtmalar, cheklar va yetkazib berishni boshqarish. Restoran POS imkoniyatlariga qo'shimcha ravishda katta savdo hajmi uchun funksiyalar.",
+    desc: "Bozor va do'konlar uchun MarketPOS: buyurtmalar, cheklar va yetkazib berishni boshqarish. Restoran POS imkoniyatlariga qo'shimcha ravishda katta savdo hajmi uchun funksiyalar.",
     order: ["orders", "checkout", "delivery", "notifications", "settings"],
     features: [
       "Barkod skaneri va tarozi yordamida tezkor hisob-kitob",
@@ -128,7 +128,7 @@ export const apps: App[] = [
   {
     slug: "dash",
     no: "03",
-    name: "OctoDash",
+    name: "Dash",
     tur: "Boshqaruv",
     devices: "Web · iOS · Android",
     desc: "Daromad, xarajatlar, marja, ombor qoldig'i va bir nechta filial bo'yicha real vaqt rejimidagi chuqur tahlil.",
@@ -174,7 +174,7 @@ export const apps: App[] = [
   {
     slug: "kitchen",
     no: "04",
-    name: "OctoKitchen",
+    name: "Kitchen",
     tur: "KDS Tizimi",
     devices: "TV · Planshet",
     desc: "Qog'ozsiz aqlli oshxona. Taomlarni stansiyalar (bar, gril, sovuq sex) bo'yicha saralash va tayyorlash vaqtini nazorat qilish.",
@@ -192,7 +192,7 @@ export const apps: App[] = [
       { label: "Qurilmalar", value: "TV · Planshet · Monoblok" },
       { label: "Oflayn", value: "Ha — Lokal Server" },
       { label: "Tillar", value: "O'zbek · Rus · Ingliz" },
-      { label: "Integratsiya", value: "OctoPos · OctoOrder" },
+      { label: "Integratsiya", value: "RestaurantPOS · Order" },
       { label: "Chiqim", value: "Qog'oz Cheksiz" },
       { label: "Yordam", value: "Telegram" },
     ],
@@ -216,7 +216,7 @@ export const apps: App[] = [
   {
     slug: "ods",
     no: "05",
-    name: "OctoDisplay",
+    name: "Display",
     tur: "ODS Ekran",
     devices: "Smart TV · HDMI",
     desc: "Mehmonlar va kuryerlar uchun zal ekranida tayyor buyurtmalar raqamlarini katta shrift va ovozli chaqiriq bilan ko'rsatish.",
@@ -226,7 +226,7 @@ export const apps: App[] = [
       { label: "Qurilmalar", value: "Smart TV · HDMI · Kiosk" },
       { label: "Oflayn", value: "Ha — Lokal Server" },
       { label: "Tillar", value: "O'zbek · Rus · Ingliz" },
-      { label: "Integratsiya", value: "OctoPos · Oshxona" },
+      { label: "Integratsiya", value: "RestaurantPOS · Oshxona" },
       { label: "Chiqim", value: "Full HD · 4K" },
       { label: "Yordam", value: "Telegram" },
     ],
@@ -245,7 +245,7 @@ export const apps: App[] = [
   {
     slug: "guest",
     no: "06",
-    name: "OctoOrder",
+    name: "Order",
     tur: "QR Menyu",
     devices: "Telefon · QR",
     desc: "Ilova o'rnatmasdan, stol ustidagi QR-kod orqali taomlarni fotosuratlari bilan ko'rish, savatga qo'shish va darhol to'lash.",
@@ -254,7 +254,7 @@ export const apps: App[] = [
       { label: "Qurilmalar", value: "Telefon · Planshet" },
       { label: "Oflayn", value: "Ha — Lokal Server" },
       { label: "Tillar", value: "O'zbek · Rus · Ingliz" },
-      { label: "Integratsiya", value: "OctoPos · Payme" },
+      { label: "Integratsiya", value: "RestaurantPOS · Payme" },
       { label: "Chiqim", value: "Stol QR Kodlari" },
       { label: "Yordam", value: "Telegram" },
     ],
@@ -269,7 +269,7 @@ export const apps: App[] = [
   {
     slug: "website",
     no: "07",
-    name: "OctoStore",
+    name: "Store",
     tur: "Veb-Do'kon",
     devices: "Web · PC",
     desc: "O'z domeningiz va brendingiz ostida ishlaydigan tezkor veb-sayt. Buyurtmalar to'g'ridan-to'g'ri umumiy kassaga integratsiyalanadi.",
@@ -312,7 +312,7 @@ export const apps: App[] = [
   {
     slug: "dispatch",
     no: "08",
-    name: "OctoDispatch",
+    name: "Dispatch",
     tur: "Logistika",
     devices: "Telefon · Web",
     desc: "Buyurtmalarni o'z kuryerlaringizga taqsimlash, ularni GPS orqali xaritada kuzatish va mijozga taxminiy yetkazib berish vaqtini ko'rsatish.",
