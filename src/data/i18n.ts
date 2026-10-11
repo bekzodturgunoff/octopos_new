@@ -184,6 +184,42 @@ export const STRINGS: Record<string, Dict> = {
     ko: "스크린샷 곧 공개",
     tr: "Ekran görüntüleri yakında",
   },
+  "lightbox.view": {
+    en: "Image viewer",
+    ru: "Просмотр фото",
+    ko: "이미지 보기",
+    tr: "Görüntüleyici",
+  },
+  "lightbox.close": {
+    en: "Close",
+    ru: "Закрыть",
+    ko: "닫기",
+    tr: "Kapat",
+  },
+  "lightbox.zoomIn": {
+    en: "Zoom in",
+    ru: "Приблизить",
+    ko: "확대",
+    tr: "Yakınlaştır",
+  },
+  "lightbox.zoomOut": {
+    en: "Zoom out",
+    ru: "Отдалить",
+    ko: "축소",
+    tr: "Uzaklaştır",
+  },
+  "lightbox.prev": {
+    en: "Previous image",
+    ru: "Предыдущее фото",
+    ko: "이전 이미지",
+    tr: "Önceki görsel",
+  },
+  "lightbox.next": {
+    en: "Next image",
+    ru: "Следующее фото",
+    ko: "다음 이미지",
+    tr: "Sonraki görsel",
+  },
 
   /* ---------- solutions ---------- */
   "sol.heading": {
