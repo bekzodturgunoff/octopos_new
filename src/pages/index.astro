@@ -164,12 +164,66 @@ const payLogos = [
   { src: "/integrations/yandex-eats.webp", alt: "Yandex Eats" },
   { src: "/integrations/yandex-go.webp", alt: "Yandex Go" },
 ];
+const faqs = [
+  {
+    q: "faq.1q",
+    a: "faq.1a",
+    uzQ: "Internet uzilsa tizim ishlashda davom etadimi?",
+    uzA:
+      "Ha. Octopos offline-first ishlaydi: aloqa uzilganda savdo, buyurtmalar va kassa to'xtamaydi, internet qaytgach barcha ma'lumotlar avtomatik sinxronlanadi.",
+  },
+  {
+    q: "faq.2q",
+    a: "faq.2a",
+    uzQ: "Obuna narxiga nimalar kiradi?",
+    uzA:
+      "Bitta obuna — sakkizta ilova, barcha yangilanishlar, Telegram orqali yordam va bitta filial uchun to'liq funksiyalar. Qo'shimcha filiallar va paketlar alohida hisoblanadi.",
+  },
+  {
+    q: "faq.3q",
+    a: "faq.3a",
+    uzQ: "Mening uskunalarim bilan ishlaydimi?",
+    uzA:
+      "Ha — Android planshetlar, Windows kompyuterlar, ESC/POS printerlar, pul tortmalari va barkod skanerlari bilan mos. To'liq ro'yxat uchun demo so'rang.",
+  },
+  {
+    q: "faq.4q",
+    a: "faq.4a",
+    uzQ: "Necha kunda ishga tushiramiz?",
+    uzA:
+      "Odatda 1–3 kun: menyuni kiritamiz, uskunalarni ulaymiz, jamoangizni o'qitamiz. Tarmoqlar uchun alohida reja tuzamiz.",
+  },
+  {
+    q: "faq.5q",
+    a: "faq.5a",
+    uzQ: "Eski tizimdagi ma'lumotlarni ko'chirish mumkinmi?",
+    uzA:
+      "Ha — menyu, narxlar va ombor qoldiqlari Excel'dan import qilinadi, o'tish davrida eski tizim bilan parallel ishlash mumkin.",
+  },
+  {
+    q: "faq.6q",
+    a: "faq.6a",
+    uzQ: "Qanday to'lov usullarini qabul qilamiz?",
+    uzA:
+      "Naqd, karta, QR, Payme va Click — barchasi avtomatik hisobga olinadi va hisobotlarga tushadi.",
+  },
+];
+
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.uzQ,
+    acceptedAnswer: { "@type": "Answer", text: f.uzA },
+  })),
+};
 ---
 
 <Layout
   title="Octopos — Yagona platforma, sakkizta ilova"
   description="POS, KDS, boshqaruv paneli, QR-menyu, veb-do'kon va kuryerlar dispetcheri — yagona obuna, yagona ma'lumotlar manbasi. O'zbekistondagi restoranlar uchun to'liq tizim."
-  jsonLd={homeLd}
+  jsonLd={[...homeLd, faqLd]}
   preloadImage={
     heroImg
       ? {
@@ -838,6 +892,47 @@ const payLogos = [
     </section>
 
     <AgentDownload />
+
+    {/* ---------------- faq ---------------- */}
+    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
+      <div class="mx-auto max-w-[1600px]">
+        <h2
+          class="max-w-[900px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
+          data-i18n="faq.heading"
+        >
+          Ko'p so'raladigan savollar
+        </h2>
+
+        <div class="mt-8 border-t border-hairline lg:mt-12">
+          {
+            faqs.map((f) => (
+              <details class="group border-b border-hairline">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 lg:py-6 [&::-webkit-details-marker]:hidden">
+                  <span
+                    class="font-geist text-[18px] leading-[26px] font-medium text-ink lg:text-[20px] lg:leading-[28px]"
+                    data-i18n={f.q}
+                  >
+                    {f.uzQ}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hairline font-geist-mono text-[18px] text-muted transition-transform duration-300 ease-far group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p
+                  class="max-w-[800px] pb-6 font-geist text-[16px] leading-[24px] text-muted lg:pb-7 lg:text-[18px] lg:leading-[28px]"
+                  data-i18n={f.a}
+                >
+                  {f.uzA}
+                </p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
 
     {/* ---------------- contact ---------------- */}
     <section
