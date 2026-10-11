@@ -10,6 +10,10 @@
    {
     "u": "/app_images/dash/dash-account.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-account.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -24,6 +28,10 @@
    {
     "u": "/app_images/dash/dash-administration.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-administration.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -38,6 +46,10 @@
    {
     "u": "/app_images/dash/dash-catalog-menu.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-catalog-menu.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -52,6 +64,10 @@
    {
     "u": "/app_images/dash/dash-catalog.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-catalog.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -66,6 +82,10 @@
    {
     "u": "/app_images/dash/dash-inventory.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-inventory.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -80,6 +100,10 @@
    {
     "u": "/app_images/dash/dash-main.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-main.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -94,6 +118,10 @@
    {
     "u": "/app_images/dash/dash-orders.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-orders.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -108,6 +136,10 @@
    {
     "u": "/app_images/dash/dash-reports.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -122,6 +154,10 @@
    {
     "u": "/app_images/dash/dash-website-settings.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-website-settings.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -136,6 +172,10 @@
    {
     "u": "/app_images/dash/dash-website.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-website.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -150,6 +190,10 @@
    {
     "u": "/app_images/kitchen/kitchen-active-orders.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-active-orders.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -164,6 +208,10 @@
    {
     "u": "/app_images/kitchen/kitchen-filter.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-filter.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -178,6 +226,10 @@
    {
     "u": "/app_images/kitchen/kitchen-more-settings.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-more-settings.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -192,6 +244,10 @@
    {
     "u": "/app_images/kitchen/kitchen-more.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-more.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -206,6 +262,10 @@
    {
     "u": "/app_images/kitchen/kitchen-orders-size-adjuster.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-orders-size-adjuster.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -220,6 +280,10 @@
    {
     "u": "/app_images/kitchen/kitchen-stop-list.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-stop-list.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -234,6 +298,10 @@
    {
     "u": "/app_images/kitchen/kitchen-unactive-orders.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/kitchen/kitchen-unactive-orders.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -248,6 +316,10 @@
    {
     "u": "/app_images/ods/ods-settings.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/ods/ods-settings.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -262,6 +334,10 @@
    {
     "u": "/app_images/ods/ods.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/ods/ods.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -276,6 +352,10 @@
    {
     "u": "/app_images/pos-market/pos-market-checkout.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-checkout.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -290,6 +370,10 @@
    {
     "u": "/app_images/pos-market/pos-market-delivery.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-delivery.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -304,6 +388,10 @@
    {
     "u": "/app_images/pos-market/pos-market-notifications.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-notifications.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -318,6 +406,10 @@
    {
     "u": "/app_images/pos-market/pos-market-orders.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-orders.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -332,6 +424,10 @@
    {
     "u": "/app_images/pos-market/pos-market-settings.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-market/pos-market-settings.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -346,6 +442,10 @@
    {
     "u": "/app_images/pos-market/pos-market.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-market/pos-market.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -360,6 +460,10 @@
    {
     "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.14.52 PM.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -374,6 +478,10 @@
    {
     "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/Screen Shot 2026-10-08 at 7.15.10 PM.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -388,6 +496,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-checkout.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-checkout.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -402,6 +514,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-delivery-address.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-address.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -416,6 +532,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-delivery-job.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-job.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -430,6 +550,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-delivery-man-informations.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-delivery-man-informations.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -444,6 +568,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-floor-plan.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-floor-plan.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -458,6 +586,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-lock.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-lock.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -472,6 +604,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-main-view.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-main-view.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -486,6 +622,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-menu.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-menu.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -500,6 +640,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-more-business-day-register.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-business-day-register.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -514,6 +658,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-more-business-day.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-business-day.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -528,6 +676,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-more-settings-appearance.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-settings-appearance.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -542,6 +694,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-more-settings.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more-settings.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -556,6 +712,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-more.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-more.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -570,6 +730,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-notifications-requests.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-notifications-requests.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -584,6 +748,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-notifications.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-notifications.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -598,6 +766,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-orders-filter.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-orders-filter.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -612,6 +784,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-orders.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-orders.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -626,6 +802,10 @@
    {
     "u": "/app_images/pos-restaurant/pos-stop-list.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/pos-restaurant/pos-stop-list.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -640,6 +820,10 @@
    {
     "u": "/app_images/website/website-about-us.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-about-us.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -654,6 +838,10 @@
    {
     "u": "/app_images/website/website-checkout.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-checkout.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -668,6 +856,10 @@
    {
     "u": "/app_images/website/website-contacts.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-contacts.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -682,6 +874,10 @@
    {
     "u": "/app_images/website/website-delivery.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-delivery.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -696,6 +892,10 @@
    {
     "u": "/app_images/website/website-hero.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-hero.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -710,6 +910,10 @@
    {
     "u": "/app_images/website/website-locations.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-locations.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -724,6 +928,10 @@
    {
     "u": "/app_images/website/website-menus-1.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-menus-1.w2048.webp",
+    "w": 2048
    }
   ]
  },
@@ -738,7 +946,121 @@
    {
     "u": "/app_images/website/website-menus-2.w1280.webp",
     "w": 1280
+   },
+   {
+    "u": "/app_images/website/website-menus-2.w2048.webp",
+    "w": 2048
    }
   ]
+ },
+ "/restaurants/baba-food.webp": {
+  "w": 400,
+  "h": 157,
+  "variants": []
+ },
+ "/restaurants/bonet.webp": {
+  "w": 400,
+  "h": 296,
+  "variants": []
+ },
+ "/restaurants/caffe_vero.webp": {
+  "w": 150,
+  "h": 150,
+  "variants": []
+ },
+ "/restaurants/family-cafe.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/feruz_burger.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/holland-fries.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/imron-cafe.webp": {
+  "w": 150,
+  "h": 150,
+  "variants": []
+ },
+ "/restaurants/mantidee.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/street-food.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/sushi_nebo.webp": {
+  "w": 400,
+  "h": 170,
+  "variants": []
+ },
+ "/restaurants/sushi_panda.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/tandir.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/tochka-burger.webp": {
+  "w": 400,
+  "h": 400,
+  "variants": []
+ },
+ "/restaurants/uch-qozon.webp": {
+  "w": 150,
+  "h": 150,
+  "variants": []
+ },
+ "/restaurants/waffle&co.webp": {
+  "w": 400,
+  "h": 267,
+  "variants": []
+ },
+ "/payments/click.webp": {
+  "w": 1667,
+  "h": 422,
+  "variants": []
+ },
+ "/payments/dodo-payments.webp": {
+  "w": 1024,
+  "h": 1001,
+  "variants": []
+ },
+ "/payments/payme.webp": {
+  "w": 1668,
+  "h": 542,
+  "variants": []
+ },
+ "/integrations/telegram.webp": {
+  "w": 3840,
+  "h": 3840,
+  "variants": []
+ },
+ "/integrations/uzum-tezkor.webp": {
+  "w": 1000,
+  "h": 1000,
+  "variants": []
+ },
+ "/integrations/yandex-eats.webp": {
+  "w": 1280,
+  "h": 1280,
+  "variants": []
+ },
+ "/integrations/yandex-go.webp": {
+  "w": 1280,
+  "h": 1280,
+  "variants": []
  }
 }

@@ -467,16 +467,21 @@ const payLogos = [
       <div class="marquee mt-10 overflow-hidden">
         <div class="marquee-track flex items-center gap-[64px] pr-[64px]">
           {
-            [...restaurantLogos, ...restaurantLogos].map((n, i) => (
-              <img
-                src={`/restaurants/${n}.webp`}
-                alt=""
-                aria-hidden={i >= restaurantLogos.length ? "true" : undefined}
-                class="logo-ticker h-[34px] w-auto shrink-0 object-contain opacity-80"
-                loading="lazy"
-                decoding="async"
-              />
-            ))
+            [...restaurantLogos, ...restaurantLogos].map((n, i) => {
+              const dm = imgDims(`/restaurants/${n}.webp`);
+              return (
+                <img
+                  src={`/restaurants/${n}.webp`}
+                  alt=""
+                  aria-hidden={i >= restaurantLogos.length ? "true" : undefined}
+                  class="logo-ticker h-[34px] w-auto shrink-0 object-contain opacity-80"
+                  width={dm?.w}
+                  height={dm?.h}
+                  loading="lazy"
+                  decoding="async"
+                />
+              );
+            })
           }
         </div>
       </div>
@@ -494,17 +499,22 @@ const payLogos = [
 
         <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
           {
-            payLogos.map((l) => (
-              <div class="flex h-[86px] items-center justify-center rounded-2xl border border-hairline bg-card/40 px-5">
-                <img
-                  src={l.src}
-                  alt={l.alt}
-                  class="max-h-[30px] max-w-full object-contain"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            ))
+            payLogos.map((l) => {
+              const dm = imgDims(l.src);
+              return (
+                <div class="flex h-[86px] items-center justify-center rounded-2xl border border-hairline bg-card/40 px-5">
+                  <img
+                    src={l.src}
+                    alt={l.alt}
+                    class="max-h-[30px] max-w-full object-contain"
+                    width={dm?.w}
+                    height={dm?.h}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              );
+            })
           }
         </div>
 
