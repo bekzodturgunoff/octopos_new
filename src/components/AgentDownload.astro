@@ -82,7 +82,7 @@ const platforms = [
       marta o'rnating — yangilanishlarni masofadan boshqaramiz.
     </p>
 
-    <div class="mt-10 grid gap-4 md:grid-cols-3">
+    <div class="mt-10 hidden gap-4 md:grid md:grid-cols-3">
       {
         platforms.map((p) => (
           <div class="flex flex-col gap-4 rounded-2xl border border-hairline bg-card/40 p-6">
@@ -122,7 +122,7 @@ const platforms = [
             <div class="mt-auto flex flex-col gap-3 border-t border-hairline pt-5">
               <div class="flex justify-center">
                 <div
-                  class="inline-flex rounded-full border border-hairline p-1 font-geist-mono text-[12px] tracking-[0.72px]"
+                  class="inline-flex gap-1 rounded-full border border-hairline p-1 font-geist-mono text-[12px] tracking-[0.72px]"
                   role="group"
                   aria-label="Architecture"
                 >
@@ -130,7 +130,8 @@ const platforms = [
                     type="button"
                     data-arch="x64"
                     aria-pressed="true"
-                    class="dl-arch rounded-full bg-ink px-4 py-1.5 text-on-ink transition-colors duration-300"
+                    aria-label="64-bit build"
+                    class="dl-arch seg-toggle seg-toggle-on px-5"
                     data-i18n={p.arch.x64}
                   >
                     {p.arch.x64 === "dl.winX64"
@@ -143,7 +144,8 @@ const platforms = [
                     type="button"
                     data-arch="arm64"
                     aria-pressed="false"
-                    class="dl-arch rounded-full px-4 py-1.5 text-muted transition-colors duration-300"
+                    aria-label="ARM 64-bit build"
+                    class="dl-arch seg-toggle seg-toggle-off px-5"
                     data-i18n={p.arch.arm64}
                   >
                     {p.arch.arm64 === "dl.macArm" ? "Apple Silicon" : "ARM64"}
@@ -181,14 +183,82 @@ const platforms = [
         ))
       }
     </div>
+
+    {/* Mobile: one expander, one download per OS, arch auto-selected. */}
+    <details class="mt-8 md:hidden">
+      <summary class="btn-outline h-[48px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">
+        <span data-i18n="dl.download">Yuklab oling</span>
+      </summary>
+      <ul class="mt-3 flex flex-col overflow-hidden rounded-2xl border border-hairline">
+        {
+          platforms.map((p) => (
+            <li class="flex items-center gap-3 border-b border-hairline px-4 py-3 last:border-0">
+              <img
+                src={p.img}
+                alt=""
+                aria-hidden="true"
+                width="20"
+                height="20"
+                class:list={[
+                  "h-5 w-5 shrink-0 object-contain",
+                  "invert" in p && p.invert && "dl-apple-icon",
+                ]}
+                loading="lazy"
+              />
+              <span
+                class="min-w-0 flex-1 truncate font-geist text-[16px] font-medium text-ink"
+                data-i18n={p.nameKey}
+              >
+                {p.nameKey === "dl.windows"
+                  ? "Windows"
+                  : p.nameKey === "dl.linux"
+                    ? "Linux"
+                    : "macOS"}
+              </span>
+              <a
+                href={`${BASE_URL}/${p.files.x64}`}
+                target="_blank"
+                rel="noopener"
+                class="btn-solid h-[44px] shrink-0 px-5 font-geist-mono text-[12px] tracking-[0.72px]"
+                data-dl-mobile
+                data-url-x64={`${BASE_URL}/${p.files.x64}`}
+                data-url-arm64={`${BASE_URL}/${p.files.arm64}`}
+              >
+                <span data-i18n="dl.download">Yuklab oling</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </details>
   </div>
 </section>
 
 <script>
+  // Preselect ARM where the visitor is almost certainly on ARM (Apple Silicon
+  // Macs report Intel only under Rosetta; ARM Linux/Windows state it outright),
+  // so restaurant owners never have to know what an architecture is (rule 11).
+  function guessArch(): string {
+    try {
+      const ua = navigator.userAgent || "";
+      if (/aarch64|arm64|armv8|Apple Silicon/i.test(ua)) return "arm64";
+      if (/Mac/i.test(ua) && !/Intel/i.test(ua)) return "arm64";
+    } catch (_) {}
+    return "x64";
+  }
   document.querySelectorAll<HTMLElement>("[data-dl-link]").forEach((link) => {
     const card = link.closest(".rounded-2xl");
     if (!card) return;
     const btns = card.querySelectorAll<HTMLButtonElement>("[data-arch]");
+
+    const select = (arch: string) => {
+      btns.forEach((b) => {
+        const on = b.getAttribute("data-arch") === arch;
+        b.setAttribute("aria-pressed", String(on));
+        b.classList.toggle("seg-toggle-on", on);
+        b.classList.toggle("seg-toggle-off", !on);
+      });
+    };
 
     const applyArch = () => {
       const active = card.querySelector('[data-arch][aria-pressed="true"]');
@@ -199,17 +269,19 @@ const platforms = [
 
     btns.forEach((btn) => {
       btn.addEventListener("click", () => {
-        btns.forEach((b) => {
-          const on = b === btn;
-          b.setAttribute("aria-pressed", String(on));
-          b.classList.toggle("bg-ink", on);
-          b.classList.toggle("text-on-ink", on);
-          b.classList.toggle("text-muted", !on);
-        });
+        select(btn.getAttribute("data-arch") ?? "x64");
         applyArch();
       });
     });
 
+    select(guessArch());
     applyArch();
+  });
+
+  // Mobile rows: point each download at the visitor's own architecture.
+  document.querySelectorAll<HTMLElement>("[data-dl-mobile]").forEach((link) => {
+    const arch = guessArch();
+    const url = link.getAttribute(`data-url-${arch}`);
+    if (url) link.setAttribute("href", url);
   });
 </script>

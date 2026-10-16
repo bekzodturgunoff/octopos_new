@@ -74,7 +74,7 @@ const links = [
           aria-label="Language"
           data-i18n-attr="aria-label:nav.lang"
           aria-haspopup="true"
-          class="flex h-9 items-center gap-1.5 rounded-full border border-hairline px-3 font-geist-mono text-[12px] leading-5 font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:text-link"
+          class="flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-hairline px-4 font-geist-mono text-[12px] leading-5 font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span data-lang-code>UZ</span>
           <svg
@@ -96,7 +96,7 @@ const links = [
               <button
                 type="button"
                 data-set-lang={l.code}
-                class="flex w-full items-center justify-between gap-3 px-4 py-2.5 font-geist text-[12px] text-ink transition-colors duration-200 hover:bg-card"
+                class="flex min-h-[44px] w-full items-center justify-between gap-3 px-4 py-3 font-geist text-[12px] text-ink transition-colors duration-200 hover:bg-card focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
               >
                 <span>{l.native}</span>
                 <span class="font-geist-mono text-[10px] tracking-[0.72px] text-muted">
@@ -112,7 +112,7 @@ const links = [
         type="button"
         data-theme-cycle
         aria-label="Toggle theme"
-        class="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link"
+        class="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex"
       >
         <span
           data-icon="light"
@@ -151,7 +151,7 @@ const links = [
         aria-label="Menu"
         data-i18n-attr="aria-label:nav.menu"
         aria-expanded="false"
-        class="flex h-9 w-9 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link lg:hidden"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
       >
         <span class="relative block h-3.5 w-[18px]" aria-hidden="true">
           <span
@@ -194,11 +194,21 @@ const links = [
         ))
       }
     </nav>
-    <div class="mx-auto max-w-[1600px] px-5 pt-5 pb-6">
+    <div class="mx-auto max-w-[1600px] px-5 pt-4 sm:hidden">
+      <button
+        type="button"
+        data-theme-cycle
+        aria-label="Toggle theme"
+        class="btn-outline h-[44px] w-full px-6 font-geist-mono text-[12px] tracking-[0.72px]"
+      >
+        <span data-i18n="theme.toggle">Mavzu</span>
+      </button>
+    </div>
+    <div class="mx-auto max-w-[1600px] px-5 pt-4 pb-6 sm:pt-5">
       <button
         type="button"
         data-plan-trigger="starter"
-        class="flex h-[48px] w-full items-center justify-center rounded-[99px] bg-accent font-geist-mono text-[12px] font-medium tracking-[0.72px] text-accent-emphasis transition-colors duration-[350ms] ease-far hover:bg-accent-active"
+        class="btn-solid h-[48px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
       >
         <span data-i18n="cta.tryFree">Bepul sinab ko'ring →</span>
       </button>

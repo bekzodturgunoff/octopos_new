@@ -36,7 +36,7 @@ const trialAPIBaseURL =
           id="wizard-close"
           aria-label="Yopish"
           data-i18n-attr="aria-label:wizard.close"
-          class="btn-ghost ml-4 h-10 w-10 shrink-0 p-0 text-ink"
+          class="btn-ghost ml-4 h-11 w-11 shrink-0 p-0 text-ink"
         >
           <svg
             class="h-5 w-5"
@@ -99,7 +99,7 @@ const trialAPIBaseURL =
           type="submit"
           class="btn-solid mt-2 w-full px-6 py-3 font-geist text-sm"
           data-i18n="wizard.startTrial"
-          >Boshlash</button
+          >Sinovni boshlash</button
         >
       </form>
 
@@ -114,7 +114,7 @@ const trialAPIBaseURL =
         <button
           type="button"
           id="wizard-start-fresh"
-          class="mt-3 w-full text-center font-geist text-sm text-muted underline hover:text-ink"
+          class="btn-ghost mt-3 w-full px-6 py-3 font-geist text-sm"
           data-i18n="wizard.startFresh"
           >Yangi hisob yaratish</button
         >
@@ -139,10 +139,9 @@ const trialAPIBaseURL =
   import { STRINGS, getLang, type Lang } from "../data/i18n";
 
   const UZ: Record<string, string> = {
-    "wizard.startTrial": "Boshlash",
-    "wizard.proceed":
-      "Ro'yxatdan o'tishni davom ettirish uchun tugmani bosing...",
-    "wizard.submitting": "Qayta ishlanmoqda...",
+    "wizard.startTrial": "Sinovni boshlash",
+    "wizard.proceed": "Davom etish →",
+    "wizard.submitting": "Yuborilmoqda…",
     "wizard.creatingKitchen": "Loyihangiz tayyorlanmoqda...",
     "wizard.close": "Yopish",
     "wizard.welcomeBackTitle": "Yana xush kelibsiz",

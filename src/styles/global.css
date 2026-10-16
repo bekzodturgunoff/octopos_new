@@ -148,9 +148,112 @@
 .btn-ghost:active {
   transform: scale(0.98);
 }
+.btn-ghost:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
 .btn-ghost:disabled {
   opacity: 0.5;
   pointer-events: none;
+}
+
+/* Secondary CTA: bordered pill. Use for every non-primary action so
+ * primary (btn-solid, accent fill) stays the single visual priority
+ * per section (rules 2, 4). Includes the same focus ring as primary. */
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid var(--color-hairline);
+  color: var(--color-ink);
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.1s ease;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  border-color: var(--color-link);
+  color: var(--color-link);
+}
+.btn-outline:active {
+  transform: scale(0.98);
+}
+.btn-outline:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.btn-outline:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Secondary CTA on a dark surface (e.g. the contact card, bg-ink).
+ * Uses on-ink for border + text in both themes so contrast holds, and
+ * the hover state must NOT inherit .btn-outline:hover's link color,
+ * which is dark-on-dark here. */
+.btn-outline-inverted {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 999px;
+  font-weight: 600;
+  border: 1px solid color-mix(in oklab, var(--color-on-ink) 30%, transparent);
+  color: var(--color-on-ink);
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.1s ease;
+  cursor: pointer;
+}
+.btn-outline-inverted:hover {
+  border-color: var(--color-on-ink);
+  color: var(--color-on-ink);
+  background: color-mix(in oklab, var(--color-on-ink) 10%, transparent);
+}
+.btn-outline-inverted:active {
+  transform: scale(0.98);
+}
+.btn-outline-inverted:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.btn-outline-inverted:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Segmented toggles (billing cycle, arch picker): inactive stays muted
+ * text, active is ink fill. Shared by all toggles so "selected" means
+ * the same everywhere (rules 14, 16). All targets meet 44px (rule 12). */
+.seg-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 999px;
+  min-height: 44px;
+  padding: 10px 20px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  cursor: pointer;
+}
+.seg-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+.seg-toggle-on {
+  background: var(--color-ink);
+  color: var(--color-on-ink);
+}
+.seg-toggle-off {
+  color: var(--color-muted);
 }
 
 .wizard-error {
