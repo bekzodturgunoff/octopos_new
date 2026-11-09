@@ -272,7 +272,7 @@ export default function i18nStatic(): AstroIntegration {
           } catch {
             return;
           }
-          bases.push(pathname);
+          if (!/<meta name="robots" content="noindex/.test(html)) bases.push(pathname);
           await writeFile(src, translateHtml(html, "uz", pathname));
 
           for (const locale of PREFIXED_LOCALES) {

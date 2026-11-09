@@ -34,6 +34,7 @@ export function getStaticPaths() {
 const { app, images } = Astro.props;
 const idx = apps.findIndex((a) => a.slug === app.slug);
 const next = apps[(idx + 1) % apps.length];
+const ogImage = images[0] ? `https://octopos.uz${images[0]}` : undefined;
 
 const SITE_URL = "https://octopos.uz";
 const appLd = [
@@ -68,7 +69,7 @@ function frameLabel(url: string): string {
 }
 ---
 
-<Layout title={`${app.name} — Octopos`} description={app.desc} jsonLd={appLd}>
+<Layout title={`${app.name} — Octopos`} description={app.desc} jsonLd={appLd} ogImage={ogImage}>
   <TopNav />
 
   <div
@@ -84,7 +85,7 @@ function frameLabel(url: string): string {
     </div>
 
     <div class="mt-10 grid grid-cols-1 gap-y-6 lg:mt-[41px] lg:grid-cols-[460px_1fr] lg:gap-x-16">
-      <aside class="self-start lg:sticky lg:top-[110px]">
+      <aside class:list={["self-start", app.features.length <= 7 && "lg:sticky lg:top-[110px]"]}>
         <h1
           class="max-w-[440px] font-anton text-[clamp(36px,11vw,52px)] leading-[0.9] tracking-[-0.69px] [overflow-wrap:anywhere] lg:text-[72px]"
         >
@@ -99,6 +100,31 @@ function frameLabel(url: string): string {
         >
           {app.desc}
         </p>
+
+        <ul class="mt-[24px] flex flex-col gap-2.5">
+          {
+            app.features.map((f, i) => (
+              <li class="flex gap-3">
+                <svg
+                  class="mt-[5px] h-3.5 w-3.5 shrink-0 text-link"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span
+                  class="font-geist text-[16px] leading-[24px] text-ink/85"
+                  data-i18n={`feat.${app.slug}.${i}`}
+                >
+                  {f}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
 
         <dl class="mt-[24px] hidden grid-cols-1 border-t border-hairline sm:grid sm:grid-cols-2">
           {

@@ -1,0 +1,105 @@
+---
+/**
+ * Yandex Metrica (112868171) + Google Analytics 4 (G-8V4X2HJPHL).
+ * Only runs on octopos.uz (and subdomains), so local dev / preview builds
+ * don't pollute the stats. Override with PUBLIC_YM_ID / PUBLIC_GA_ID.
+ *
+ * Goals sent (create the same identifiers in Metrica → Goals → JavaScript event):
+ *   trial_open      — any "try free / demo" button that opens the signup wizard
+ *   trial_created   — the wizard created a tenant (the real conversion)
+ *   lead_submitted  — callback form sent (the other real conversion)
+ *   lead_open       — "Demo so'rash" / "Qo'ng'iroq so'rash" pressed
+ *   lead_failed     — callback form could not be sent (fallback shown)
+ *   telegram_click  — any t.me link
+ *   phone_click     — any tel: link
+ *   email_click     — any mailto: link
+ *   docs_click      — docs.octopos.uz
+ *   agent_download  — agent installer download link
+ */
+// Public IDs (they appear in the page source anyway). Env can override;
+// set either to an empty string to turn it off.
+const ym = (import.meta.env.PUBLIC_YM_ID as string | undefined) ?? "112868171";
+const ga = (import.meta.env.PUBLIC_GA_ID as string | undefined) ?? "G-8V4X2HJPHL";
+const enabled = Boolean(ym || ga);
+---
+
+{
+  enabled && (
+    <script is:inline define:vars={{ ym: ym ?? "", ga: ga ?? "" }}>
+      (function () {
+        var host = location.hostname;
+        var prod = host === "octopos.uz" || /\.octopos\.uz$/.test(host);
+        window.octoTrack = function () {};
+        if (!prod) return;
+        if (ga) {
+          var g = document.createElement("script");
+          g.async = true;
+          g.src = "https://www.googletagmanager.com/gtag/js?id=" + ga;
+          document.head.appendChild(g);
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () {
+            window.dataLayer.push(arguments);
+          };
+          window.gtag("js", new Date());
+          window.gtag("config", ga);
+        }
+        if (ym) {
+          (function (m, e, t, r, i, k, a) {
+            m[i] =
+              m[i] ||
+              function () {
+                (m[i].a = m[i].a || []).push(arguments);
+              };
+            m[i].l = 1 * new Date();
+            k = e.createElement(t);
+            a = e.getElementsByTagName(t)[0];
+            k.async = 1;
+            k.src = r;
+            a.parentNode.insertBefore(k, a);
+          })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+          window.ym(Number(ym), "init", {
+            clickmap: true,
+            trackLinks: true,
+            accurateTrackBounce: true,
+            webvisor: true,
+          });
+        }
+
+        window.octoTrack = function (goal, params) {
+          try {
+            if (ym && window.ym) window.ym(Number(ym), "reachGoal", goal, params);
+            if (ga && window.gtag) window.gtag("event", goal, params || {});
+          } catch (_) {}
+        };
+
+        document.addEventListener(
+          "click",
+          function (e) {
+            var t = e.target instanceof Element ? e.target : null;
+            if (!t) return;
+            var trigger = t.closest("[data-plan-trigger]");
+            if (trigger) {
+              var addon = trigger.closest("[data-addon]");
+              window.octoTrack("trial_open", {
+                plan: trigger.getAttribute("data-plan-name") || "",
+                addon: addon ? addon.getAttribute("data-addon") : "",
+                lang: document.documentElement.lang,
+              });
+              return;
+            }
+            var a = t.closest("a[href]");
+            if (!a) return;
+            var href = a.getAttribute("href") || "";
+            if (href.indexOf("https://t.me/") === 0) window.octoTrack("telegram_click", { href: href });
+            else if (href.indexOf("tel:") === 0) window.octoTrack("phone_click");
+            else if (href.indexOf("mailto:") === 0) window.octoTrack("email_click");
+            else if (href.indexOf("https://docs.octopos.uz") === 0) window.octoTrack("docs_click");
+            else if (href.indexOf("https://artifacts.octopos.uz/") === 0)
+              window.octoTrack("agent_download", { href: href });
+          },
+          true,
+        );
+      })();
+    </script>
+  )
+}

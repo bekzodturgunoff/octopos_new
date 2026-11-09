@@ -1,0 +1,193 @@
+---
+/**
+ * Sample fiscal receipt for the "tax" problem block.
+ *
+ * Mirrors the structure the Octopos printing service actually prints on an
+ * 80mm roll (48 character columns, kdsx-api/printing/escpos ProfileID80):
+ * order number, logo, address, order details, items with MXIK codes, totals,
+ * the tax-authority QR, and the fiscal block (Turi / FM / FB).
+ *
+ * The font is the one the Dash uses to preview receipts
+ * (kdsx-dash-v2/src/index.css `.receipt`), so this reads like the real thing.
+ *
+ * Everything here is a placeholder — no client's name, logo, address, staff or
+ * fiscal module number. The QR is a decorative pattern, not a scannable code.
+ */
+const items = [
+  { qty: 2, name: "Osh - 0.5", price: 45000, mxik: "10000000000000001" },
+  { qty: 1, name: "Ko'k choy", price: 8000, mxik: "10000000000000002" },
+  { qty: 3, name: "Somsa", price: 12000, mxik: "10000000000000003" },
+];
+const som = (n: number) => Math.round(n).toLocaleString("ru-RU").replace(/ /g, " ");
+const subtotal = items.reduce((s, i) => s + i.qty * i.price, 0);
+const service = subtotal * 0.1;
+const total = subtotal + service;
+const vat = (total * 12) / 112;
+
+// Decorative QR-like pattern: three finder squares + deterministic noise.
+const N = 25;
+const cells: { x: number; y: number }[] = [];
+let seed = 7;
+const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+const inFinder = (x: number, y: number) =>
+  (x < 8 && y < 8) || (x >= N - 8 && y < 8) || (x < 8 && y >= N - 8);
+for (let y = 0; y < N; y++)
+  for (let x = 0; x < N; x++) if (!inFinder(x, y) && rnd() > 0.52) cells.push({ x, y });
+const finders = [
+  [0, 0],
+  [N - 7, 0],
+  [0, N - 7],
+];
+---
+
+<figure class="relative mx-auto w-full max-w-[420px] lg:mr-0">
+  <div class="[filter:drop-shadow(0_18px_28px_rgba(0,0,0,0.35))]">
+    <div class="paper receipt-paper" aria-hidden="true">
+      <p class="big center">Buyurtma #128</p>
+
+      <div class="logo">LOGO</div>
+
+      <hr />
+      <p class="center">Namuna ko'chasi, 1</p>
+      <p class="center">Tel: +998000000000</p>
+      <hr />
+
+      <p class="row"><span>Sana</span><span>2026-11-10 13:45</span></p>
+      <p class="row"><span>Stol</span><span>Zal, Stol 4</span></p>
+      <p class="row"><span>Ofitsiant</span><span>Ofitsiant 1</span></p>
+      <p class="row"><span>Manba</span><span>POS</span></p>
+      <hr />
+      <p class="center bold">Joyida</p>
+      <hr />
+
+      <p class="row bold"><span>Mahsulotlar</span><span>Narx</span></p>
+      {
+        items.map((i) => (
+          <>
+            <p class="row">
+              <span>{i.qty}x {i.name}</span>
+              <span>{som(i.qty * i.price)}</span>
+            </p>
+            <p class="indent">MXIK: {i.mxik}</p>
+          </>
+        ))
+      }
+      <hr />
+
+      <p class="row"><span>Oraliq jami</span><span>{som(subtotal)}</span></p>
+      <p class="row"><span>Xizmat 10%</span><span>{som(service)}</span></p>
+      <p class="row"><span>QQS 12% (ichida)</span><span>{som(vat)}</span></p>
+      <p class="row big"><span>Jami</span><span>{som(total)}</span></p>
+      <hr />
+      <p class="row"><span>Naqd</span><span>{som(total)}</span></p>
+      <hr />
+
+      <svg viewBox={`-1 -1 ${N + 2} ${N + 2}`} class="qr" shape-rendering="crispEdges">
+        <rect x="-1" y="-1" width={N + 2} height={N + 2} fill="#fff" />
+        {cells.map((c) => <rect x={c.x} y={c.y} width="1" height="1" fill="#111" />)}
+        {
+          finders.map(([x, y]) => (
+            <g>
+              <rect x={x} y={y} width="7" height="7" fill="#111" />
+              <rect x={x + 1} y={y + 1} width="5" height="5" fill="#fff" />
+              <rect x={x + 2} y={y + 2} width="3" height="3" fill="#111" />
+            </g>
+          ))
+        }
+      </svg>
+
+      <p class="row"><span>Turi</span><span>Sotuv</span></p>
+      <p class="row"><span>FM</span><span>UZ000000000000</span></p>
+      <p class="row"><span>FB</span><span>***</span></p>
+      <hr />
+      <p class="center">Tashrifingiz uchun rahmat!</p>
+      <p class="center">Yana kutib qolamiz.</p>
+    </div>
+  </div>
+</figure>
+
+<style>
+  /* Same face and colours as the Dash receipt preview; 48 columns = 80mm roll. */
+  .paper {
+    --cols: 48;
+    font-family: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+    /* fit 48 columns into the card on any screen, never above 12.5px */
+    font-size: min(12.5px, calc((100vw - 96px) / var(--cols) / 0.6));
+    line-height: 1.45;
+    color: #111;
+    background: #fff;
+    width: calc(var(--cols) * 1ch + 2.5em);
+    max-width: 100%;
+    margin-left: auto;
+    padding: 1.6em 1.25em 2.4em;
+    border-radius: 6px 6px 0 0;
+    /* torn-paper bottom edge */
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - 10px) no-repeat,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 16px 10px repeat-x;
+  }
+  @media (max-width: 1023px) {
+    .paper {
+      margin-right: auto;
+    }
+  }
+  .paper p {
+    margin: 0;
+    white-space: pre;
+  }
+  .paper .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 2ch;
+  }
+  .paper .row span:first-child {
+    overflow: hidden;
+    text-overflow: clip;
+  }
+  .paper .center {
+    text-align: center;
+  }
+  .paper .bold {
+    font-weight: 700;
+  }
+  /* ESC/POS double width + height, as the printer does for the order number and total */
+  .paper .big {
+    font-size: 2em;
+    line-height: 1.2;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+  }
+  .paper .row.big {
+    margin: 0.15em 0;
+  }
+  .paper .indent {
+    padding-left: 2ch;
+  }
+  .paper hr {
+    border: 0;
+    border-top: 1px dashed rgba(17, 17, 17, 0.45);
+    margin: 0.7em 0;
+  }
+  .paper .logo {
+    margin: 0.8em auto 0.4em;
+    width: 11em;
+    height: 5.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px dashed rgba(17, 17, 17, 0.35);
+    border-radius: 999px;
+    color: rgba(17, 17, 17, 0.45);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+  }
+  .paper .qr {
+    display: block;
+    width: 14em;
+    height: 14em;
+    margin: 0.8em auto 1em;
+  }
+</style>

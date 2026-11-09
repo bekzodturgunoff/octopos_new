@@ -1,0 +1,29 @@
+---
+/* Installer downloads for the Octopos Agent (local server). Used by our team
+ * when setting up a new client, so it is linked only from the footer and kept
+ * out of search results and the sitemap. */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "../components/TopNav.astro";
+import AgentDownload from "../components/AgentDownload.astro";
+---
+
+<Layout
+  title="Octopos Agent — yuklab olish"
+  description="Octopos Agent va lokal server o'rnatuvchilari: Windows, Linux, macOS."
+  noindex
+>
+  <TopNav />
+  <main>
+    <AgentDownload standalone />
+    <section class="px-5 pb-[60px] lg:px-[32px] lg:pb-[120px]">
+      <div class="mx-auto max-w-[1600px]">
+        <p class="max-w-[760px] font-geist text-[16px] leading-[24px] text-muted">
+          <span data-i18n="agent.help">O'rnatish bo'yicha qo'llanma:</span>
+          <a href="https://docs.octopos.uz" class="text-link hover:underline">docs.octopos.uz</a>
+          ·
+          <a href="https://t.me/octopos_support" class="text-link hover:underline">@octopos_support</a>
+        </p>
+      </div>
+    </section>
+  </main>
+</Layout>

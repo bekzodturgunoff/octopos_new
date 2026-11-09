@@ -52,7 +52,7 @@ const links = [
               data-i18n={l.key}
               class:list={[
                 "font-geist-mono text-[16px] leading-6 tracking-[0.72px] transition-colors duration-[350ms] ease-far hover:text-link",
-                path === l.href ? "text-ink" : "text-ink/80",
+                !l.href.includes("#") && path === l.href ? "text-ink" : "text-ink/80",
               ]}
             >
               {l.key === "nav.apps"

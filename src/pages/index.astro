@@ -1,16 +1,46 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import TopNav from "../components/TopNav.astro";
-import AgentDownload from "../components/AgentDownload.astro";
 import { apps, imagesFor, imgDims, imgSrcset } from "../data/apps";
 import AppIcon from "../components/AppIcon.astro";
+import Receipt from "../components/Receipt.astro";
+import Shot from "../components/Shot.astro";
+import LeadForm from "../components/LeadForm.astro";
+import trims from "../data/image-trims.json";
 import logoLight from "../assets/logo_light.webp";
 import logoDark from "../assets/logo_dark.webp";
+import { testimonials } from "../data/testimonials";
 import { has } from "../data/i18n";
+import { fetchPlans, renderPlanCard, UZ_PLAN_STRINGS } from "../data/plans";
+
+/* Plans are rendered into the HTML at build time (SEO, no loading flash); the
+ * browser refreshes them. If the API is down during the build, the page falls
+ * back to the client-side fetch as before. */
+let ssrPlansHtml = "";
+try {
+  const plans = await fetchPlans("uz", AbortSignal.timeout(8000));
+  ssrPlansHtml = plans
+    .map((p) => renderPlanCard(p, "uz", "monthly", (k) => UZ_PLAN_STRINGS[k] ?? ""))
+    .join("");
+} catch (err) {
+  console.warn("[plans] build-time fetch failed, falling back to client:", err);
+}
 
 const heroImg = imagesFor("pos-restaurant")[0];
 const heroMeta = heroImg ? imgDims(heroImg) : null;
 const heroSrcset = heroImg ? imgSrcset(heroImg) : null;
+// Same edge trim as the /apps pages (drops the capture border at the top).
+const heroTrim = heroImg
+  ? (trims as Record<string, { ar: number; l: number; r: number; t: number; b: number }>)[heroImg]
+  : undefined;
+const tp = (n: number) => `${(n * 100).toFixed(3)}%`;
+// Top/bottom only, same rule as the other homepage screenshots.
+const heroHH = heroTrim ? 1 - heroTrim.t - heroTrim.b : 1;
+const heroWrapStyle =
+  heroTrim && heroMeta ? `aspect-ratio:${((heroMeta.w / heroMeta.h) / heroHH).toFixed(4)}` : undefined;
+const heroImgStyle = heroTrim
+  ? `position:absolute;left:0;top:${tp(-heroTrim.t / heroHH)};width:100%;height:${tp(1 / heroHH)};max-width:none;`
+  : undefined;
 const HERO_SIZES =
   "(max-width:640px) 92vw, (max-width:1664px) calc(100vw - 64px), 1600px";
 
@@ -31,6 +61,46 @@ const homeLd = [
     inLanguage: "uz",
   },
 ];
+
+const journey = [
+  {
+    n: 1,
+    app: "guest",
+    t: "Mehmon QR orqali buyurtma beradi",
+    d: "Stoldagi QR-kodni skanerlaydi, menyuni ko'radi va ilovasiz buyurtma beradi.",
+  },
+  {
+    n: 2,
+    app: "pos-restaurant",
+    t: "Ofitsiant tasdiqlaydi",
+    d: "QR-buyurtmani tasdiqlaydi yoki buyurtmani o'zi planshetda kiritadi.",
+  },
+  {
+    n: 3,
+    app: "kitchen",
+    t: "Oshxona tayyorlaydi",
+    d: "Buyurtma shu zahoti oshxona ekranida paydo bo'ladi, kutish vaqti bilan birga.",
+  },
+  {
+    n: 4,
+    app: "ods",
+    t: "Mijoz xabardor bo'ladi",
+    d: "Taom tayyor bo'lganda mijoz o'z raqamini zal ekranida ko'radi.",
+  },
+  {
+    n: 5,
+    app: "pos-restaurant",
+    t: "To'lov qabul qilinadi",
+    d: "Naqd, karta, Payme yoki Click. Hisobni bir necha kishiga bo'lib to'lash ham mumkin.",
+  },
+  {
+    n: 6,
+    app: "dash",
+    t: "Siz natijani ko'rasiz",
+    d: "Savdo, ombor qoldig'i va foyda telefoningizda darhol yangilanadi.",
+  },
+].map((s) => ({ ...s, appObj: apps.find((a) => a.slug === s.app)! }));
+const deliveryApps = ["website", "dispatch"].map((slug) => apps.find((a) => a.slug === slug)!);
 
 const radOffsets = [37, 42, 33.5, 40, 35, 42.5, 34, 41];
 const angJitter = [0, -6, 5, -4, 7, -5, 4, -6];
@@ -71,7 +141,7 @@ const tentacles = ring.map(({ x: ox, y: oy }, i) => {
   const amp = 1.9 + (i % 3) * 0.3;
   const cycles = 1;
   const N = 20;
-  const pts = [];
+  const pts: { x: number; y: number; t: number }[] = [];
   for (let s = 0; s <= N; s++) {
     const t = s / N;
     const off = dir * amp * Math.sin(t * Math.PI * 2 * cycles);
@@ -102,68 +172,114 @@ const photoTiers = [
   { n: 1500, price: "690 000" },
 ];
 
-const solutions = [
-  {
-    uzT: "Restoranlar va kafelar",
-    kT: "sol.1t",
-    uzD:
-      "Zal va stol rejasi, QR-menyu, oshxona ekrani va kuryer — stoldan hisobotgacha to'liq jarayon.",
-    kD: "sol.1d",
-    tags: "POS · QR menyu · KDS · ODS",
-  },
-  {
-    uzT: "Marketlar va do'konlar",
-    kT: "sol.2t",
-    uzD:
-      "Barkod, tarozi, ombor qoldig'i, to'lov va kassa hisobotlari — katta savdo hajmi uchun.",
-    kD: "sol.2d",
-    tags: "POS · Ombor · Kassa",
-  },
-  {
-    uzT: "Onlayn buyurtmalar",
-    kT: "sol.3t",
-    uzD:
-      "Veb-do'kon, Telegram va agregatorlar (Yandex Eats, Uzum Tezkor) — barchasi yagona kassada.",
-    kD: "sol.3d",
-    tags: "Veb-do'kon · Telegram · Aggregator",
-  },
-  {
-    uzT: "O'z yetkazib berish xizmati",
-    kT: "sol.4t",
-    uzD:
-      "Dispetcher paneli, Telegram orqali kuryerlarni boshqarish, real vaqt xaritasi va cheklanmagan kuryerlar soni.",
-    kD: "sol.4d",
-    tags: "Dispetcher · GPS · Telegram",
-  },
+const fiscalPoints = [
+  { n: 1, t: "Qaytarish ham fiskal chek bilan", d: "Har bir qaytarish alohida fiskal chek bilan rasmiylashtiriladi." },
+  { n: 2, t: "MXIK va qadoq kodlari", d: "Har bir mahsulotga yoki butun biznesga bir marta belgilanadi." },
+  { n: 3, t: "Chekda soliq QR-kodi", d: "Mijoz QR orqali chekni soliq tizimida tekshira oladi." },
+  { n: 4, t: "Fiskal kun o'zi yopiladi", d: "Smena yoki ish kuni yopilganda fiskal kun ham yopiladi." },
+  { n: 5, t: "Chek yo'qolmaydi", d: "Fiskal modul javob bermasa, chek avtomatik qayta yuboriladi." },
+  { n: 6, t: "Xizmat haqi va QQS to'g'ri", d: "Chekda alohida qatorda, soliq talabiga mos ko'rsatiladi." },
 ];
 
-const restaurantLogos = [
-  "baba-food",
-  "bonet",
-  "caffe_vero",
-  "family-cafe",
-  "feruz_burger",
-  "holland-fries",
-  "imron-cafe",
-  "mantidee",
-  "street-food",
-  "sushi_nebo",
-  "sushi_panda",
-  "tandir",
-  "tochka-burger",
-  "uch-qozon",
-  "waffle&co",
+type ProblemIn = {
+  n: number;
+  img?: string;
+  receipt?: boolean;
+  pain: string;
+  title: string;
+  body: string;
+  alt?: string;
+};
+const problems = ([
+  {
+    n: 7,
+    receipt: true,
+    pain: "Soliq tekshiruvidan xavotirdamisiz?",
+    title: "Har bir savdoga fiskal chek, avtomatik",
+    body:
+      "Octopos fiskal modul bilan ishlaydi: har bir savdo soliq tizimiga avtomatik yuboriladi, kassir qo'shimcha hech narsa qilmaydi. Mijozlarimiz allaqachon shu tarzda ishlayapti.",
+  },
+  {
+    n: 1,
+    img: "/app_images/pos-restaurant/pos-notifications-requests.webp",
+    pain: "Kassir cheklarni bekor qilyaptimi?",
+    title: "Bekor qilish faqat menejer ruxsati bilan",
+    body:
+      "Buyurtma yoki taomni bekor qilish uchun menejer tasdig'i kerak. So'rov POS ekraniga va Telegramga keladi: kim, qachon va qaysi sabab bilan so'radi. Rad etsangiz, chek o'zgarmaydi.",
+    alt: "RestaurantPOS — bekor qilish so'rovlari",
+  },
+  {
+    n: 2,
+    img: "/app_images/dash/dash-inventory.webp",
+    pain: "Ombordan mahsulot yo'qolyaptimi?",
+    title: "Texkarta sarfni hisoblaydi, inventarizatsiya farqni ko'rsatadi",
+    body:
+      "Sotilgan har bir taom texnologik karta bo'yicha ombordan chiqariladi. Inventarizatsiyadan keyin farq hisobotida qaysi mahsulot qancha kam chiqqani ko'rinadi. Tugab borayotgan mahsulot haqida Telegramga xabar keladi.",
+    alt: "Dash — inventarizatsiya",
+  },
+  {
+    n: 3,
+    img: "/app_images/pos-restaurant/pos-more-business-day-register.webp",
+    pain: "Smena oxirida kassa to'g'ri chiqmayaptimi?",
+    title: "Har bir smena bitta hisobotda",
+    body:
+      "Ish kuni yopilganda yalpi savdo, chegirmalar, qaytarishlar, bekor qilinganlar va naqd yoki karta bo'yicha to'lovlar bitta sahifada. Kassaga kiritilgan va olingan naqd pul ham alohida yoziladi.",
+    alt: "RestaurantPOS — smena hisoboti",
+  },
+  {
+    n: 6,
+    img: "/app_images/website/website-hero.webp",
+    pain: "Agregatorlar har buyurtmadan komissiya oladimi?",
+    title: "O'z saytingiz va Telegram orqali, komissiyasiz",
+    body:
+      "Brendingiz bilan onlayn do'kon ochasiz. Buyurtmalar to'g'ridan-to'g'ri kassaga tushadi, Payme va Click orqali to'lanadi, o'z kuryerlaringiz yetkazib beradi.",
+    alt: "Store — onlayn do'kon",
+  },
+] as ProblemIn[]);
+
+const extras = [
+  { n: 2, title: "Internet o'chsa savdo to'xtaydimi?", body:
+      "Yo'q. Octopos Agent restoraningizdagi kompyuterda ishlaydi: kassalar, printerlar va oshxona ekranlari internetsiz ham bir-biri bilan ishlayveradi. Internet qaytgach hammasi sinxronlanadi." },
+  { n: 3, title: "Mijozlar qarzga olyaptimi?", body:
+      "Har bir mijozning qarzi va to'lovlari hisobda. Kim qancha qarzdorligi va qarz qachondan beri turgani bitta hisobotda ko'rinadi." },
+  { n: 4, title: "Dollar kursi o'zgarsa, narxlarni qayta yozasizmi?", body:
+      "Tovarni dollarda narxlang: kassada u kunlik kurs bo'yicha so'mda sotiladi. Kursni kiritasiz, narxlarni qo'lda o'zgartirish shart emas." },
+  { n: 5, title: "Menyuni kiritishga kunlar ketadimi?", body:
+      "Menyu rasmini yoki oddiy ro'yxatni yuklang (Excel ham bo'ladi). AI taomlar, kategoriyalar va narxlarni mahsulotlar ro'yxatiga qo'shadi va taomlaringiz rasmini ham yaratib beradi: dastlabki 20 ta rasm bepul." },
+  { n: 6, title: "Yandex va Uzum'da narx boshqacha bo'lishi kerakmi?", body:
+      "Har bir savdo kanali uchun o'z narxi: zal, QR-menyu, sayt, Telegram, Yandex Eats va Uzum Tezkor. Ulgurji mijozlar uchun ham alohida narx ro'yxati." },
 ];
+
+const stats = [
+  { n: 1, v: "30+", l: "Restoran va marketlar Octopos bilan ishlaydi" },
+  { n: 2, v: "1–3 kun", l: "Ishga tushirish: menyu, uskunalar va o'qitish bilan" },
+  { n: 3, v: "Offline", l: "Internet uzilsa ham savdo davom etadi" },
+  { n: 4, v: "Telegram", l: "Orqali yordam: o'zbek, rus, ingliz va koreys tillarida" },
+];
+
+const steps = [
+  { n: 1, t: "Ro'yxatdan o'ting", d: "Bepul tarifda o'zingiz boshlang yoki Telegramga yozing, biz siz bilan bog'lanamiz." },
+  { n: 2, t: "Biz sozlaymiz", d: "Menyu va narxlarni kiritamiz (Excel'dan ham), planshet, printer va kassa tortmasini ulaymiz." },
+  { n: 3, t: "Jamoangizni o'rgatamiz", d: "Kassir, ofitsiant va oshpazlarga ko'rsatamiz. Odatda 1–3 kunda to'liq ishlay boshlaysiz." },
+];
+
 
 const payLogos = [
   { src: "/payments/payme.webp", alt: "Payme" },
   { src: "/payments/click.webp", alt: "Click" },
-  { src: "/payments/dodo-payments.webp", alt: "Dodo Payments" },
   { src: "/integrations/telegram.webp", alt: "Telegram" },
   { src: "/integrations/uzum-tezkor.webp", alt: "Uzum Tezkor" },
   { src: "/integrations/yandex-eats.webp", alt: "Yandex Eats" },
   { src: "/integrations/yandex-go.webp", alt: "Yandex Go" },
 ];
+const footerCompanyLinks = [
+  { href: "/#solutions", key: "nav.solutions", uz: "Yechimlar" },
+  { href: "/#plans", key: "nav.pricing", uz: "Tariflar" },
+  { href: "/#contact", key: "nav.contact", uz: "Aloqa" },
+  { href: "https://docs.octopos.uz", key: "ft.docs", uz: "Hujjatlar" },
+  { href: "/agent", key: "ft.agent", uz: "Octopos Agent" },
+];
+
 const faqs = [
   {
     q: "faq.1q",
@@ -221,8 +337,8 @@ const faqLd = {
 ---
 
 <Layout
-  title="Octopos — Yagona platforma, sakkizta ilova"
-  description="POS, KDS, boshqaruv paneli, QR-menyu, veb-do'kon va kuryerlar dispetcheri — yagona obuna, yagona ma'lumotlar manbasi. O'zbekistondagi restoranlar uchun to'liq tizim."
+  title="Octopos — restoran, kafe va do'konlar uchun kassa dasturi"
+  description="Kassa dasturi, oshxona ekrani, QR-menyu, onlayn do'kon, ombor va fiskal cheklar bitta tizimda. O'zbekistondagi restoran, kafe va do'konlar uchun. Bepul tarif bor."
   jsonLd={[...homeLd, faqLd]}
   preloadImage={
     heroImg
@@ -255,35 +371,38 @@ const faqLd = {
             class="max-w-[600px] font-geist text-[20px] leading-[30px] text-muted"
             data-i18n="hero.body"
           >
-            POS, KDS, boshqaruv paneli, QR-menyu, veb-do'kon va kuryerlar
-            dispetcheri — yagona obuna, yagona ma'lumotlar manbasi. Internet
-            uzilsa ham ishlashda davom etadi.
+            Kassa, oshxona ekrani, QR-menyu, onlayn do'kon va yetkazib berish
+            bitta tizimda. Ombor, soliq cheklari va hisobotlar ham shu yerda.
+            Internet uzilsa ham savdo to'xtamaydi.
           </p>
           <div class="flex shrink-0 flex-col items-start gap-4 lg:items-end">
-            <button
-              type="button"
-              data-plan-trigger="starter"
-              class="btn-solid h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
-            >
-              <span data-i18n="hero.cta">              Bepul sinab ko'ring →</span>
-            </button>
-            <p
-              class="rounded-full border border-hairline bg-card/60 px-4 py-1.5 text-center font-geist-mono text-[11px] leading-4 tracking-[0.72px] text-muted"
-              data-i18n="hero.trust"
-            >
-              ✓ Bank kartasi talab qilinmaydi · ✓ Bugunoq ishga tushiring · ✓
-              Internet bo'lmasa ham ishlaydi
-            </p>
+            <div class="flex flex-wrap gap-3 lg:justify-end">
+              <button
+                type="button"
+                data-plan-trigger="starter"
+                class="btn-solid h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+              >
+                <span data-i18n="hero.cta">Bepul sinab ko'ring →</span>
+              </button>
+              <a
+                href="#contact"
+                data-lead-jump
+                class="btn-outline h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+              >
+                <span data-i18n="ct.demo">Demo so'rash</span>
+              </a>
+            </div>
           </div>
         </div>
 
-        <div class="mt-10 overflow-hidden rounded-2xl bg-card">
+        <div class="relative mt-10 overflow-hidden rounded-2xl bg-card" style={heroWrapStyle}>
           {
             heroImg ? (
               <img
                 src={heroImg}
                 alt="RestaurantPOS — restoran POS ekrani"
-                class="block -mt-[3px] w-full h-auto"
+                class:list={["block", heroTrim ? "" : "h-auto w-full"]}
+                style={heroImgStyle}
                 width={heroMeta?.w}
                 height={heroMeta?.h}
                 srcset={heroSrcset}
@@ -299,15 +418,126 @@ const faqLd = {
             )
           }
         </div>
+
+        <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-hairline pt-8 lg:mt-12 lg:grid-cols-4 lg:gap-10">
+          {
+            stats.map((s) => (
+              <div>
+                <dt
+                  class="font-anton text-[32px] leading-none tracking-[-0.5px] text-ink lg:text-[44px]"
+                  data-i18n={`proof.${s.n}v`}
+                >
+                  {s.v}
+                </dt>
+                <dd
+                  class="mt-2 max-w-[260px] font-geist text-[14px] leading-[20px] text-muted lg:text-[16px] lg:leading-[24px]"
+                  data-i18n={`proof.${s.n}l`}
+                >
+                  {s.l}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
       </div>
     </section>
 
-    {/* ---------------- apps ---------------- */}
-    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
+    {/* ---------------- problems → solutions ---------------- */}
+    <section
+      id="solutions"
+      class="scroll-mt-[70px] px-5 py-[32px] lg:px-[32px] lg:py-[96px]"
+    >
       <div class="mx-auto max-w-[1600px]">
-        <div
-          class="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:gap-14"
+        <h2
+          class="max-w-[1000px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
+          data-i18n="prob.heading"
         >
+          Tanish muammolar, tayyor yechimlar
+        </h2>
+        <p
+          class="mt-5 max-w-[640px] font-geist text-[18px] leading-[28px] text-muted lg:text-[20px] lg:leading-[30px]"
+          data-i18n="prob.body"
+        >
+          Har kuni kassa yonida turolmaysiz. Octopos har bir chek, har bir
+          gramm mahsulot va har bir bekor qilishni yozib boradi.
+        </p>
+
+        <div class="mt-10 flex flex-col gap-16 lg:mt-16 lg:gap-32">
+          {
+            problems.map((pr) => (
+              <article
+                class:list={[
+                  pr.receipt && "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-20",
+                ]}
+              >
+                <div class:list={["min-w-0", pr.receipt ? "max-w-[820px]" : "max-w-[760px]"]}>
+                  <p
+                    class="font-geist text-[15px] leading-[22px] font-medium text-link lg:text-[17px]"
+                  >
+                    <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
+                  </p>
+                  <h3
+                    class="mt-4 font-geist text-[28px] leading-[1.15] font-semibold tracking-[-0.6px] text-balance text-ink lg:text-[44px] lg:leading-[1.08] lg:tracking-[-1px]"
+                    data-i18n={`prob.${pr.n}t`}
+                  >
+                    {pr.title}
+                  </h3>
+                  <p
+                    class="mt-5 max-w-[640px] font-geist text-[17px] leading-[28px] text-muted lg:text-[19px] lg:leading-[31px]"
+                    data-i18n={`prob.${pr.n}d`}
+                  >
+                    {pr.body}
+                  </p>
+                  {pr.receipt && (
+                    <ul class="mt-6 grid gap-x-8 gap-y-3 border-t border-hairline pt-6 sm:mt-8 sm:grid-cols-2 sm:gap-y-6 sm:pt-8 lg:mt-10 lg:pt-10">
+                      {fiscalPoints.map((f) => (
+                        <li class="flex gap-3">
+                          <svg class="mt-[2px] h-5 w-5 shrink-0 text-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg>
+                          <div>
+                            <p class="font-geist text-[16px] leading-[24px] font-semibold text-ink lg:text-[17px]" data-i18n={`fisc.${f.n}t`}>{f.t}</p>
+                            <p class="mt-1 hidden font-geist text-[15px] leading-[23px] text-muted sm:block lg:text-[16px] lg:leading-[24px]" data-i18n={`fisc.${f.n}d`}>{f.d}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                {pr.receipt && <Receipt />}
+                {pr.img && (
+                  <Shot src={pr.img} alt={pr.alt ?? ""} class="mt-8 lg:mt-12" />
+                )}
+              </article>
+            ))
+          }
+        </div>
+
+        <div class="mt-14 grid gap-4 md:grid-cols-2 lg:mt-24 xl:grid-cols-3">
+          {
+            extras.map((x) => (
+              <div class="rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+                <h3
+                  class="font-geist text-[20px] leading-[1.25] font-semibold tracking-[-0.2px] text-ink lg:text-[22px]"
+                  data-i18n={`prob.x${x.n}t`}
+                >
+                  {x.title}
+                </h3>
+                <p
+                  class="mt-3 font-geist text-[17px] leading-[27px] text-muted lg:text-[18px] lg:leading-[28px]"
+                  data-i18n={`prob.x${x.n}d`}
+                >
+                  {x.body}
+                </p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ---------------- apps: order journey + octopus orbit ---------------- */}
+    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]" data-journey>
+      <div class="mx-auto max-w-[1600px]">
+        <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-14">
           <div>
             <h2
               class="max-w-[900px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
@@ -315,21 +545,88 @@ const faqLd = {
             >
               Sakkizta ilova, bitta sinxron tizim.
             </h2>
-
             <p
-              class="mt-6 max-w-[640px] font-geist text-[20px] leading-[30px] text-muted lg:text-[24px] lg:leading-[34px]"
-              data-i18n="apps.desc"
+              class="mt-5 max-w-[600px] font-geist text-[18px] leading-[28px] text-muted lg:text-[20px] lg:leading-[30px]"
+              data-i18n="journey.body"
             >
-              Sakkizta ilova yagona ma'lumotlar manbasi asosida bitta ekotizim
-              sifatida ishlaydi: buyurtma stolda qabul qilinadi, oshxonada
-              tayyorlanadi, kuryerga topshiriladi va hisobotga aylanadi. POS,
-              KDS, dispetcher, QR-menyu va veb-do'kon — yagona platforma, yagona
-              obuna va uzluksiz sinxronizatsiya.
+              Buyurtma bir ekrandan ikkinchisiga o'zi o'tadi, hech kim uni qayta
+              yozmaydi.
             </p>
+
+            <ol class="relative mt-8 hidden flex-col gap-5 lg:flex">
+              <span aria-hidden="true" class="absolute top-6 bottom-6 left-[21px] w-px bg-hairline"></span>
+              {
+                journey.map((s) => (
+                  <li
+                    class="journey-step relative grid grid-cols-[44px_minmax(0,1fr)] items-start gap-4 rounded-2xl"
+                    data-apps={s.app}
+                    tabindex="0"
+                  >
+                    <span class="relative z-10 flex h-11 w-11 items-center justify-center rounded-[14px] border border-hairline bg-card text-ink ring-4 ring-page transition-colors duration-300">
+                      <AppIcon slug={s.app} class="h-5 w-5" />
+                    </span>
+                    <div class="min-w-0 pt-0.5">
+                      <h3 class="flex flex-wrap items-baseline gap-x-2 font-geist text-[17px] leading-[1.3] font-semibold text-ink lg:text-[18px]">
+                        <span class="font-geist-mono text-[12px] font-normal tracking-[0.72px] text-muted">{String(s.n).padStart(2, "0")}</span>
+                        <span data-i18n={`journey.${s.n}t`}>{s.t}</span>
+                      </h3>
+                      <p class="mt-1 font-geist text-[15px] leading-[23px] text-muted lg:text-[16px] lg:leading-[24px]" data-i18n={`journey.${s.n}d`}>
+                        {s.d}
+                      </p>
+                      <p class="mt-1.5 font-geist-mono text-[11px] tracking-[0.6px] text-muted/80">
+                        {s.appObj.name}
+                      </p>
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+
+            <p class="mt-6 hidden max-w-[600px] font-geist text-[15px] leading-[23px] text-muted lg:block">
+              <span class="font-semibold text-ink" data-i18n="journey.dt">Yetkazib berish bo'lsa</span>
+              <span aria-hidden="true">·</span>
+              <span data-i18n="journey.dd">Sayt yoki Telegram'dan kelgan buyurtma ham shu yo'ldan o'tadi, so'ng Dispatch uni Telegram orqali kuryerga beradi va siz kuryerni xaritada kuzatasiz.</span>
+            </p>
+
+            <div class="mt-8 hidden lg:block">
+              <a
+                href="/apps"
+                class="btn-outline h-[44px] px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+              >
+                <span data-i18n="apps.viewAll">Barcha ilovalar →</span>
+              </a>
+            </div>
           </div>
 
+          {/* Mobile: all 8 apps as a list (the octopus is desktop-only). */}
+          <ul class="grid grid-cols-2 gap-3 lg:hidden">
+            {
+              apps.map((app) => (
+                <li>
+                  <a
+                    href={`/apps/${app.slug}`}
+                    class="flex h-full flex-col items-start gap-3 rounded-2xl border border-hairline bg-card/40 p-4 transition-colors duration-300 active:bg-card"
+                  >
+                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-hairline bg-card text-ink">
+                      <AppIcon slug={app.slug} class="h-5 w-5" />
+                    </span>
+                    <span class="min-w-0 max-w-full">
+                      <span class="block font-geist text-[15px] leading-[20px] font-semibold text-ink">{app.name}</span>
+                      <span
+                        class="mt-0.5 block font-geist text-[13px] leading-[18px] text-muted"
+                        data-i18n={has(`v.${app.tur}`) ? `v.${app.tur}` : undefined}
+                      >
+                        {app.tur}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+
           <div
-            class="relative mx-auto aspect-square w-[min(92vw,560px)] lg:w-full"
+            class="relative mx-auto hidden aspect-square w-full lg:block"
           >
           <svg
             class="pointer-events-none absolute inset-0 h-full w-full text-ink opacity-30"
@@ -389,13 +686,14 @@ const faqLd = {
                 title={app.tur}
                 aria-label={`${app.name} — ${app.tur}`}
                 class={`group absolute z-10 flex -translate-x-1/2 flex-col items-center ${mobileShift[i]}`}
+                data-orbit-app={app.slug}
                 style={`left:${x.toFixed(2)}%;top:${y.toFixed(2)}%`}
               >
                 <div
                   class="octo-tile flex flex-col items-center"
                   style={`animation-delay:${(-i * 0.55).toFixed(1)}s`}
                 >
-                  <span class="flex h-[54px] w-[54px] items-center justify-center rounded-[20px] border border-hairline bg-card text-ink transition-all duration-300 ease-far group-hover:scale-[1.08] group-hover:border-link/40 group-hover:bg-ink group-hover:text-on-ink sm:h-[70px] sm:w-[70px]">
+                  <span class="flex h-[54px] w-[54px] items-center justify-center rounded-[20px] border border-hairline bg-card text-ink transition-all duration-300 ease-far group-hover:scale-[1.08] group-hover:border-link/40 group-hover:bg-ink group-hover:text-on-ink group-data-[lit]:scale-[1.08] group-data-[lit]:border-link/40 group-data-[lit]:bg-ink group-data-[lit]:text-on-ink sm:h-[70px] sm:w-[70px]">
                     <AppIcon slug={app.slug} class="h-7 w-7 sm:h-8 sm:w-8" />
                   </span>
                   <span class="mt-1.5 hidden whitespace-nowrap font-geist-mono text-[10px] leading-[1.2] tracking-[0.6px] text-muted min-[360px]:block">
@@ -410,198 +708,56 @@ const faqLd = {
       </div>
     </section>
 
-    {/* ---------------- solutions ---------------- */}
-    <section
-      id="solutions"
-      class="scroll-mt-[70px] px-5 py-[32px] lg:px-[32px] lg:py-[96px]"
-    >
-      <div class="mx-auto max-w-[1600px]">
-        <h2
-          class="max-w-[1000px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
-          data-i18n="sol.heading"
-        >
-          Biznesingiz uchun tayyor yechimlar
-        </h2>
-
-        <div class="mt-10 border-t border-hairline">
-          {
-            solutions.map((s) => (
-              <div class="grid gap-3 border-b border-hairline py-7 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-8">
-                <div>
-                  <h3
-                    class="font-geist text-[19px] leading-[1.25] font-medium tracking-[-0.2px] lg:text-[22px]"
-                    data-i18n={s.kT}
-                  >
-                    {s.uzT}
-                  </h3>
-                  <p
-                    class="mt-2 max-w-[640px] font-geist text-[20px] leading-[30px] text-muted"
-                    data-i18n={s.kD}
-                  >
-                    {s.uzD}
-                  </p>
-                </div>
-                <span class="hidden font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-muted lg:block lg:text-right">
-                  {s.tags}
-                </span>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    {/* ---------------- features ---------------- */}
-    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
-      <div class="mx-auto max-w-[1600px]">
-        <h2
-          class="font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
-          data-i18n="feat.heading"
-        >
-          Har bir ilova nimalarga qodir?
-        </h2>
-
-        {/* Mobile: accordion per app, first open. Same content as desktop. */}
-        <div class="mt-8 border-t border-hairline md:hidden">
-          {
-            apps.map((app, ai) => (
-              <details class="group border-b border-hairline" open={ai === 0 ? true : undefined}>
-                <summary class="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
-                  <span class="font-geist text-[17px] leading-[1.3] font-medium text-ink">
-                    {app.name}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hairline font-geist-mono text-[18px] text-muted transition-transform duration-300 ease-far group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <ul class="flex flex-col gap-2.5 pb-5">
-                  {app.features.map((f, i) => (
-                    <li class="flex gap-3">
-                      <span
-                        class="font-geist-mono text-[12px] leading-[21px] text-muted"
-                        aria-hidden="true"
-                      >
-                        —
-                      </span>
-                      <span
-                        class="font-geist text-[16px] leading-[24px] text-ink/75"
-                        data-i18n={`feat.${app.slug}.${i}`}
-                      >
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            ))
-          }
-        </div>
-
-        <div class="mt-12 hidden gap-x-12 gap-y-10 md:grid md:grid-cols-2">
-          {
-            apps.map((app) => (
-              <div class="border-t border-hairline pt-5">
-                <div class="flex items-baseline justify-between gap-4">
-                  <h3 class="font-geist text-[17px] leading-[1.3] font-medium">
-                    {app.name}
-                  </h3>
-                  <span
-                    class="shrink-0 font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted"
-                    data-i18n={has(`v.${app.tur}`) ? `v.${app.tur}` : undefined}
-                  >
-                    {app.tur}
-                  </span>
-                </div>
-                <ul class="mt-4 flex flex-col gap-2.5">
-                  {app.features.map((f, i) => (
-                    <li class="flex gap-3">
-                      <span
-                        class="font-geist-mono text-[12px] leading-[21px] text-muted"
-                        aria-hidden="true"
-                      >
-                        —
-                      </span>
-                      <span
-                        class="font-geist text-[20px] leading-[30px] text-ink/75"
-                        data-i18n={`feat.${app.slug}.${i}`}
-                      >
-                        {f}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    {/* ---------------- trusted logos ---------------- */}
-    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
-      <div class="mx-auto max-w-[1600px]">
-        <h2
-          class="max-w-[1000px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
-          data-i18n="logos.heading"
-        >
-          Octopos bilan ishlaydigan restoranlar
-        </h2>
-        <p
-          class="mt-5 hidden max-w-[560px] font-geist text-[20px] leading-[30px] text-muted sm:block"
-          data-i18n="logos.sub"
-        >
-          Bitta kafedan ko'p filialli tarmoqlargacha — haqiqiy biznes, haqiqiy natijalar.
-        </p>
-      </div>
-
-      {/* Mobile: static 6-logo grid, no animation cost. */}
-      <div class="mt-8 grid grid-cols-3 gap-3 sm:hidden">
-        {
-          restaurantLogos.slice(0, 6).map((n) => {
-            const dm = imgDims(`/restaurants/${n}.webp`);
-            return (
-              <div class="flex h-[64px] items-center justify-center rounded-xl border border-hairline bg-card/40 px-3">
-                <img
-                  src={`/restaurants/${n}.webp`}
-                  alt=""
-                  aria-hidden="true"
-                  class="logo-ticker max-h-[28px] w-auto max-w-full object-contain opacity-80"
-                  width={dm?.w}
-                  height={dm?.h}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            );
-          })
-        }
-      </div>
-
-      <div class="marquee mt-10 hidden overflow-hidden sm:block">
-        <div class="marquee-track flex items-center gap-[64px] pr-[64px]">
-          {
-            [...restaurantLogos, ...restaurantLogos].map((n, i) => {
-              const dm = imgDims(`/restaurants/${n}.webp`);
-              return (
-                <img
-                  src={`/restaurants/${n}.webp`}
-                  alt=""
-                  aria-hidden={i >= restaurantLogos.length ? "true" : undefined}
-                  class="logo-ticker h-[34px] w-auto shrink-0 object-contain opacity-80"
-                  width={dm?.w}
-                  height={dm?.h}
-                  loading="lazy"
-                  decoding="async"
-                />
-              );
-            })
-          }
-        </div>
-      </div>
-    </section>
+    {/* ---------------- testimonials (renders only when data exists) ---------------- */}
+    {
+      testimonials.length > 0 && (
+        <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
+          <div class="mx-auto max-w-[1600px]">
+            <h2
+              class="max-w-[1000px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] lg:text-[60px]"
+              data-i18n="tm.heading"
+            >
+              Mijozlarimiz nima deydi
+            </h2>
+            <div class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {testimonials.map((t) => (
+                <figure class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+                  {t.video ? (
+                    <video
+                      class="mb-5 aspect-video w-full rounded-xl bg-card object-cover"
+                      src={t.video}
+                      poster={t.photo}
+                      controls
+                      preload="none"
+                      playsinline
+                    />
+                  ) : null}
+                  <blockquote class="font-geist text-[18px] leading-[28px] text-ink">
+                    “{t.quote}”
+                  </blockquote>
+                  <figcaption class="mt-auto flex items-center gap-3 pt-6">
+                    {t.photo && !t.video ? (
+                      <img
+                        src={t.photo}
+                        alt=""
+                        width="44"
+                        height="44"
+                        class="h-11 w-11 rounded-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : null}
+                    <span>
+                      <span class="block font-geist text-[15px] font-medium text-ink">{t.name}</span>
+                      <span class="block font-geist text-[14px] text-muted">{t.role}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
 
     {/* ---------------- integrations ---------------- */}
     <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
@@ -660,7 +816,7 @@ const faqLd = {
           </div>
         </details>
 
-        <div class="mt-10 hidden grid-cols-3 gap-4 sm:grid lg:grid-cols-7">
+        <div class="mt-10 hidden grid-cols-3 gap-4 sm:grid lg:grid-cols-6">
           {
             payLogos.map((l) => {
               const dm = imgDims(l.src);
@@ -709,11 +865,11 @@ const faqLd = {
               class="mt-4 max-w-[520px] font-geist text-[20px] leading-[30px] text-muted"
               data-i18n="plans.body"
             >
-              Yashirin to'lovlar yo'q. Murakkab tariflar yo'q. Barchasi obunaga kiritilgan.
+              Bepul tarifdan boshlang va biznes o'sgani sari keyingi tarifga o'ting. Qo'shimcha xizmatlar narxi pastda.
             </p>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
             <div
               class="flex gap-1 rounded-full border border-hairline p-1 font-geist-mono text-[12px] tracking-[0.72px]"
               role="group"
@@ -735,15 +891,18 @@ const faqLd = {
               >
             </div>
             <span
-              class="hidden font-geist-mono text-[11px] tracking-[0.72px] text-muted sm:block"
-              data-i18n="plans.saveNote">              Yillik to'lov · 10% tejamkorlik</span
+              class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+              data-i18n="plans.saveNote">Yillik to'lov · 10% tejamkorlik</span
             >
           </div>
         </div>
 
         <p
           id="plans-loading"
-          class="mt-10 font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+          class:list={[
+            "mt-10 font-geist-mono text-[12px] tracking-[0.72px] text-muted",
+            ssrPlansHtml && "hidden",
+          ]}
           data-i18n="plans.loading"
         >
           Yuklanmoqda…
@@ -751,8 +910,13 @@ const faqLd = {
         <div
           id="plans-grid"
           class="mt-12 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4"
-        >
-        </div>
+          set:html={ssrPlansHtml}
+        />
+        <noscript>
+          <p class="mt-10 font-geist text-[16px] leading-[24px] text-muted">
+            Narxlarni ko'rish uchun <a href="https://t.me/octopos_support" class="text-link hover:underline" target="_blank" rel="noopener">Telegram orqali yozing</a>.
+          </p>
+        </noscript>
 
         <div
           class="mt-8 flex flex-col items-start justify-between gap-5 rounded-2xl border border-hairline bg-card/40 p-6 lg:flex-row lg:items-center"
@@ -808,7 +972,7 @@ const faqLd = {
 
         <div class="mt-10 grid gap-4 lg:grid-cols-3">
           {/* online store / website */}
-          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-addon="store">
             <h3
               class="font-geist text-[19px] leading-[1.25] font-medium"
               data-i18n="add.t1"
@@ -916,7 +1080,7 @@ const faqLd = {
           </div>
 
           {/* own delivery */}
-          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-addon="delivery">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <h3
                 class="font-geist text-[19px] leading-[1.25] font-medium"
@@ -997,7 +1161,7 @@ const faqLd = {
           </div>
 
           {/* photo studio (AI) */}
-          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-addon="photo">
             <h3
               class="font-geist text-[19px] leading-[1.25] font-medium"
               data-i18n="add.t3"
@@ -1093,7 +1257,49 @@ const faqLd = {
       </div>
     </section>
 
-    <AgentDownload />
+    {/* ---------------- onboarding steps ---------------- */}
+    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
+      <div class="mx-auto max-w-[1600px]">
+        <h2
+          class="max-w-[1000px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
+          data-i18n="steps.heading"
+        >
+          Qanday boshlaymiz
+        </h2>
+        <ol class="mt-10 grid gap-4 lg:grid-cols-3">
+          {
+            steps.map((s) => (
+              <li class="rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
+                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-ink font-geist text-[15px] font-semibold text-on-ink">
+                  {s.n}
+                </span>
+                <h3
+                  class="mt-5 font-geist text-[20px] leading-[1.25] font-semibold tracking-[-0.2px] text-ink lg:text-[22px]"
+                  data-i18n={`steps.${s.n}t`}
+                >
+                  {s.t}
+                </h3>
+                <p
+                  class="mt-3 font-geist text-[17px] leading-[27px] text-muted lg:text-[18px] lg:leading-[28px]"
+                  data-i18n={`steps.${s.n}d`}
+                >
+                  {s.d}
+                </p>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="mt-8">
+          <button
+            type="button"
+            data-plan-trigger="starter"
+            class="btn-solid h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+          >
+            <span data-i18n="hero.cta">Bepul sinab ko'ring →</span>
+          </button>
+        </div>
+      </div>
+    </section>
 
     {/* ---------------- faq ---------------- */}
     <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
@@ -1136,51 +1342,65 @@ const faqLd = {
       </div>
     </section>
 
-    {/* ---------------- contact ---------------- */}
+    {/* ---------------- contact: callback form ---------------- */}
     <section
       id="contact"
       class="scroll-mt-[70px] px-5 py-[32px] lg:px-[32px] lg:py-[96px]"
     >
       <div class="mx-auto max-w-[1600px]">
-        <div
-          class="rounded-[28px] bg-ink px-6 py-8 text-center sm:px-10 lg:py-28"
-        >
-          <h2
-            class="mx-auto max-w-[1200px] font-anton text-[30px] leading-[0.9] tracking-[-0.69px] text-on-ink [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] [text-wrap:balance] lg:text-[78px]"
-            data-i18n="ct.heading"
-          >
-            Bugun boshlaymizmi?
-          </h2>
-          <p
-            class="mx-auto mt-6 max-w-[560px] font-geist text-[20px] leading-[30px] text-on-ink/70"
-            data-i18n="ct.body"
-          >
-            Demo so'rang yoki savolingizni yozing — Telegram orqali javob beramiz.
-          </p>
-          <div
-            class="mt-9 flex flex-wrap items-center justify-center gap-4"
-          >
-            <button
-              type="button"
-              data-plan-trigger="starter"
-              class="btn-solid h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+        <div class="grid items-center gap-8 rounded-[28px] bg-ink px-5 py-8 sm:px-10 sm:py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,560px)] lg:gap-16 lg:px-16 lg:py-20">
+          <div>
+            <h2
+              class="max-w-[640px] font-anton text-[32px] leading-[0.95] tracking-[-0.69px] text-on-ink [text-wrap:balance] lg:text-[72px]"
+              data-i18n="ct.heading"
             >
-              <span data-i18n="ct.demo">Demo so'rash</span>
-            </button>
-            <a
-              href="https://t.me/octopos_support"
-              class="btn-outline-inverted h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+              Bugun boshlaymizmi?
+            </h2>
+            <p
+              class="mt-5 max-w-[480px] font-geist text-[18px] leading-[28px] text-on-ink/70 lg:text-[20px] lg:leading-[30px]"
+              data-i18n="ct.body"
             >
-              <span data-i18n="ct.support">Texnik yordam</span>
-            </a>
+              Ismingiz va raqamingizni qoldiring, biz qo'ng'iroq qilib
+              hammasini ko'rsatamiz va savollaringizga javob beramiz.
+            </p>
+            <div class="mt-8 hidden flex-col gap-3 font-geist text-[16px] text-on-ink/80 lg:flex">
+              <a href="tel:+998941500330" class="inline-flex w-fit items-center gap-3 transition-colors duration-300 hover:text-on-ink">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.18 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                +998 94 150 03 30
+              </a>
+              <a href="https://t.me/octopos_support" class="inline-flex w-fit items-center gap-3 transition-colors duration-300 hover:text-on-ink">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9z" /></svg>
+                @octopos_support
+              </a>
+              <button type="button" data-plan-trigger="starter" class="inline-flex w-fit items-center gap-3 text-left transition-colors duration-300 hover:text-on-ink">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                <span data-i18n="ct.self">Yoki o'zingiz bepul boshlang</span>
+              </button>
+            </div>
           </div>
+          <LeadForm />
         </div>
       </div>
     </section>
   </main>
 
+  {/* ---------------- sticky mobile call bar ---------------- */}
+  <div
+    class="mobile-cta fixed inset-x-0 bottom-0 z-40 translate-y-full border-t border-hairline bg-page/95 px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))] backdrop-blur transition-transform duration-300 lg:hidden"
+    data-mobile-cta
+  >
+    <div class="mx-auto flex max-w-[560px] gap-3">
+      <a href="#contact" data-lead-jump class="btn-solid h-[48px] flex-1 px-4 font-geist text-[15px] font-semibold">
+        <span data-i18n="ct.callMe">Qo'ng'iroq so'rash</span>
+      </a>
+      <a href="https://t.me/octopos_support" class="btn-outline h-[48px] px-5 font-geist text-[15px] font-semibold" aria-label="Telegram">
+        Telegram
+      </a>
+    </div>
+  </div>
+
   {/* ---------------- footer ---------------- */}
-  <footer class="px-5 py-6 lg:px-[32px] lg:py-12">
+  <footer class="px-5 pt-6 pb-[96px] lg:px-[32px] lg:py-12">
       <div class="mx-auto max-w-[1600px]">
       <div class="grid gap-6 md:grid-cols-4 md:gap-10">
         <div>
@@ -1209,7 +1429,7 @@ const faqLd = {
             class="mt-3 max-w-[260px] font-geist text-[16px] leading-[23px] text-muted"
             data-i18n="ft.tagline"
           >
-            Hammasi bir joyda — sakkiz ilova, bitta platforma.
+            Restoran, kafe va do'konlar uchun kassa tizimi.
           </p>
 
             <p
@@ -1305,30 +1525,14 @@ const faqLd = {
             Kompaniya
           </p>
           <ul class="mt-4 flex flex-col gap-2.5">
-            <li>
-              <a
-                href="/#solutions"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="nav.solutions">Yechimlar</a>
-            </li>
-            <li>
-              <a
-                href="/#plans"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="nav.pricing">Tariflar</a>
-            </li>
-            <li>
-              <a
-                href="/#contact"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="nav.contact">Aloqa</a>
-            </li>
-            <li>
-              <a
-                href="https://docs.octopos.uz"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="ft.docs">Hujjatlar</a>
-            </li>
+            {footerCompanyLinks.map((l) => (
+              <li>
+                <a
+                  href={l.href}
+                  class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
+                  data-i18n={l.key}>{l.uz}</a>
+              </li>
+            ))}
           </ul>
         </div>
         <details class="group md:hidden">
@@ -1337,30 +1541,14 @@ const faqLd = {
             <span aria-hidden="true" class="text-[18px] transition-transform duration-300 group-open:rotate-45">+</span>
           </summary>
           <ul class="flex flex-col gap-2.5 pb-4">
-            <li>
-              <a
-                href="/#solutions"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="nav.solutions">Yechimlar</a>
-            </li>
-            <li>
-              <a
-                href="/#plans"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="nav.pricing">Tariflar</a>
-            </li>
-            <li>
-              <a
-                href="/#contact"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="nav.contact">Aloqa</a>
-            </li>
-            <li>
-              <a
-                href="https://docs.octopos.uz"
-                class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
-                data-i18n="ft.docs">Hujjatlar</a>
-            </li>
+            {footerCompanyLinks.map((l) => (
+              <li>
+                <a
+                  href={l.href}
+                  class="font-geist text-[16px] text-ink/80 transition-colors duration-300 hover:text-link"
+                  data-i18n={l.key}>{l.uz}</a>
+              </li>
+            ))}
           </ul>
         </details>
 
@@ -1485,147 +1673,114 @@ const faqLd = {
   </footer>
 
   <script>
-    import { STRINGS, getLang, type Lang } from "../data/i18n";
+    // Mobile call bar: show after the hero, hide while the form is on screen.
+    (() => {
+      const bar = document.querySelector<HTMLElement>("[data-mobile-cta]");
+      const hero = document.querySelector("main > section");
+      const contact = document.getElementById("contact");
+      if (!bar || !hero || !contact) return;
+      let pastHero = false;
+      let atForm = false;
+      const sync = () => bar.classList.toggle("translate-y-full", !pastHero || atForm);
+      new IntersectionObserver(([e]) => {
+        pastHero = !e.isIntersecting;
+        sync();
+      }).observe(hero);
+      new IntersectionObserver(([e]) => {
+        atForm = e.isIntersecting;
+        sync();
+      }, { threshold: 0.15 }).observe(contact);
+    })();
 
-    const API = "https://api.octopos.uz";
+    // "Demo so'rash" / "Qo'ng'iroq so'rash": scroll to the form and focus the name.
+    document.querySelectorAll<HTMLAnchorElement>("[data-lead-jump]").forEach((a) =>
+      a.addEventListener("click", (e) => {
+        const target = document.getElementById("contact");
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.setTimeout(() => document.getElementById("lead-name")?.focus({ preventScroll: true }), 600);
+        (window as any).octoTrack?.("lead_open");
+      }),
+    );
+
+    // Hovering / focusing a journey step lights up its app(s) in the octopus.
+    (() => {
+      const root = document.querySelector<HTMLElement>("[data-journey]");
+      if (!root) return;
+      const tiles = [...root.querySelectorAll<HTMLElement>("[data-orbit-app]")];
+      const light = (slugs: string[]) =>
+        tiles.forEach((t) => t.toggleAttribute("data-lit", slugs.includes(t.dataset.orbitApp ?? "")));
+      root.querySelectorAll<HTMLElement>(".journey-step").forEach((step) => {
+        const slugs = (step.dataset.apps ?? "").split(" ");
+        step.addEventListener("mouseenter", () => light(slugs));
+        step.addEventListener("focus", () => light(slugs));
+        step.addEventListener("mouseleave", () => light([]));
+        step.addEventListener("blur", () => light([]));
+      });
+    })();
+  </script>
+
+  <script>
+    import { STRINGS, getLang, type Lang } from "../data/i18n";
+    import {
+      apiLangFor,
+      esc,
+      fetchPlans,
+      renderPlanCard,
+      UZ_PLAN_STRINGS,
+      type Cycle,
+    } from "../data/plans";
+
     const grid = document.getElementById("plans-grid");
     const loading = document.getElementById("plans-loading");
     const cycleBtns = document.querySelectorAll<HTMLElement>("[data-cycle]");
 
-    const UZ: Record<string, string> = {
-      "plans.monthly": "Oylik",
-      "plans.yearly": "Yillik",
-      "plans.saveNote": "Yillik to'lov · 10% tejamkorlik",
-      "plans.startFree": "Bepul boshlash",
-      "plans.getStarted": "Tarifni tanlash",
-      "plans.popular": "Eng ko'p tanlangan",
-      "plans.noCard": "Bank kartasi talab qilinmaydi",
-      "plans.perMonth": "/oy",
-      "plans.perYear": "/yil",
-      "plans.locations": "{n} ta filial",
-      "plans.aiPhotos": "Oyiga {n} ta AI-surati",
-      "plans.onlineOrders": "Oyiga {n} ta onlayn buyurtma",
-      "plans.loading": "Yuklanmoqda…",
-      "common.showAll": "Barchasini ko'rsatish",
-    };
-
-    let cycle: "monthly" | "yearly" = "monthly";
+    let cycle: Cycle = "monthly";
     let plans: any[] = [];
     let fetchedFor = "";
+    // Build output already shows the Uzbek monthly cards; keep them if the
+    // refresh fails rather than replacing them with the Telegram fallback.
+    const staticHtml = grid?.innerHTML.trim() ?? "";
+    const hasStatic = staticHtml.length > 0;
 
     const L = (k: string, lang: string): string =>
       lang === "uz"
-        ? (UZ[k] ?? "")
-        : (STRINGS[k]?.[lang as Lang] ?? UZ[k] ?? "");
+        ? (UZ_PLAN_STRINGS[k] ?? "")
+        : (STRINGS[k]?.[lang as Lang] ?? UZ_PLAN_STRINGS[k] ?? "");
 
-    const esc = (s: unknown): string =>
-      String(s ?? "").replace(
-        /[&<>"]/g,
-        (c) =>
-          ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string,
-      );
+    const card = (plan: any, lang: string): string =>
+      renderPlanCard(plan, lang, cycle, (k) => L(k, lang));
 
-    function card(plan: any, lang: string): string {
-      const want = lang === "uz" ? "UZS" : "USD";
-      const popular = plan.name === "Growth" || plan.position === 3;
-      const cyclePlans = (plan.prices ?? []).filter(
-        (p: any) => p.billingCycle === cycle,
-      );
-      const price =
-        cyclePlans.find(
-          (p: any) => (p?.value?.currency || "").toUpperCase() === want,
-        ) ??
-        cyclePlans[0] ??
-        plan.prices?.[0];
-      const amount = price?.value?.majorAmount ?? 0;
-      const suffix =
-        cycle === "monthly"
-          ? L("plans.perMonth", lang)
-          : L("plans.perYear", lang);
-      let display =
-        amount === 0
-          ? want === "UZS"
-            ? "0"
-            : "$0"
-          : (price?.value?.display ?? "");
-      if (want === "UZS")
-        display = display.replace(
-          /\s*(so'?m|сум|soums?|uzs)\s*$/i,
-          "",
-        );
-      const note =
-        amount === 0
-          ? `<p class="mt-3 font-geist text-[13px] text-muted">${esc(L("plans.noCard", lang))}</p>`
-          : cycle === "yearly"
-            ? `<p class="mt-3 font-geist-mono text-[11px] tracking-[0.72px] text-muted">${esc(L("plans.saveNote", lang))}</p>`
-            : "";
-      const cta =
-        amount === 0 ? L("plans.startFree", lang) : L("plans.getStarted", lang);
-
-      const quotas: any[] = Array.isArray(plan.quotas) ? plan.quotas : [];
-      const quotaMax = (meter: string): number => {
-        const matches = quotas.filter((q) => q?.meter === meter);
-        if (!matches.length) return 0;
-        return Math.max(...matches.map((q) => Number(q.max) || 0));
-      };
-      const chip = (label: string, n: number): string =>
-        n > 0
-          ? `<span class="rounded-full border border-hairline px-2.5 py-1 font-geist-mono text-[10.5px] leading-none tracking-[0.3px] text-muted">${esc(label.replace("{n}", String(n)))}</span>`
-          : "";
-      const chips = [
-        chip(L("plans.locations", lang), quotaMax("location")),
-        chip(L("plans.aiPhotos", lang), quotaMax("imageGeneration")),
-        chip(L("plans.onlineOrders", lang), quotaMax("order")),
-      ]
-        .filter(Boolean)
-        .join("");
-
-      const feats = (plan.features ?? [])
-        .map(
-          (f: any) =>
-            `<li class="flex items-start gap-2.5"><svg class="mt-[3px] h-3.5 w-3.5 shrink-0 text-link" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="font-geist text-[13.5px] leading-[20px] text-ink/90"${f.description ? ` title="${esc(f.description)}"` : ""}>${esc(f.name)}</span></li>`,
-        )
-        .join("");
-
-      return `<div class="relative flex flex-col rounded-[20px] border border-hairline bg-card/50 p-6 transition-colors duration-300 hover:border-link/40 ${popular ? "ring-2 ring-accent" : ""}">
-        ${popular ? `<span class="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 font-geist-mono text-[10px] tracking-[0.72px] text-accent-emphasis">${esc(L("plans.popular", lang))}</span>` : ""}
-        <p class="font-geist text-[16px] font-medium text-ink">${esc(plan.name)}</p>
-        <p class="mt-2 min-h-[36px] font-geist text-[13.5px] leading-[20px] text-muted">${esc(plan.description ?? "")}</p>
-        <div class="mt-4 flex items-baseline gap-1.5">
-          <span class="font-anton text-[40px] leading-none tracking-tight text-ink">${esc(display)}</span>
-          <span class="font-geist-mono text-[11px] tracking-[0.72px] text-muted">${esc(suffix)}</span>
-        </div>
-        ${note}
-        ${chips ? `<div class="mt-4 flex flex-wrap gap-1.5">${chips}</div>` : ""}
-        <div class="mt-5 h-px w-full bg-hairline"></div>
-        <ul class="mt-5 hidden flex-col gap-2.5 md:flex">${feats}</ul>
-        ${feats ? `<details class="mt-5 md:hidden"><summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">${esc(L("common.showAll", lang))}</summary><ul class="mt-4 flex flex-col gap-2.5">${feats}</ul></details>` : ""}
-        <div class="mt-auto pt-6">
-          <button type="button" data-plan-trigger="starter" data-plan-name="${esc(plan.name)}" class="${popular ? "btn-solid" : "btn-outline"} h-[44px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]">${esc(cta)}</button>
-        </div>
-      </div>`;
-    }
+    const FALLBACK: Partial<Record<string, string>> = {
+      uz: "Narxlarni ko'rish uchun",
+      en: "Contact us on Telegram for pricing",
+      ru: "Узнать цены в Telegram",
+      ko: "텔레그램에서 요금 문의",
+      tr: "Fiyatlar için Telegram'dan yazın",
+    };
 
     function render(lang: string): void {
       if (!grid) return;
+      if (plans.length === 0) {
+        if (hasStatic && cycle === "monthly") {
+          grid.innerHTML = staticHtml;
+          return;
+        }
+        const msg = esc(FALLBACK[lang] ?? FALLBACK["en"] ?? "");
+        grid.innerHTML = `<p class="col-span-full font-geist text-[16px] leading-[24px] text-muted">${msg} — <a href="https://t.me/octopos_support" class="text-link hover:underline" target="_blank" rel="noopener">@octopos_support</a></p>`;
+        return;
+      }
       grid.innerHTML = plans.map((p) => card(p, lang)).join("");
     }
 
     async function load(): Promise<void> {
       const lang = getLang();
-      const apiLang = lang === "tr" ? "en" : lang;
+      const apiLang = apiLangFor(lang);
       if (fetchedFor !== apiLang) {
-        loading?.classList.remove("hidden");
+        if (!hasStatic) loading?.classList.remove("hidden");
         try {
-          const r = await fetch(
-            `${API}/plans.get?lang=${apiLang}${lang === "uz" ? "&currency=UZS" : ""}`,
-            {
-              cache: "no-store",
-              headers: { "Accept-Language": apiLang },
-            },
-          );
-          const j: any = await r.json();
-          plans = j.plans ?? [];
+          plans = await fetchPlans(lang);
           fetchedFor = apiLang;
         } catch {
           plans = [];

@@ -1,0 +1,110 @@
+---
+/**
+ * A product screenshot shown as a zoomed crop of the part that matters, so
+ * the UI text is readable, with a button that opens the full screen.
+ *
+ * `crop` is the region to show, as fractions of the full image
+ * (x, y = top-left corner; w, h = size). Omit it to show the whole image.
+ * Phones get a fixed-width frame inside a horizontal scroller, so the crop
+ * stays at a readable scale.
+ */
+import { imgDims, imgSrcset } from "../data/apps";
+import trims from "../data/image-trims.json";
+
+interface Props {
+  src: string;
+  alt: string;
+  crop?: { x: number; y: number; w: number; h: number };
+  class?: string;
+}
+
+const { src, alt, crop, class: cls } = Astro.props;
+// Without an explicit crop, trim only the top/bottom capture edges (from the
+// same data as the /apps pages). Side margins are kept so every screenshot
+// keeps the same width and scale on the homepage.
+const trim = (trims as Record<string, { t: number; b: number }>)[src];
+const c = crop ?? (trim ? { x: 0, y: trim.t, w: 1, h: 1 - trim.t - trim.b } : { x: 0, y: 0, w: 1, h: 1 });
+// Phones: zoomed crops get a 760px swipe frame; whole screenshots just fit
+// the screen width, like the hero.
+const swipe = Boolean(crop);
+const mobileW = swipe ? "760px" : "100%";
+const dims = imgDims(src);
+const srcset = imgSrcset(src) ?? undefined;
+const ratio = dims ? dims.w / dims.h : 1.6;
+const ar = (c.w * ratio) / c.h;
+const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
+const imgStyle = `position:absolute;left:${pct(-c.x / c.w)};top:${pct(-c.y / c.h)};width:${pct(1 / c.w)};height:auto;max-width:none;`;
+const sizes = swipe
+  ? `(max-width:640px) ${Math.round(760 / c.w)}px, ${Math.round(1536 / c.w)}px`
+  : `(max-width:640px) ${Math.round(100 / c.w)}vw, ${Math.round(1536 / c.w)}px`;
+---
+
+<figure class:list={["shot", crop && "shot-crop", cls]} style={`--ar:${ar.toFixed(4)};--mw:${mobileW}`}>
+  <div class:list={["shot-scroll rounded-2xl border border-hairline bg-card", swipe ? "overflow-x-auto overscroll-x-contain sm:overflow-hidden" : "overflow-hidden"]}>
+    <button
+      type="button"
+      data-shot-open
+      class="shot-frame relative block cursor-zoom-in overflow-hidden"
+      aria-label={alt}
+    >
+      <img
+        src={src}
+        srcset={srcset}
+        sizes={sizes}
+        width={dims?.w}
+        height={dims?.h}
+        alt={alt}
+        style={imgStyle}
+        loading="lazy"
+        decoding="async"
+      />
+    </button>
+  </div>
+  <figcaption class="mt-3 flex items-center justify-between gap-4 font-geist-mono text-[11px] tracking-[0.72px] text-muted">
+    {swipe && <span class="sm:hidden" data-i18n="common.swipe">← Suring →</span>}
+    <button
+      type="button"
+      data-shot-open
+      class="ml-auto inline-flex items-center gap-1.5 rounded-full border border-hairline px-3 py-1.5 transition-colors duration-300 hover:border-link/40 hover:text-ink"
+    >
+      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
+      <span data-i18n="common.fullscreen">To'liq ekran</span>
+    </button>
+  </figcaption>
+  <dialog class="shot-dialog m-auto max-h-[94vh] max-w-[96vw] overflow-hidden rounded-2xl bg-card p-0 backdrop:bg-black/80">
+    <img src={src} srcset={srcset} sizes="96vw" alt={alt} class="block max-h-[94vh] w-auto max-w-[96vw] object-contain" loading="lazy" decoding="async" />
+    <form method="dialog" class="absolute top-3 right-3">
+      <button class="flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-[20px] leading-none text-white" aria-label="Yopish">×</button>
+    </form>
+  </dialog>
+</figure>
+
+<style>
+  .shot-frame {
+    aspect-ratio: var(--ar);
+    width: var(--mw);
+  }
+  @media (min-width: 640px) {
+    .shot-frame {
+      width: 100%;
+    }
+    /* tall crops: keep the frame within ~72% of the viewport height, and let
+       the bordered box hug it instead of leaving an empty strip */
+    .shot-crop {
+      max-width: min(100%, calc(72vh * var(--ar)));
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("click", (e) => {
+    const t = e.target instanceof Element ? e.target : null;
+    const opener = t?.closest("[data-shot-open]");
+    if (opener) {
+      opener.closest(".shot")?.querySelector<HTMLDialogElement>("dialog")?.showModal();
+      return;
+    }
+    // click on the backdrop closes
+    if (t instanceof HTMLDialogElement && t.classList.contains("shot-dialog")) t.close();
+  });
+</script>

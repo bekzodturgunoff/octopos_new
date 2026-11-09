@@ -1,0 +1,253 @@
+---
+/**
+ * Callback request ("call me back") form.
+ *
+ * Required: name, phone. Optional: business type, city.
+ *
+ * POSTs JSON to LEADS_URL. Backend contract (to be added to the API that
+ * Helm uses; the Helm bot posts it to the team group with "🙋 Take it"):
+ *
+ *   POST https://api.octopos.uz/leads.create
+ *   Content-Type: application/json
+ *   {
+ *     "name": "Aziz",
+ *     "phone": "+998901234567",            // E.164
+ *     "businessType": "restaurant" | "cafe" | "market" | "other" | null,
+ *     "city": "Toshkent" | null,
+ *     "lang": "uz" | "en" | "ru" | "ko" | "tr",
+ *     "page": "/ru/",                       // where the form was sent from
+ *     "utm": { "source": "...", "medium": "...", "campaign": "..." } | null,
+ *     "website": "",                        // honeypot: non-empty => bot, drop it
+ *     "elapsedMs": 8421                     // time from first focus to submit
+ *   }
+ *   → 2xx on success (body ignored). Anything else shows the fallback
+ *     (call / Telegram), so no lead is silently lost.
+ *
+ * Spam: no captcha (keeps the form one step). The honeypot + elapsedMs let
+ * the API drop bots; the API should also rate-limit by IP/phone.
+ */
+const PHONE_DISPLAY = "+998 94 150 03 30";
+const PHONE_TEL = "+998941500330";
+const types = [
+  { v: "restaurant", k: "lead.typeRestaurant", uz: "Restoran" },
+  { v: "cafe", k: "lead.typeCafe", uz: "Kafe" },
+  { v: "market", k: "lead.typeMarket", uz: "Market / do'kon" },
+  { v: "other", k: "lead.typeOther", uz: "Boshqa" },
+];
+const inputCls =
+  "w-full rounded-xl border border-hairline bg-page px-4 py-3 font-geist text-[16px] text-ink outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-muted/70 focus:border-accent focus:ring-4 focus:ring-accent/25";
+---
+
+<div class="lead-card rounded-[20px] bg-page p-6 text-left text-ink sm:p-8" data-lead>
+  <form class="flex flex-col gap-5" novalidate data-lead-form>
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for="lead-name" class="block font-geist text-[14px] font-medium" data-i18n="lead.name">Ismingiz</label>
+        <input
+          id="lead-name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          required
+          maxlength="80"
+          class:list={["mt-2", inputCls]}
+          placeholder="Aziz"
+          data-i18n-attr="placeholder:lead.namePh"
+        />
+      </div>
+      <div>
+        <label for="lead-phone" class="block font-geist text-[14px] font-medium" data-i18n="lead.phone">Telefon raqam</label>
+        <div class:list={["mt-2 flex items-center gap-2", inputCls, "focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"]}>
+          <span class="shrink-0 text-muted">+998</span>
+          <input
+            id="lead-phone"
+            name="phone"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="tel-national"
+            required
+            class="w-full min-w-0 bg-transparent outline-none placeholder:text-muted/70"
+            placeholder="90 123 45 67"
+          />
+        </div>
+      </div>
+    </div>
+
+    <fieldset>
+      <legend class="font-geist text-[14px] font-medium">
+        <span data-i18n="lead.type">Biznesingiz</span>
+        <span class="font-normal text-muted" data-i18n="lead.optional">(ixtiyoriy)</span>
+      </legend>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {
+          types.map((t) => (
+            <label class="cursor-pointer">
+              <input type="radio" name="businessType" value={t.v} class="peer sr-only" />
+              <span
+                class="inline-flex h-10 items-center rounded-full border border-hairline px-4 font-geist text-[14px] transition-colors duration-200 peer-checked:border-ink peer-checked:bg-ink peer-checked:text-on-ink peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:border-ink/40"
+                data-i18n={t.k}
+              >
+                {t.uz}
+              </span>
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <div>
+      <label for="lead-city" class="block font-geist text-[14px] font-medium">
+        <span data-i18n="lead.city">Shahar</span>
+        <span class="font-normal text-muted" data-i18n="lead.optional">(ixtiyoriy)</span>
+      </label>
+      <input
+        id="lead-city"
+        name="city"
+        type="text"
+        autocomplete="address-level2"
+        maxlength="60"
+        class:list={["mt-2", inputCls]}
+        placeholder="Toshkent"
+        data-i18n-attr="placeholder:lead.cityPh"
+      />
+    </div>
+
+    {/* honeypot: hidden from people, bots fill it */}
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <p class="hidden rounded-xl bg-[oklch(63%_0.2_25/0.12)] px-4 py-3 font-geist text-[14px] text-ink" role="alert" data-lead-invalid>
+      <span data-i18n="lead.invalid">Ism va to'liq telefon raqamini kiriting.</span>
+    </p>
+
+    <button
+      type="submit"
+      class="btn-solid h-[52px] w-full px-7 font-geist text-[15px] font-semibold"
+      data-lead-submit
+    >
+      <span data-i18n="lead.submit" data-lead-label>Menga qo'ng'iroq qiling</span>
+      <span class="hidden" data-i18n="lead.sending" data-lead-sending>Yuborilmoqda…</span>
+    </button>
+    <p class="font-geist text-[13px] leading-[19px] text-muted" data-i18n="lead.privacy">
+      Raqamingiz faqat siz bilan bog'lanish uchun ishlatiladi.
+    </p>
+  </form>
+
+  <div class="hidden py-6 text-center" role="status" data-lead-success>
+    <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent text-accent-emphasis">
+      <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg>
+    </span>
+    <p class="mt-5 font-geist text-[22px] font-semibold" data-i18n="lead.okTitle">Rahmat! So'rovingiz qabul qilindi</p>
+    <p class="mx-auto mt-2 max-w-[360px] font-geist text-[16px] leading-[24px] text-muted" data-i18n="lead.okBody">
+      Tez orada siz bilan bog'lanamiz.
+    </p>
+  </div>
+
+  <div class="hidden py-4" role="alert" data-lead-error>
+    <p class="font-geist text-[20px] font-semibold" data-i18n="lead.errTitle">So'rovni yubora olmadik</p>
+    <p class="mt-2 font-geist text-[16px] leading-[24px] text-muted" data-i18n="lead.errBody">
+      Iltimos, bizga qo'ng'iroq qiling yoki Telegram'da yozing, darhol javob beramiz.
+    </p>
+    <div class="mt-5 flex flex-wrap gap-3">
+      <a href={`tel:${PHONE_TEL}`} class="btn-solid h-[48px] px-6 font-geist text-[15px] font-semibold">{PHONE_DISPLAY}</a>
+      <a href="https://t.me/octopos_support" class="btn-outline h-[48px] px-6 font-geist text-[15px] font-semibold">Telegram</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getLang } from "../data/i18n";
+
+  const LEADS_URL = "https://api.octopos.uz/leads.create";
+  const MIN_MS = 2500; // faster than this from first focus = almost certainly a bot
+
+  document.querySelectorAll<HTMLElement>("[data-lead]").forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>("[data-lead-form]")!;
+    const phone = form.querySelector<HTMLInputElement>('input[name="phone"]')!;
+    const name = form.querySelector<HTMLInputElement>('input[name="name"]')!;
+    const invalid = root.querySelector<HTMLElement>("[data-lead-invalid]")!;
+    const submit = root.querySelector<HTMLButtonElement>("[data-lead-submit]")!;
+    const label = root.querySelector<HTMLElement>("[data-lead-label]")!;
+    const sending = root.querySelector<HTMLElement>("[data-lead-sending]")!;
+    let startedAt = 0;
+
+    form.addEventListener("focusin", () => (startedAt ||= Date.now()), { once: true });
+
+    // "901234567" -> "90 123 45 67"; accepts pasted "+998 90 ..." too
+    const digits = (s: string) => {
+      let d = s.replace(/\D/g, "");
+      if (d.startsWith("998") && d.length > 9) d = d.slice(3);
+      return d.slice(0, 9);
+    };
+    phone.addEventListener("input", () => {
+      const d = digits(phone.value);
+      phone.value = [d.slice(0, 2), d.slice(2, 5), d.slice(5, 7), d.slice(7, 9)].filter(Boolean).join(" ");
+    });
+
+    const show = (state: "form" | "success" | "error") => {
+      form.classList.toggle("hidden", state !== "form");
+      root.querySelector("[data-lead-success]")!.classList.toggle("hidden", state !== "success");
+      root.querySelector("[data-lead-error]")!.classList.toggle("hidden", state !== "error");
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const d = digits(phone.value);
+      const n = name.value.trim();
+      if (!n || d.length !== 9) {
+        invalid.classList.remove("hidden");
+        (n ? phone : name).focus();
+        return;
+      }
+      invalid.classList.add("hidden");
+
+      const data = new FormData(form);
+      const qs = new URLSearchParams(location.search);
+      const utm = qs.get("utm_source")
+        ? { source: qs.get("utm_source"), medium: qs.get("utm_medium"), campaign: qs.get("utm_campaign") }
+        : null;
+      const elapsedMs = startedAt ? Date.now() - startedAt : 0;
+      const honeypot = String(data.get("website") ?? "");
+
+      // Bots: pretend success, send nothing.
+      if (honeypot || elapsedMs < MIN_MS) {
+        show("success");
+        return;
+      }
+
+      submit.disabled = true;
+      label.classList.add("hidden");
+      sending.classList.remove("hidden");
+      try {
+        const res = await fetch(LEADS_URL, {
+          method: "POST",
+          headers: { "content-type": "application/json", accept: "application/json" },
+          body: JSON.stringify({
+            name: n,
+            phone: `+998${d}`,
+            businessType: (data.get("businessType") as string) || null,
+            city: String(data.get("city") ?? "").trim() || null,
+            lang: getLang(),
+            page: location.pathname,
+            utm,
+            website: honeypot,
+            elapsedMs,
+          }),
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        (window as any).octoTrack?.("lead_submitted", { lang: getLang(), businessType: data.get("businessType") || "" });
+        show("success");
+      } catch (err) {
+        console.warn("[lead] send failed", err);
+        (window as any).octoTrack?.("lead_failed");
+        show("error");
+      } finally {
+        submit.disabled = false;
+        label.classList.remove("hidden");
+        sending.classList.add("hidden");
+      }
+    });
+  });
+</script>

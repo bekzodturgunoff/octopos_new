@@ -5,11 +5,11 @@ const trialAPIBaseURL =
 
 <div
   id="plan-wizard"
-  class="fixed inset-0 z-[60] hidden"
+  class="fixed inset-0 z-[60] hidden overflow-y-auto"
   data-api-base={trialAPIBaseURL}
 >
   <div class="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-  <div class="relative mx-auto my-10 max-w-lg px-4">
+  <div class="relative mx-auto my-4 max-w-lg px-4 sm:my-10">
     <div
       role="dialog"
       aria-modal="true"
@@ -94,6 +94,9 @@ const trialAPIBaseURL =
 
         <cap-widget data-cap-api-endpoint="https://captcha.octopos.uz/591f8342ea"
         ></cap-widget>
+        <p id="wizard-cap-hint" class="text-center font-geist text-[11px] leading-4 text-muted">
+          Yuborishdan oldin yuqoridagi captchani bajaring
+        </p>
         <button
           id="wizard-submit"
           type="submit"
@@ -214,10 +217,14 @@ const trialAPIBaseURL =
       return capLoading;
     };
 
+    const capHint = document.getElementById("wizard-cap-hint");
     widget?.addEventListener("solve", (e) => {
       const detail = (e as CustomEvent<{ token: string }>).detail;
       token = detail?.token ?? null;
-      if (token) submitBtn!.disabled = false;
+      if (token) {
+        submitBtn!.disabled = false;
+        capHint?.classList.add("hidden");
+      }
     });
 
     const showError = () => {
@@ -228,7 +235,7 @@ const trialAPIBaseURL =
     };
     const hideError = () => errorBox?.classList.add("hidden");
 
-    const open = () => {
+    const open = (contextHint = "") => {
       submitBtn!.disabled = true;
       lastActive = document.activeElement as Element | null;
       modal!.classList.remove("hidden");
@@ -253,6 +260,7 @@ const trialAPIBaseURL =
         requestAnimationFrame(() => continueBtn?.focus());
       } else {
         showSignupHeader();
+        if (contextHint && subtitleEl) subtitleEl.textContent = contextHint;
         welcomeBack?.classList.add("hidden");
         form!.classList.remove("hidden");
         requestAnimationFrame(() => {
@@ -285,12 +293,19 @@ const trialAPIBaseURL =
         submitBtn!.disabled = true;
         (widget as HTMLElement & { reset?: () => void })?.reset?.();
         token = null;
+        capHint?.classList.remove("hidden");
       }
       if (lastActive && "focus" in lastActive) {
         try {
           (lastActive as HTMLElement).focus();
         } catch (_) {}
       }
+    };
+
+    const ADDON_HINTS: Record<string, Partial<Record<string, string>>> = {
+      store: { uz: "Onlayn do'kon uchun sinov boshlash", en: "Starting a trial for the online store", ru: "Начать пробный период для онлайн-магазина", ko: "온라인 스토어 체험 시작", tr: "Çevrimiçi mağaza denemesini başlat" },
+      delivery: { uz: "Yetkazib berish xizmati uchun sinov boshlash", en: "Starting a trial for delivery", ru: "Начать пробный период для доставки", ko: "배달 서비스 체험 시작", tr: "Teslimat hizmeti denemesini başlat" },
+      photo: { uz: "Fotostudiya uchun sinov boshlash", en: "Starting a trial for the photo studio", ru: "Начать пробный период для фотостудии", ko: "포토 스튜디오 체험 시작", tr: "Fotoğraf stüdyosu denemesini başlat" },
     };
 
     document.addEventListener("click", (e) => {
@@ -300,7 +315,10 @@ const trialAPIBaseURL =
           : null;
       if (!target) return;
       e.preventDefault();
-      open();
+      const addonEl = target.closest("[data-addon]");
+      const addonKey = addonEl?.getAttribute("data-addon") ?? "";
+      const hint = addonKey ? ADDON_HINTS[addonKey] : null;
+      open(hint ? (hint[getLang()] ?? hint["en"] ?? "") : "");
     });
 
     continueBtn?.addEventListener("click", () => {
@@ -354,6 +372,7 @@ const trialAPIBaseURL =
         if (jsonRes.id) {
           loadingState?.classList.add("hidden");
           handled = true;
+          (window as any).octoTrack?.("trial_created", { lang: getLang() });
           if (jsonRes.apps?.dash) {
             try {
               localStorage.setItem(
@@ -378,7 +397,7 @@ const trialAPIBaseURL =
           return;
         }
       } catch (err) {
-        console.log("Error while submitting data.", err);
+        console.error("Error while submitting data.", err);
       }
 
       if (!handled) {
