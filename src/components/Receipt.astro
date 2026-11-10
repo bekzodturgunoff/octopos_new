@@ -10,9 +10,11 @@
  * The font is the one the Dash uses to preview receipts
  * (kdsx-dash-v2/src/index.css `.receipt`), so this reads like the real thing.
  *
- * Everything here is a placeholder — no client's name, logo, address, staff or
- * fiscal module number. The QR is a decorative pattern, not a scannable code.
+ * The logo is Octopos's own; everything else is a placeholder — no client's
+ * name, address, staff or fiscal module number. The QR is a decorative pattern, not a scannable code.
  */
+import logo from "../assets/logo_dark.webp";
+
 const items = [
   { qty: 2, name: "Osh - 0.5", price: 45000, mxik: "10000000000000001" },
   { qty: 1, name: "Ko'k choy", price: 8000, mxik: "10000000000000002" },
@@ -45,7 +47,10 @@ const finders = [
     <div class="paper receipt-paper" aria-hidden="true">
       <p class="big center">Buyurtma #128</p>
 
-      <div class="logo">LOGO</div>
+      <div class="logo">
+        <img src={logo.src} alt="" width="256" height="256" loading="lazy" decoding="async" />
+        <span>OCTOPOS</span>
+      </div>
 
       <hr />
       <p class="center">Namuna ko'chasi, 1</p>
@@ -172,17 +177,22 @@ const finders = [
     margin: 0.7em 0;
   }
   .paper .logo {
-    margin: 0.8em auto 0.4em;
-    width: 11em;
-    height: 5.5em;
+    margin: 0.9em auto 0.5em;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border: 1.5px dashed rgba(17, 17, 17, 0.35);
-    border-radius: 999px;
-    color: rgba(17, 17, 17, 0.45);
+    gap: 0.45em;
+  }
+  /* printed on a thermal head: pure black, slightly soft */
+  .paper .logo img {
+    width: 6.5em;
+    height: 6.5em;
+    filter: grayscale(1) contrast(1.4);
+  }
+  .paper .logo span {
     font-weight: 700;
-    letter-spacing: 0.3em;
+    letter-spacing: 0.35em;
+    padding-left: 0.35em;
   }
   .paper .qr {
     display: block;
