@@ -386,7 +386,7 @@ const faqLd = {
         <ul class="grid gap-4 lg:grid-cols-2">
           {
             problems.filter((pr) => pr.mock).map((pr) => (
-              <li class="card flex flex-col overflow-hidden p-6 pb-0 lg:p-10 lg:pb-0">
+              <li class="card flex flex-col p-6 pb-0 lg:p-10 lg:pb-0">
                 {/* Same text height in every card, so the four mock windows start on one line. */}
                 <div class="lg:min-h-[270px]">
                   <p class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[1.4] font-semibold text-link lg:text-[16px]">
@@ -407,8 +407,8 @@ const faqLd = {
                     {pr.body}
                   </p>
                 </div>
-                {/* Fixed window cropped at the card's bottom edge, so every card is the same height. */}
-                <div class="mx-auto mt-8 h-[260px] w-full max-w-[460px] overflow-hidden lg:h-[300px]"><Mock kind={pr.mock!} /></div>
+                {/* Full mock, never cropped. */}
+                <div class="mx-auto mt-8 w-full max-w-[460px] pb-6 lg:pb-10"><Mock kind={pr.mock!} /></div>
               </li>
             ))
           }
@@ -462,7 +462,7 @@ const faqLd = {
                     <p class="mt-1.5 font-geist text-[16px] leading-[1.5] text-muted" data-i18n={has(`v.${app.tur}`) ? `v.${app.tur}` : undefined}>{app.tur}</p>
                   </div>
                   {/* One centred crop of the real app, cropped only at the bottom (AppCardMock). */}
-                  <div class="mt-auto px-6 lg:px-8">
+                  <div class="mt-auto px-6 pb-6 lg:px-8 lg:pb-8">
                     <AppCardMock slug={app.slug} />
                   </div>
                 </a>

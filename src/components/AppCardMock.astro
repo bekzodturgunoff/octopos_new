@@ -216,18 +216,14 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
 
 <style>
   .acm {
-    height: 220px;
+    min-height: 220px;
     overflow: hidden;
-    border-radius: 16px 16px 0 0;
+    border-radius: 16px;
     font-family: var(--font-sans);
     line-height: 1.35;
     text-align: left;
   }
-  @media (min-width: 1024px) {
-    .acm {
-      height: 240px;
-    }
-  }
+
   /* App tokens (light, then dark) — the apps' own surface colours. */
   .app {
     --s100: oklch(98.09% 0.013 115.83);

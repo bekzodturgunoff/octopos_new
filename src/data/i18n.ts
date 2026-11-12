@@ -1091,6 +1091,8 @@ export const STRINGS: Record<string, Dict> = {
     ko: "배달 주문을 자체 배달원에게 맡기세요. 배정하거나 작업을 제안하고, 배달원의 응답을 알림함에서 확인하세요.",
     tr: "Teslimat siparişlerini kendi kuryelerinize verin: atayın veya işi teklif edin, kuryelerin yanıtlarını Gelen Kutusu'nda görün.",
   },
+  "app.whatItDoes": { en: "What it does", ru: "Что умеет", ko: "주요 기능", tr: "Neler yapar" },
+  "app.screens": { en: "Screens", ru: "Экраны", ko: "화면", tr: "Ekranlar" },
   "app.soon": { en: "Coming soon", ru: "Скоро", ko: "출시 예정", tr: "Yakında" },
   "v.Planshet · Web": { en: "Tablet · Web", ru: "Планшет · Веб", ko: "태블릿 · 웹", tr: "Tablet · Web" },
 

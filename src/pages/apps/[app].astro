@@ -4,25 +4,10 @@ import Footer from "../../components/Footer.astro";
 import TopNav from "../../components/TopNav.astro";
 import { apps, imagesFor, imgDims, imgSrcset, type App } from "../../data/apps";
 import { has } from "../../data/i18n";
-import trims from "../../data/image-trims.json";
 
 interface Props {
   app: App;
   images: string[];
-}
-
-type Trim = { ar: number; l: number; r: number; t: number; b: number };
-const TRIMS = trims as Record<string, Trim>;
-const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
-function trimStyles(src: string): { wrap?: string; img?: string } {
-  const t = TRIMS[src];
-  if (!t) return {};
-  const hw = 1 - t.l - t.r;
-  const hh = 1 - t.t - t.b;
-  return {
-    wrap: `aspect-ratio:${t.ar}`,
-    img: `position:absolute;left:${pct(-t.l / hw)};top:${pct(-t.t / hh)};width:${pct(1 / hw)};height:${pct(1 / hh)};`,
-  };
 }
 
 export function getStaticPaths() {
@@ -73,248 +58,161 @@ function frameLabel(url: string): string {
 <Layout title={`${app.name} — Octopos`} description={app.desc} jsonLd={appLd} ogImage={ogImage}>
   <TopNav />
 
-  <div class="wrap pt-6 pb-24 lg:pt-10 lg:pb-32">
-    <div class="flex items-center justify-between gap-4">
+  {/* ---------------- hero: forest band, name + one line + CTA, then the main visual ---------------- */}
+  <section class="on-forest band mt-2">
+    <div class="wrap pt-8 pb-10 lg:pt-12 lg:pb-14">
       <a
         href="/apps"
         data-i18n={has("common.back") ? "common.back" : undefined}
         class="rounded font-geist text-[14px] leading-5 font-medium text-muted transition-colors duration-200 ease-out hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
         >← Ilovalar</a
       >
-    </div>
-
-    <div class="mt-8 grid grid-cols-1 gap-y-10 lg:mt-12 lg:grid-cols-[440px_1fr] lg:gap-x-16">
-      <aside class:list={["self-start", app.features.length <= 7 && "lg:sticky lg:top-[110px]"]}>
-        {app.soon && <span class="inline-flex rounded-full bg-accent px-3 py-1 font-geist text-[13px] font-semibold text-accent-emphasis mb-4" data-i18n="app.soon">Tez orada</span>}
-        <h1
-          class="display display-2 max-w-[440px] [overflow-wrap:anywhere]"
-        >
-          {app.name}
-        </h1>
-
-        <p
-          class="mt-5 font-geist text-[17px] leading-[1.6] text-muted lg:text-[18px]"
-          data-i18n={`app.${app.slug}.desc`}
-        >
-          {app.desc}
-        </p>
-
-        <ul class="mt-6 flex flex-col gap-3">
-          {
-            app.features.map((f, i) => (
-              <li class="flex items-start gap-3">
-                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/8 text-ink">
-                  <svg
-                    class="h-3.5 w-3.5"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                  </svg>
-                </span>
-                <span
-                  class="font-geist text-[16px] leading-[1.5] text-ink"
-                  data-i18n={`feat.${app.slug}.${i}`}
-                >
-                  {f}
-                </span>
-              </li>
-            ))
-          }
-        </ul>
-
-        <dl class="card mt-8 hidden grid-cols-1 overflow-hidden sm:grid sm:grid-cols-2">
-          {
-            app.meta.map((row, i) => {
-              const labelKey = `meta.${row.label}`;
-              const valueKey = `v.${row.value}`;
-              return (
-                <div
-                  class:list={[
-                    "border-b border-ink/10 px-4 py-3",
-                    i % 2 === 0 ? "sm:border-r" : "",
-                  ]}
-                >
-                  <dt
-                    class="font-geist text-[13px] leading-[1.4] text-muted"
-                    data-i18n={has(labelKey) ? labelKey : undefined}
-                  >
-                    {row.label}
-                  </dt>
-                  <dd
-                    class="mt-0.5 font-geist text-[15px] leading-[1.4] font-medium text-ink"
-                    data-i18n={has(valueKey) ? valueKey : undefined}
-                  >
-                    {row.value}
-                  </dd>
-                </div>
-              );
-            })
-          }
-          {
-            app.meta.length % 2 === 1 && (
-              <div class="hidden sm:block" aria-hidden="true" />
-            )
-          }
-        </dl>
-
-        {/* Mobile: specs behind an expander. */}
-        <details class="mt-6 sm:hidden">
-          <summary class="btn-outline btn btn-sm w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-            <span data-i18n={has("common.details") ? "common.details" : undefined}>Tafsilotlar</span>
-          </summary>
-          <dl class="card mt-3 overflow-hidden">
-            {
-              app.meta.map((row) => {
-                const labelKey = `meta.${row.label}`;
-                const valueKey = `v.${row.value}`;
-                return (
-                  <div class="flex items-baseline justify-between gap-3 border-b border-ink/10 px-4 py-3 last:border-0">
-                    <dt
-                      class="shrink-0 font-geist text-[13px] leading-[1.4] text-muted"
-                      data-i18n={has(labelKey) ? labelKey : undefined}
-                    >
-                      {row.label}
-                    </dt>
-                    <dd
-                      class="text-right font-geist text-[14px] leading-[1.4] font-medium text-ink"
-                      data-i18n={has(valueKey) ? valueKey : undefined}
-                    >
-                      {row.value}
-                    </dd>
-                  </div>
-                );
-              })
-            }
-          </dl>
-        </details>
-
-        <div class="mt-8 grid gap-3 sm:grid-cols-2">
+      <div class="mt-8 grid items-end gap-8 lg:mt-10 lg:grid-cols-[1fr_auto]">
+        <div class="max-w-[720px]">
+          <p class="flex items-center gap-3 font-geist text-[15px] font-medium text-muted">
+            <span class="tabular-nums">{app.no}</span>
+            <span data-i18n={has(`v.${app.tur}`) ? `v.${app.tur}` : undefined}>{app.tur}</span>
+            {app.soon && <span class="rounded-full bg-accent px-3 py-1 text-[13px] font-semibold text-accent-emphasis" data-i18n="app.soon">Tez orada</span>}
+          </p>
+          <h1 class="display display-1 mt-3 [overflow-wrap:anywhere]">{app.name}</h1>
+          <p class="mt-5 font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]" data-i18n={`app.${app.slug}.desc`}>{app.desc}</p>
+        </div>
+        <div class="flex flex-wrap gap-3">
           {app.soon ? (
-            <span class="btn-outline btn w-full !px-4 pointer-events-none opacity-70" aria-disabled="true">
-              <span data-i18n="app.soon">Tez orada</span>
-            </span>
+            <span class="btn-outline btn pointer-events-none opacity-70" aria-disabled="true"><span data-i18n="app.soon">Tez orada</span></span>
           ) : (
-          <button
-            type="button"
-            data-plan-trigger="starter"
-            class="btn-solid btn w-full !px-4"
-          >
-            <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}
-              >Bepul sinab ko'ring →</span
-            >
-          </button>
+            <button type="button" data-plan-trigger="starter" class="btn-solid btn">
+              <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}>Bepul sinab ko'ring →</span>
+            </button>
           )}
-          <a
-            href={`/apps/${next.slug}`}
-            aria-label={`Keyingi — ${next.name}`}
-            class="btn-outline btn w-full !px-4"
-          >
-            <span
-              data-i18n={has("cta.next") ? "cta.next" : undefined}
-              >Keyingi ›</span
-            >
+          <a href={`/apps/${next.slug}`} aria-label={`Keyingi — ${next.name}`} class="btn-outline btn">
+            <span data-i18n={has("cta.next") ? "cta.next" : undefined}>Keyingi ›</span>
           </a>
         </div>
-      </aside>
+      </div>
 
-      <div class="relative min-w-0">
+      {/* Main visual: the first screen, full width, shown whole. */}
+      {images[0] && (() => {
+        const src = images[0];
+        const dm = imgDims(src);
+        const portrait = !!dm && dm.h > dm.w;
+        return (
+          <div
+            class:list={["group relative mt-10 cursor-zoom-in overflow-hidden rounded-[20px] bg-card lg:mt-14", portrait && "mx-auto max-w-[360px]"]}
+            data-lightbox
+          >
+            <img
+              src={src}
+              alt={`${app.name} — ${frameLabel(src)}`}
+              class="block h-auto w-full"
+              width={dm?.w}
+              height={dm?.h}
+              srcset={imgSrcset(src)}
+              sizes="(max-width:1279px) 100vw, 1184px"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+        );
+      })()}
+    </div>
+  </section>
+
+  {/* ---------------- what it does: feature cards ---------------- */}
+  <section class="section">
+    <div class="wrap">
+      <h2 class="display display-2 max-w-[760px]" data-i18n="app.whatItDoes">Nima qila oladi</h2>
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3">
         {
-          images.length > 0 ? (
-            <>
-              <div class="flex flex-col gap-6 lg:gap-8" data-gallery>
-                {images.map((src, i) => {
-                  const base = frameBase(src);
-                  const frameKey = `frame.${app.slug}.${base}`;
-                  const useKey = has(frameKey) && app.frames?.[base] != null;
-                  const ts = trimStyles(src);
-                  const dm = imgDims(src);
-                  const ss = imgSrcset(src);
-                  return (
-                    <figure class:list={[i >= 3 && "gallery-extra hidden lg:block", dm && dm.h > dm.w && "mx-auto w-full max-w-[340px]"]}>
-                      <div
-                        class="group relative cursor-zoom-in overflow-hidden rounded-[16px] bg-card"
-                        style={ts.wrap}
-                        data-lightbox
-                      >
-                        <img
-                          src={src}
-                          alt={`${app.name} — ${frameLabel(src)}`}
-                          class:list={[
-                            "block max-w-none",
-                            TRIMS[src] ? "absolute" : "-mt-[3px] w-full h-auto",
-                          ]}
-                          style={ts.img}
-                          width={dm?.w}
-                          height={dm?.h}
-                          srcset={ss}
-                          sizes="(max-width:1023px) calc(100vw - 48px), 660px"
-                          loading={i === 0 ? "eager" : "lazy"}
-                          fetchpriority={i === 0 ? "high" : "auto"}
-                          decoding="async"
-                        />
-                        <span
-                          aria-hidden="true"
-                          class="pointer-events-none absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/45 text-white opacity-100 backdrop-blur-sm transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
-                        >
-                          <svg
-                            class="h-4 w-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          >
-                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                          </svg>
-                        </span>
-                      </div>
-                      <figcaption class="mt-3 flex items-baseline justify-between gap-4 font-geist text-[13px] leading-4">
-                        <span
-                          class="text-muted"
-                          data-i18n={useKey ? frameKey : undefined}
-                        >
-                          {frameLabel(src)}
-                        </span>
-                        <span class="shrink-0 font-medium text-ink">
-                          {String(i + 1).padStart(2, "0")} /{" "}
-                          {String(images.length).padStart(2, "0")}
-                        </span>
-                      </figcaption>
-                    </figure>
-                  );
-                })}
-              </div>
-              {images.length > 3 && (
-                <button
-                  type="button"
-                  data-gallery-more
-                  class="btn-outline btn mt-6 w-full lg:hidden"
-                >
-                  <span data-i18n={has("common.showAllPhotos") ? "common.showAllPhotos" : undefined}>
-                    Barcha rasmlarni ko'rsatish
-                  </span>
-                </button>
-              )}
-            </>
-          ) : (
-            <div class="card flex h-[420px] items-center justify-center lg:h-[560px]">
-              <span
-                class="font-geist text-[15px] text-muted"
-                data-i18n={has("imgPending") ? "imgPending" : undefined}
-              >
-                Rasmlar tez orada paydo bo'ladi
+          app.features.map((f, i) => (
+            <li class="card flex flex-col gap-4 p-6 lg:p-8">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-accent font-geist text-[14px] font-semibold text-accent-emphasis tabular-nums">
+                {String(i + 1).padStart(2, "0")}
               </span>
-            </div>
-          )
+              <p class="font-geist text-[18px] leading-[1.4] font-semibold" data-i18n={`feat.${app.slug}.${i}`}>{f}</p>
+            </li>
+          ))
         }
+      </ul>
+
+      {/* Specs: one compact table */}
+      <dl class="mt-4 grid overflow-hidden rounded-[24px] border border-ink/10 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          app.meta.map((row) => {
+            const labelKey = `meta.${row.label}`;
+            const valueKey = `v.${row.value}`;
+            return (
+              <div class="border-b border-ink/10 px-6 py-5 sm:border-r">
+                <dt class="font-geist text-[13px] leading-[1.4] text-muted" data-i18n={has(labelKey) ? labelKey : undefined}>{row.label}</dt>
+                <dd class="mt-1 font-geist text-[16px] leading-[1.4] font-medium" data-i18n={has(valueKey) ? valueKey : undefined}>{row.value}</dd>
+              </div>
+            );
+          })
+        }
+      </dl>
+    </div>
+  </section>
+
+  {/* ---------------- screens: horizontal carousel, every screenshot ---------------- */}
+  {images.length > 1 && (
+    <section class="pb-24 lg:pb-32" data-shots>
+      <div class="wrap flex items-end justify-between gap-6">
+        <h2 class="display display-2" data-i18n="app.screens">Ekranlar</h2>
+        <div class="hidden shrink-0 gap-2 lg:flex">
+          <button type="button" data-shots-prev aria-label="Oldingi" data-i18n-attr="aria-label:car.prev" class="flex h-12 w-12 items-center justify-center rounded-full border border-ink/30 text-ink transition-colors duration-200 ease-out hover:border-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          </button>
+          <button type="button" data-shots-next aria-label="Keyingi" data-i18n-attr="aria-label:car.next" class="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-emphasis transition-colors duration-200 ease-out hover:bg-accent-active focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+          </button>
+        </div>
+      </div>
+      <ul data-shots-track tabindex="0" aria-label="Ekranlar" data-i18n-attr="aria-label:app.screens" class="car-track mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:mt-12 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+        {
+          images.slice(1).map((src, k) => {
+            const i = k + 1;
+            const base = frameBase(src);
+            const frameKey = `frame.${app.slug}.${base}`;
+            const useKey = has(frameKey) && app.frames?.[base] != null;
+            const dm = imgDims(src);
+            const portrait = !!dm && dm.h > dm.w;
+            return (
+              <li class:list={["shrink-0 snap-start", portrait ? "w-[52vw] max-w-[240px]" : "w-[86vw] max-w-[640px]"]}>
+                <figure>
+                  <div class="group relative cursor-zoom-in overflow-hidden rounded-[16px] bg-card" data-lightbox>
+                    <img
+                      src={src}
+                      alt={`${app.name} — ${frameLabel(src)}`}
+                      class="block h-auto w-full"
+                      width={dm?.w}
+                      height={dm?.h}
+                      srcset={imgSrcset(src)}
+                      sizes="640px"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <figcaption class="mt-3 flex items-baseline justify-between gap-4 font-geist text-[14px] leading-5">
+                    <span class="text-muted" data-i18n={useKey ? frameKey : undefined}>{frameLabel(src)}</span>
+                    <span class="shrink-0 font-medium tabular-nums">{String(i + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}</span>
+                  </figcaption>
+                </figure>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </section>
+  )}
+  {images.length === 0 && (
+    <div class="wrap pb-24">
+      <div class="card flex h-[360px] items-center justify-center">
+        <span class="font-geist text-[15px] text-muted" data-i18n={has("imgPending") ? "imgPending" : undefined}>Rasmlar tez orada paydo bo'ladi</span>
       </div>
     </div>
-  </div>
+  )}
+
   <Footer mobileBar />
 
   {/* ---------------- mobile sticky trial CTA ---------------- */}
@@ -418,18 +316,18 @@ function frameLabel(url: string): string {
 
   <script is:inline>
     (function () {
-      // Mobile gallery: reveal screenshots past the first three on demand.
-      var moreBtn = document.querySelector('[data-gallery-more]');
-      if (moreBtn) {
-        moreBtn.addEventListener('click', function () {
-          var g = document.querySelector('[data-gallery]');
-          if (g) {
-            g.querySelectorAll('.gallery-extra').forEach(function (el) {
-              el.classList.remove('hidden');
-            });
-          }
-          moreBtn.remove();
-        });
+      // Screens carousel: arrow buttons scroll by one card.
+      var track = document.querySelector('[data-shots-track]');
+      if (track) {
+        var step = function (dir) {
+          var card = track.querySelector('li');
+          var w = card ? card.getBoundingClientRect().width + 16 : 400;
+          track.scrollBy({ left: dir * w, behavior: 'smooth' });
+        };
+        var p = document.querySelector('[data-shots-prev]');
+        var n = document.querySelector('[data-shots-next]');
+        if (p) p.addEventListener('click', function () { step(-1); });
+        if (n) n.addEventListener('click', function () { step(1); });
       }
 
       var overlay = document.getElementById('app-lightbox');
