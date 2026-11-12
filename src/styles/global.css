@@ -238,16 +238,16 @@
   }
 }
 
-/* In dark mode the forest is close to the page colour; lift the panels a step
- * so their rounded edge still reads. */
+/* Dark mode: the apps' own dark theme (@yeahuz/kdsx-tailwind .dark) has no green
+ * surfaces; panels are surface-300 on a surface-100 page, green is accent only. */
 :root[data-theme="dark"] .on-forest.band,
 :root[data-theme="dark"] .on-forest.band-top {
-  background: oklch(24% 0.03 135);
+  background: oklch(23.89% 0.009 137.83);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .on-forest.band,
   :root:not([data-theme="light"]) .on-forest.band-top {
-    background: oklch(24% 0.03 135);
+    background: oklch(23.89% 0.009 137.83);
   }
 }
 
