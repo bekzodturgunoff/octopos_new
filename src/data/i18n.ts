@@ -1634,10 +1634,10 @@ export const STRINGS: Record<string, Dict> = {
     tr: "Depodan ürün mü kayboluyor?",
   },
   "prob.2t": {
-    en: "Recipes track usage, stock counts show the gap",
-    ru: "Техкарты считают расход, инвентаризация показывает разницу",
-    ko: "레시피가 사용량을 계산하고, 재고 실사가 차이를 보여줍니다",
-    tr: "Reçeteler tüketimi hesaplar, sayım farkı gösterir",
+    en: "Every gram in stock is accounted for",
+    ru: "Каждый грамм на складе под учётом",
+    ko: "재고의 모든 그램을 기록합니다",
+    tr: "Depodaki her gram kayıt altında",
   },
   "prob.2d": {
     en: "Every dish sold is deducted from stock by its recipe. After a stock count, the variance report shows which product came up short and by how much. You get a Telegram alert when something is running low.",
