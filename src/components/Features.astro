@@ -89,11 +89,11 @@ const I = {
           <div class="mt-3 grid grid-cols-2 gap-2">
             <div class="box">
               <p class="flex items-center justify-between text-[11.5px]"><span data-i18n="ft.netSales">Sof savdo</span><span class="delta"><svg viewBox="0 0 24 24" set:html={I.up} />12.4%</span></p>
-              <p class="kpi">4 820 000</p>
+              <p class="kpi"><span>4 820 000</span></p>
             </div>
             <div class="box">
               <p class="text-[11.5px]" data-i18n="ft.grossProfit">Yalpi foyda (taxminiy)</p>
-              <p class="kpi">3 133 000 <span class="m2 text-[12px] font-normal">65%</span></p>
+              <p class="kpi"><span>3 133 000</span> <span class="m2 text-[12px] font-normal">65%</span></p>
             </div>
           </div>
           <div class="box mt-2">
@@ -177,7 +177,7 @@ const I = {
           <p data-i18n="ft.floorD">Qaysi stol band, qancha vaqtdan beri o‘tirishibdi va kim ofitsiantni chaqirdi.</p>
         </div>
         <div class="ft-crop app" aria-hidden="true">
-          <div class="flex items-center gap-3 text-[12px]">
+          <div class="flex flex-wrap items-center gap-x-3 gap-y-2 text-[12px]">
             <span class="tab on"><span data-i18n="ft.all">Barchasi</span> <em>6</em></span>
             <span class="tab"><i class="dot" style="background:var(--s500)"></i><span data-i18n="ft.free">Bo'sh</span> <em>3</em></span>
             <span class="tab"><i class="dot" style="background:var(--accent)"></i><span data-i18n="ft.busy">Band</span> <em>3</em></span>
@@ -211,7 +211,7 @@ const I = {
         </div>
         <div class="ft-crop app" aria-hidden="true">
           <div class="flex items-center justify-between gap-2">
-            <b class="text-[17px] font-semibold tracking-[-0.01em]" data-i18n="ft.inbox">Xabarlar</b>
+            <b class="shrink-0 text-[17px] font-semibold tracking-[-0.01em]" data-i18n="ft.inbox">Xabarlar</b>
             <span class="pill-outline"><svg viewBox="0 0 24 24" set:html={I.checks} /><span data-i18n="ft.markAll">Barchasini o'qilgan deb belgilash</span></span>
           </div>
           <div class="note mt-2.5">
@@ -285,6 +285,8 @@ const I = {
   /* Fills the rest of the tile from the top, so panels in a row match in size. */
   .ft-crop {
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
     margin: 0 24px 24px;
     padding: 14px;
     border-radius: 14px;
@@ -344,6 +346,7 @@ const I = {
     color: var(--on2);
   }
   .box {
+    min-width: 0;
     border-radius: 10px;
     background: var(--s200);
     padding: 10px 12px;
@@ -384,13 +387,25 @@ const I = {
   .split span {
     border-radius: 999px;
   }
+  /* Phones: two KPI boxes share ~230px, so the figures step down to fit. */
   .kpi {
     margin-top: 4px;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     letter-spacing: 0.01em;
-    white-space: nowrap;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 4px;
     font-variant-numeric: tabular-nums;
+  }
+  .kpi > :first-child {
+    white-space: nowrap;
+  }
+  @media (min-width: 400px) {
+    .kpi {
+      font-size: 18px;
+    }
   }
   @media (min-width: 640px) {
     .kpi {
@@ -399,16 +414,17 @@ const I = {
   }
   .legend {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 6px 16px;
     font-size: 11.5px;
   }
   @media (min-width: 640px) {
     .legend {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   .legend div {
+    min-width: 0;
     display: flex;
     justify-content: space-between;
     gap: 6px;
@@ -507,9 +523,15 @@ const I = {
     border: 1px solid color-mix(in oklab, var(--on) 60%, transparent);
     border-radius: 999px;
     padding: 4px 10px;
+    min-width: 0;
     font-size: 11px;
     font-weight: 600;
     white-space: nowrap;
+  }
+  /* A long label (e.g. "mark all as read") shortens instead of pushing out of the mock. */
+  .pill-outline span {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .pill-outline svg {
     width: 12px;
@@ -589,10 +611,11 @@ const I = {
   }
   .tables {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
   }
   .tables li {
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -600,6 +623,14 @@ const I = {
     border-radius: 10px;
     background: var(--s300);
     padding: 8px 6px 7px;
+  }
+  /* Long words (ru «Свободно») shorten inside a narrow tile instead of spilling out. */
+  .tables li > b,
+  .tables li > small {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .tbl {
     position: relative;

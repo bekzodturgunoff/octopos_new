@@ -391,7 +391,7 @@ const faqLd = {
         <ul class="grid gap-4 lg:grid-cols-2">
           {
             problems.filter((pr) => pr.mock).map((pr) => (
-              <li class="card flex flex-col p-6 pb-0 lg:p-10 lg:pb-0">
+              <li class="card flex min-w-0 flex-col p-6 pb-0 lg:p-10 lg:pb-0">
                 {/* Same text height in every card, so the four mock windows start on one line. */}
                 <div class="lg:min-h-[270px]">
                   <p class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[1.4] font-semibold text-link lg:text-[16px]">
@@ -726,7 +726,7 @@ const faqLd = {
 
         <div class="mt-10 grid gap-4 lg:grid-cols-3">
           {/* online store / website */}
-          <div class="card flex flex-col p-6 lg:p-8" data-addon="store">
+          <div class="card flex min-w-0 flex-col p-6 lg:p-8" data-addon="store">
             <h3
               class="font-geist text-[24px] leading-[1.25] font-semibold"
               data-i18n="add.t1"
@@ -834,7 +834,7 @@ const faqLd = {
           </div>
 
           {/* own delivery */}
-          <div class="card flex flex-col p-6 lg:p-8" data-addon="delivery">
+          <div class="card flex min-w-0 flex-col p-6 lg:p-8" data-addon="delivery">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <h3
                 class="font-geist text-[24px] leading-[1.25] font-semibold"
@@ -915,7 +915,7 @@ const faqLd = {
           </div>
 
           {/* photo studio (AI) */}
-          <div class="card flex flex-col p-6 lg:p-8" data-addon="photo">
+          <div class="card flex min-w-0 flex-col p-6 lg:p-8" data-addon="photo">
             <h3
               class="font-geist text-[24px] leading-[1.25] font-semibold"
               data-i18n="add.t3"

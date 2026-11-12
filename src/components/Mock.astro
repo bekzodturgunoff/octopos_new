@@ -180,16 +180,16 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
               <span class="sf-dot h-1 w-4 rounded-full" /><span class="sf-dot-off h-1 w-1 rounded-full" /><span class="sf-dot-off h-1 w-1 rounded-full" />
             </div>
 
-            <ul class="mt-4 grid grid-cols-3 gap-x-2 pb-5 text-[10.5px]">
-              <li class="flex gap-2">
+            <ul class="mt-4 grid gap-y-2.5 pb-5 text-[10.5px] sm:grid-cols-3 sm:gap-x-2">
+              <li class="flex min-w-0 gap-2">
                 <svg class="sf-accent mt-0.5 h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" set:html={I.truck} />
                 <span><b class="block font-semibold" data-i18n="mock.delivery">Yetkazib berish</b><span class="sf-muted" data-i18n="mock.toDoor">Eshigingizgacha</span></span>
               </li>
-              <li class="flex gap-2">
+              <li class="flex min-w-0 gap-2">
                 <svg class="sf-accent mt-0.5 h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" set:html={I.clock} />
                 <span><b class="block font-semibold" data-i18n="mock.pickup">Olib ketish</b><span class="sf-muted">Chorsu, Mirobod</span></span>
               </li>
-              <li class="flex gap-2">
+              <li class="flex min-w-0 gap-2">
                 <svg class="sf-accent mt-0.5 h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" set:html={I.card} />
                 <span><b class="block font-semibold" data-i18n="mock.payOnline">Onlayn to'lov</b><span class="sf-muted">Payme, Click</span></span>
               </li>

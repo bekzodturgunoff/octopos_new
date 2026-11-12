@@ -13,8 +13,8 @@
  * charge are translated so each language page reads as one restaurant.
  *
  * Scales as one piece: 1em = 16px at the 1280px design width, driven by the
- * container width. On narrow screens it crops to the right-hand side (last tile
- * column + order panel) so the text stays readable.
+ * container width. Shown whole at every width: on phones it scales down
+ * rather than cropping.
  */
 const tiles = [
   { n: 1, name: "Limonad Ocean", src: "/mock/pos/drink1.webp" },
@@ -147,12 +147,11 @@ const ico = {
   .pos-hero {
     container-type: inline-size;
     overflow: hidden;
-    border-radius: 16px;
-    --mock-w: 180; /* % of the frame the mock spans: crops to the right part on phones */
+    border-radius: 12px;
+    --mock-w: 100; /* % of the frame the mock spans: always the whole screen */
   }
   @media (min-width: 768px) {
     .pos-hero {
-      --mock-w: 100;
       border-radius: 24px;
     }
   }

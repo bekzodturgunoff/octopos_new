@@ -10,6 +10,15 @@ import {
 
 const SITE = "https://octopos.uz";
 
+/** Open Graph locale per site language. */
+const OG_LOCALE: Record<Lang, string> = {
+  uz: "uz_UZ",
+  en: "en_US",
+  ru: "ru_RU",
+  ko: "ko_KR",
+  tr: "tr_TR",
+};
+
 /* ------------------------------------------------------------------ *
  * HTML translation
  * ------------------------------------------------------------------ */
@@ -89,6 +98,10 @@ function metaFor(pathname: string): { title: string; desc: string } | null {
   if (p === "/") return { title: "meta.home.title", desc: "meta.home.desc" };
   if (p === "/apps") return { title: "meta.apps.title", desc: "meta.apps.desc" };
   if (p === "/404") return { title: "nf.title", desc: "nf.body" };
+  // App pages: the title is the app name (same in every language); the
+  // description is the app's translated summary.
+  const app = p.match(/^\/apps\/([a-z-]+)$/);
+  if (app) return { title: "", desc: `app.${app[1]}.desc` };
   return null;
 }
 
@@ -158,6 +171,10 @@ export function translateHtml(
           /(<meta property="og:title" content=")[^"]*(")/,
           `$1${escapeHtml(title)}$2`,
         );
+        out = out.replace(
+          /(<meta name="twitter:title" content=")[^"]*(")/,
+          `$1${escapeHtml(title)}$2`,
+        );
       }
       if (desc) {
         out = out.replace(
@@ -166,6 +183,10 @@ export function translateHtml(
         );
         out = out.replace(
           /(<meta property="og:description" content=")[^"]*(")/,
+          `$1${escapeHtml(desc)}$2`,
+        );
+        out = out.replace(
+          /(<meta name="twitter:description" content=")[^"]*(")/,
           `$1${escapeHtml(desc)}$2`,
         );
       }
@@ -177,16 +198,26 @@ export function translateHtml(
     /(<link rel="canonical" href=")[^"]*(")/,
     `$1${canonical}$2`,
   );
+  // Share links point at the page in this language, not the Uzbek one.
+  out = out.replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${canonical}$2`);
+  if (!out.includes('property="og:locale"')) {
+    out = out.replace(
+      /(<meta property="og:site_name"[^>]*>)/,
+      `$1<meta property="og:locale" content="${OG_LOCALE[locale]}">`,
+    );
+  }
   if (!out.includes('hreflang="x-default"')) {
     out = out.replace(/<\/head>/, `${alternates(pathname)}</head>`);
   }
   return out;
 }
 
-/** Write `sitemap-0.xml` / `sitemap-index.xml` with hreflang alternates. */
+/** Write `sitemap-0.xml` / `sitemap-index.xml` with hreflang alternates.
+ * Every language version gets its own <url> entry (Google requires each
+ * listed alternate to also be listed as a URL with the full set). */
 async function writeSitemap(root: string, bases: string[]): Promise<void> {
   const urls = bases
-    .map((pathname) => {
+    .flatMap((pathname) => {
       const links = [
         `<xhtml:link rel="alternate" hreflang="uz" href="${SITE}${pathname}" />`,
         ...PREFIXED_LOCALES.map(
@@ -195,7 +226,8 @@ async function writeSitemap(root: string, bases: string[]): Promise<void> {
         ),
         `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${pathname}" />`,
       ].join("");
-      return `<url><loc>${SITE}${pathname}</loc>${links}</url>`;
+      const locs = [`${SITE}${pathname}`, ...PREFIXED_LOCALES.map((l) => `${SITE}/${l}${pathname}`)];
+      return locs.map((loc) => `<url><loc>${loc}</loc>${links}</url>`);
     })
     .join("");
 
