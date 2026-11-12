@@ -77,7 +77,9 @@ const bandApps = appOrder.map((slug) => apps.find((a) => a.slug === slug)!).filt
 
 // Placeholders never reach production: Vercel sets VERCEL_ENV at build time.
 const showPlaceholders = process.env.VERCEL_ENV !== "production";
-const tmCards: (Testimonial | null)[] = testimonials.length ? testimonials.slice(0, 3) : showPlaceholders ? [null, null, null] : [];
+/* Testimonials are hidden until real client photos and reviews arrive; flip to true to show them. */
+const SHOW_TESTIMONIALS = false;
+const tmCards: (Testimonial | null)[] = !SHOW_TESTIMONIALS ? [] : testimonials.length ? testimonials.slice(0, 3) : showPlaceholders ? [null, null, null] : [];
 
 const storeTiers = [
   { name: "Start", price: "790 000", n: 1000 },

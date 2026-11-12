@@ -156,8 +156,8 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
             <div class="flex items-center justify-between">
               {/* Shop logo slot: Octopos's own mark, not a client's. Same files the header loads. */}
               <span class="flex items-center gap-2">
-                <img src={logoDark.src} alt="" width="28" height="28" class="logo-dark h-7 w-7" loading="lazy" decoding="async" />
-                <img src={logoLight.src} alt="" width="28" height="28" class="logo-light h-7 w-7" loading="lazy" decoding="async" />
+                <img src={logoDark.src} alt="" width="28" height="28" class="logo-light h-7 w-7" loading="lazy" decoding="async" />
+                <img src={logoLight.src} alt="" width="28" height="28" class="logo-dark h-7 w-7" loading="lazy" decoding="async" />
                 <span class="text-[13px] font-semibold tracking-[-0.2px]">Octopos</span>
               </span>
               <svg class="h-4 w-4" viewBox="0 0 24 24" set:html={I.moon} />
@@ -244,23 +244,13 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
     background: var(--sf-bg);
     color: var(--sf-fg);
   }
-  :global(:root[data-theme="dark"]) .sf {
+  :global(:root:not([data-theme="dark"])) .sf {
     --sf-bg: #141414;
     --sf-fg: #f2f2f2;
     --sf-muted: #a5a5a5;
     --sf-field: #1f1f1f;
     --sf-line: #5a5a5a;
     --sf-accent-c: #ffa77e;
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme="light"])) .sf {
-      --sf-bg: #141414;
-      --sf-fg: #f2f2f2;
-      --sf-muted: #a5a5a5;
-      --sf-field: #1f1f1f;
-      --sf-line: #5a5a5a;
-      --sf-accent-c: #ffa77e;
-    }
   }
   .sf-field {
     border-radius: 8px;

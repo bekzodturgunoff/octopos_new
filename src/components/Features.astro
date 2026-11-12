@@ -318,7 +318,7 @@ const I = {
     line-height: 1.4;
     text-align: left;
   }
-  :global(:root[data-theme="dark"]) .app {
+  :global(:root:not([data-theme="dark"])) .app {
     --s100: oklch(19.09% 0.009 137.85);
     --s200: oklch(20.86% 0.009 137.84);
     --s300: oklch(23.89% 0.009 137.83);
@@ -329,20 +329,6 @@ const I = {
     --forest: var(--accent);
     --red: oklch(83.83% 0.089 26.76);
     --red-low: oklch(25.2% 0.011 91.73);
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme="light"])) .app {
-      --s100: oklch(19.09% 0.009 137.85);
-      --s200: oklch(20.86% 0.009 137.84);
-      --s300: oklch(23.89% 0.009 137.83);
-      --s500: oklch(27.1% 0.011 139.43);
-      --on: oklch(91.24% 0.03 125.98);
-      --on2: oklch(82.4% 0.04 129.72);
-      --border: oklch(37.54% 0.023 135.14);
-      --forest: var(--accent);
-      --red: oklch(83.83% 0.089 26.76);
-      --red-low: oklch(25.2% 0.011 91.73);
-    }
   }
   .app svg {
     width: 14px;

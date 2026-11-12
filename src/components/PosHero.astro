@@ -6,8 +6,8 @@
  * tablet layout): search bar, menu breadcrumb, numbered product tiles with
  * variant chips, the order panel (Yangi savdo · Joyida · Jo'natish, lines with
  * steppers, notes, subtotal / service / total, To'lov F8) and the six-tab bar.
- * Colours are the POS surface tokens read from the live app; it follows the
- * site theme like the real app does.
+ * Colours are the POS light-theme surface tokens read from the live app; the
+ * mock stays light whatever the site theme is.
  * Labels use the POS's own translations (kdsx-pos-v2/public/locales). Product
  * names are catalogue data and stay as they are; the menu folder and service
  * charge are translated so each language page reads as one restaurant.
@@ -183,38 +183,6 @@ const ico = {
     line-height: 1.5;
     text-align: left;
     user-select: none;
-  }
-  /* POS dark-theme tokens (read from the live app). The dark screen sits on a
-   * dark band, so the frame gets a 1px edge in this theme only. */
-  :global(:root[data-theme="dark"]) .pos-hero {
-    box-shadow: 0 0 0 1px oklch(34% 0.012 137);
-  }
-  :global(:root[data-theme="dark"]) .pos {
-    --s100: oklch(19.09% 0.009 137.85);
-    --s200: oklch(20.86% 0.009 137.84);
-    --s300: oklch(23.89% 0.009 137.83);
-    --s500: oklch(27.1% 0.011 139.43);
-    --on: oklch(91.24% 0.03 125.98);
-    --on2: oklch(82.4% 0.04 129.72);
-    --border: oklch(37.54% 0.023 135.14);
-    --active: var(--accent);
-    --plus: var(--accent);
-  }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme="light"])) .pos-hero {
-      box-shadow: 0 0 0 1px oklch(34% 0.012 137);
-    }
-    :global(:root:not([data-theme="light"])) .pos {
-      --s100: oklch(19.09% 0.009 137.85);
-      --s200: oklch(20.86% 0.009 137.84);
-      --s300: oklch(23.89% 0.009 137.83);
-      --s500: oklch(27.1% 0.011 139.43);
-      --on: oklch(91.24% 0.03 125.98);
-      --on2: oklch(82.4% 0.04 129.72);
-      --border: oklch(37.54% 0.023 135.14);
-      --active: var(--accent);
-      --plus: var(--accent);
-    }
   }
   .pos svg {
     width: 1.25em;
