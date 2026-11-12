@@ -238,6 +238,19 @@
   }
 }
 
+/* In dark mode the forest is close to the page colour; lift the panels a step
+ * so their rounded edge still reads. */
+:root[data-theme="dark"] .on-forest.band,
+:root[data-theme="dark"] .on-forest.band-top {
+  background: oklch(24% 0.03 135);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .on-forest.band,
+  :root:not([data-theme="light"]) .on-forest.band-top {
+    background: oklch(24% 0.03 135);
+  }
+}
+
 .on-forest {
   background: var(--color-forest);
   --color-page: var(--color-forest);

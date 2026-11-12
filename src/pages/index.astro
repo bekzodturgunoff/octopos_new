@@ -269,43 +269,46 @@ const faqLd = {
   description="Kassa dasturi, oshxona ekrani, QR-menyu, onlayn do'kon, ombor va fiskal cheklar bitta tizimda. O'zbekistondagi restoran, kafe va do'konlar uchun. Bepul tarif bor."
   jsonLd={[...homeLd, faqLd]}
 >
-  <TopNav overHero />
+  <TopNav />
 
   <main>
-    {/* ---------------- hero (forest band) ---------------- */}
-    <section class="on-forest">
-      <div class="wrap pt-10 pb-10 lg:pt-20 lg:pb-14">
-        <h1 class="display display-1 max-w-[1100px]">
-          <span data-i18n="hero.t1">Eng yaxshisini ishlating,</span>
-          <span class="text-link" data-i18n="hero.t2">boshliq!</span>
-        </h1>
-        <p class="mt-6 max-w-[600px] font-geist text-[16px] leading-[1.6] text-ink/90 lg:mt-8 lg:text-[18px]" data-i18n="hero.body">
-          Kassa, oshxona ekrani, QR-menyu, onlayn do'kon va yetkazib berish
-          bitta tizimda. Ombor, soliq cheklari va hisobotlar ham shu yerda.
-          Internet uzilsa ham savdo to'xtamaydi.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <button type="button" data-plan-trigger="starter" class="btn-solid btn">
-            <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
-          </button>
-          <a href="#contact" data-lead-jump class="btn-outline btn">
-            <span data-i18n="ct.demo">Demo so'rash</span>
-          </a>
+    {/* ---------------- hero: inset forest panel (same layout as the app pages) ---------------- */}
+    <section class="on-forest band mt-2">
+      <div class="wrap pt-10 pb-10 lg:pt-16 lg:pb-14">
+        <div class="grid items-end gap-8 lg:grid-cols-[1fr_auto]">
+          <div class="max-w-[820px]">
+            <h1 class="display display-1">
+              <span data-i18n="hero.t1">Eng yaxshisini ishlating,</span>
+              <span class="text-link" data-i18n="hero.t2">boshliq!</span>
+            </h1>
+            <p class="mt-5 max-w-[640px] font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]" data-i18n="hero.body">
+              Kassa, oshxona ekrani, QR-menyu, onlayn do'kon va yetkazib berish
+              bitta tizimda. Ombor, soliq cheklari va hisobotlar ham shu yerda.
+              Internet uzilsa ham savdo to'xtamaydi.
+            </p>
+          </div>
+          <div class="lg:pb-1">
+            <div class="flex flex-wrap gap-3">
+              <button type="button" data-plan-trigger="starter" class="btn-solid btn">
+                <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
+              </button>
+              <a href="#contact" data-lead-jump class="btn-outline btn">
+                <span data-i18n="ct.demo">Demo so'rash</span>
+              </a>
+            </div>
+          </div>
         </div>
         <p class="mt-5 font-geist text-[14px] leading-[1.5] text-muted" data-i18n="hero.trust">
           Bank kartasi shart emas · 1–3 kunda ishga tushadi · Internetsiz ishlaydi
         </p>
+
+        {/* The RestaurantPOS order screen, rebuilt in HTML from the live app (PosHero.astro), shown whole. */}
+        <div class="mt-10 lg:mt-14">
+          <PosHero />
+        </div>
       </div>
     </section>
 
-    {/* Hero visual: the RestaurantPOS order screen, rebuilt in HTML from the
-        live app (see PosHero.astro). Sits half on the forest band, half on the page. */}
-    <div class="relative">
-      <div class="absolute inset-x-0 top-0 h-1/2 bg-forest" aria-hidden="true"></div>
-      <div class="wrap relative">
-        <PosHero />
-      </div>
-    </div>
     {/* ---------------- trust row ---------------- */}
     <section class="py-12 lg:py-20">
       <ul class="wrap grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
