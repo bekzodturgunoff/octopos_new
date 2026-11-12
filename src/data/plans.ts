@@ -123,7 +123,7 @@ export function renderPlanCard(plan: any, _lang: string, cycle: Cycle, L: Label,
   const chips = [
     chip("plans.locations", quotaMax("location")),
     chip("plans.aiPhotos", quotaMax("imageGeneration")),
-    chip("plans.orders", planWide("order")),
+    // No order-count chip: the note under the cards states the order allowance for every plan.
     chip("plans.items", planWide("item")),
   ]
     .filter(Boolean)

@@ -319,12 +319,14 @@ export default function i18nStatic(): AstroIntegration {
           const raw = req.url ?? "/";
           const [pathOnly, query] = raw.split("?");
           const m = pathOnly.match(/^\/(en|ru|ko|tr)(\/.*)?$/);
-          if (!m) return next();
-          const locale = m[1] as Lang;
-          const stripped = m[2] || "/";
+          // Uzbek pages (no prefix) also go through translateHtml in dev, so the
+          // dev server shows the same official apostrophes as the build.
+          if (!m && (HAS_EXT.test(pathOnly) || /^\/(@|__|_astro\/|node_modules\/|src\/)/.test(pathOnly))) return next();
+          const locale = (m ? m[1] : "uz") as Lang;
+          const stripped = m ? m[2] || "/" : pathOnly;
           if (HAS_EXT.test(stripped)) return next();
 
-          req.url = stripped + (query ? `?${query}` : "");
+          if (m) req.url = stripped + (query ? `?${query}` : "");
 
           const chunks: Buffer[] = [];
           const origWrite = res.write.bind(res);
