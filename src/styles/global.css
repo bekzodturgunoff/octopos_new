@@ -68,7 +68,7 @@
   --color-page: oklch(98.09% 0.013 115.83);
   --color-ink: oklch(22.26% 0.027 133.88);
   --color-muted: oklch(39.23% 0.036 133.1);
-  --color-hairline: oklch(95.7% 0.005 117.93);
+  --color-hairline: oklch(91% 0.01 117.93);
   --color-link: oklch(28.69% 0.08386907740604355 135.05042975542813);
   --color-on-ink: oklch(98.09% 0.013 115.83);
   /* Cards read as a light lime tint of the brand (as wise.com's light-green
@@ -284,7 +284,7 @@
   --color-hairline: oklch(91% 0.01 117.93);
   --color-link: oklch(28.69% 0.08386907740604355 135.05042975542813);
   --color-on-ink: oklch(98.09% 0.013 115.83);
-  --color-card: oklch(94.5% 0.018 119.1);
+  --color-card: oklch(95.2% 0.035 131);
   --color-error-bright: oklch(50.6% 0.193 27.7);
   --color-error-low: oklch(91.83% 0.04177126481295753 25.22590685781077);
 }
@@ -296,7 +296,7 @@
     --color-hairline: oklch(91% 0.01 117.93);
     --color-link: oklch(28.69% 0.08386907740604355 135.05042975542813);
     --color-on-ink: oklch(98.09% 0.013 115.83);
-    --color-card: oklch(94.5% 0.018 119.1);
+    --color-card: oklch(95.2% 0.035 131);
     --color-error-bright: oklch(50.6% 0.193 27.7);
     --color-error-low: oklch(91.83% 0.04177126481295753 25.22590685781077);
   }
@@ -311,7 +311,7 @@
   --color-hairline: oklch(91% 0.01 117.93);
   --color-link: oklch(28.69% 0.08386907740604355 135.05042975542813);
   --color-on-ink: oklch(98.09% 0.013 115.83);
-  --color-card: oklch(96.49% 0.015 119.1);
+  --color-card: oklch(95.2% 0.035 131);
   color: var(--color-ink);
 }
 :root[data-theme="dark"] .surface-reset {

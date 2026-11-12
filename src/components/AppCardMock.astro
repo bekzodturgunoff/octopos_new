@@ -2,15 +2,14 @@
 /**
  * The visual on each apps-carousel card: one tight, centred crop of that app's
  * real screen (sunday-style: product under the title, cropped only at the
- * bottom). Rebuilt in HTML from the live apps and their source; follows the
- * site theme like the apps do. Wording is each app's own (public/locales).
+ * bottom). Rebuilt in HTML from the live apps and their source; always shown in
+ * the apps' light theme, whatever the site theme. Wording is each app's own (public/locales).
  *
  *   pos-restaurant — order panel           pos-market — parked sales + basket
  *   dash           — P&L + money split      kitchen    — ticket cards
  *   ods            — pickup board           guest      — table landing (QR)
  *   website        — yeah.uz storefront     dispatch   — coming soon
  */
-import logoDark from "../assets/logo_dark.webp";
 import logoLight from "../assets/logo_light.webp";
 
 interface Props {
@@ -180,8 +179,7 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
       <div class="phone sf">
         <div class="flex items-center justify-between">
           <span class="flex items-center gap-1.5">
-            <img src={logoDark.src} alt="" width="22" height="22" class="logo-light h-[22px] w-[22px]" loading="lazy" decoding="async" />
-            <img src={logoLight.src} alt="" width="22" height="22" class="logo-dark h-[22px] w-[22px]" loading="lazy" decoding="async" />
+            <img src={logoLight.src} alt="" width="22" height="22" class="h-[22px] w-[22px]" loading="lazy" decoding="async" />
           </span>
           <span class="flex gap-2.5"><Fragment set:html={svg(I.search)} /><Fragment set:html={svg(I.bag)} /></span>
         </div>
@@ -245,19 +243,6 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
     --grey: oklch(56.54% 0.038 131.64);
     background: var(--s100);
     color: var(--on);
-  }
-  :global(:root:not([data-theme="dark"])) :global(.on-forest) .acm {
-    box-shadow: 0 0 0 1px rgba(248, 250, 240, 0.14);
-  }
-  :global(:root:not([data-theme="dark"])) .app {
-    --s100: oklch(19.09% 0.009 137.85);
-    --s200: oklch(20.86% 0.009 137.84);
-    --s300: oklch(23.89% 0.009 137.83);
-    --s500: oklch(27.1% 0.011 139.43);
-    --on: oklch(91.24% 0.03 125.98);
-    --on2: oklch(82.4% 0.04 129.72);
-    --border: oklch(37.54% 0.023 135.14);
-    --forest: var(--accent);
   }
   .app :global(svg) {
     width: 13px;
@@ -599,13 +584,6 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
     background: #fff;
     color: #141414;
     max-width: 250px;
-  }
-  :global(:root:not([data-theme="dark"])) .acm:has(.sf) {
-    background: #141414;
-  }
-  :global(:root:not([data-theme="dark"])) .sf {
-    background: #141414;
-    color: #f2f2f2;
   }
   .acm:has(.sf) {
     background: #fff;
