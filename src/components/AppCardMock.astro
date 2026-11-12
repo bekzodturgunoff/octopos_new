@@ -1,0 +1,715 @@
+---
+/**
+ * The visual on each apps-carousel card: one tight, centred crop of that app's
+ * real screen (sunday-style: product under the title, cropped only at the
+ * bottom). Rebuilt in HTML from the live apps and their source; follows the
+ * site theme like the apps do. Wording is each app's own (public/locales).
+ *
+ *   pos-restaurant — order panel           pos-market — parked sales + basket
+ *   dash           — P&L + money split      kitchen    — ticket cards
+ *   ods            — pickup board           guest      — table landing (QR)
+ *   website        — yeah.uz storefront     dispatch   — coming soon
+ */
+import logoDark from "../assets/logo_dark.webp";
+import logoLight from "../assets/logo_light.webp";
+
+interface Props {
+  slug: string;
+}
+const { slug } = Astro.props;
+
+const I = {
+  utensils: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 3 2h3Zm0 0v7"/>',
+  down: '<path d="m6 9 6 6 6-6"/>',
+  minus: '<path d="M5 12h14"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  noFork: '<path d="m2 2 20 20"/><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v8"/><path d="M21 15V2a5 5 0 0 0-5 5v6"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  chevron: '<path d="m9 18 6-6-6-6"/>',
+  bell: '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>',
+  receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  truck: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  card: '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/>',
+  bike: '<circle cx="18.5" cy="17.5" r="3.5"/><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="15" cy="5" r="1"/><path d="M12 17.5V14l-3-3 4-3 2 3h2"/>',
+  scan: '<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 7v10"/><path d="M12 7v10"/><path d="M17 7v10"/>',
+};
+const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
+---
+
+<div class="acm app" aria-hidden="true">
+  {
+    slug === "pos-restaurant" && (
+      <div class="p">
+        <div class="flex items-start justify-between gap-2">
+          <span>
+            <b class="block text-[14px] font-semibold tracking-[-0.01em]" data-i18n="pos.newSale">Yangi savdo</b>
+            <span class="pill mt-1"><Fragment set:html={svg(I.utensils)} /><span data-i18n="pos.dineIn">Zalda</span><Fragment set:html={svg(I.down)} /></span>
+          </span>
+          <span class="acc"><span data-i18n="pos.send">Jo'natish</span><kbd>Enter</kbd></span>
+        </div>
+        <ul class="lines mt-2.5">
+          {[["Osh - 0.5", "45 000", 2], ["Lag'mon", "38 000", 1], ["Somsa", "12 000", 3]].map(([n, p, q]) => (
+            <li><span class="ln">{n}</span><span class="step"><i set:html={svg(I.minus)} /><b>{q}</b><i set:html={svg(I.plus)} /></span><span class="lp">{p}</span></li>
+          ))}
+        </ul>
+        <div class="tot mt-2.5"><span data-i18n="pos.total">Jami</span><b>164 000</b></div>
+        <span class="acc wide mt-2"><span data-i18n="pos.checkout">To'lov</span><kbd>F8</kbd></span>
+      </div>
+    )
+  }
+
+  {
+    slug === "pos-market" && (
+      <div class="p">
+        <div class="flex items-center justify-between gap-2">
+          <b class="text-[14px] font-semibold tracking-[-0.01em]" data-i18n="pos.newSale">Yangi savdo</b>
+          <span class="ghost"><span data-i18n="mk.park">Chetga qo'yish</span><kbd>F9</kbd></span>
+        </div>
+        <div class="mt-2 flex gap-1.5 overflow-hidden">
+          <span class="park"><span data-i18n="mk.items2">2 ta mahsulot</span> · 28 000</span>
+          <span class="park on"><span data-i18n="mk.items4">4 ta mahsulot</span> · 61 500</span>
+        </div>
+        <ul class="lines mt-2">
+          {[["Sut 1 L", "24 000", 2], ["Guruch 1 kg", "18 500", 1], ["Choy 100 g", "15 000", 1], ["Obi non", "4 000", 1]].map(([n, p, q]) => (
+            <li><span class="ln">{n}</span><span class="step"><i set:html={svg(I.minus)} /><b>{q}</b><i set:html={svg(I.plus)} /></span><span class="lp">{p}</span></li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    slug === "dash" && (
+      <div class="p">
+        <div class="flex gap-1.5">
+          <span class="chip on" data-i18n="ft.today">Bugun</span>
+          <span class="chip" data-i18n="ft.yesterday">Kecha</span>
+          <span class="chip" data-i18n="ft.week">Shu hafta</span>
+        </div>
+        <div class="box mt-2.5">
+          <p class="flex items-center justify-between text-[11px]"><span data-i18n="ft.netSales">Sof savdo</span><span class="delta">↑ 12.4%</span></p>
+          <p class="mt-0.5 text-[20px] font-semibold tabular-nums">4 820 000</p>
+        </div>
+        <div class="box mt-1.5">
+          <p class="text-[11px] font-medium" data-i18n="ft.where">Pul qayerga ketadi</p>
+          <div class="split mt-2"><span style="width:35%;background:var(--yellow)" /><span style="width:12%;background:var(--cyan)" /><span style="width:8%;background:var(--grey)" /><span style="width:45%;background:var(--accent)" /></div>
+          <p class="mt-2 flex justify-between text-[10.5px]"><span class="flex items-center gap-1.5"><i class="dot" style="background:var(--accent)" /><span data-i18n="ft.opProfit">Operatsion foyda</span></span><b class="font-medium tabular-nums">2 169 000</b></p>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    slug === "kitchen" && (
+      <div class="p grid grid-cols-[1fr_0.55fr] gap-2">
+        <div class="ticket">
+          <div class="th">
+            <p class="flex items-center gap-1.5"><b>0015</b><span class="st new" data-i18n="kd.new">Yangi</span><span class="ml-auto flex items-center gap-1 m2 text-[10.5px]"><Fragment set:html={svg(I.clock)} />13:42</span></p>
+            <p class="m2 mt-1 flex items-center gap-1 text-[10.5px]"><Fragment set:html={svg(I.user)} />Dilnoza</p>
+            <p class="mt-1.5 flex gap-1"><span class="tg cyan"><Fragment set:html={svg(I.utensils)} /><span data-i18n="kd.dineIn">Joyida</span></span><span class="tg"><span data-i18n="kd.table">Stol</span>: 4</span></p>
+          </div>
+          <ul class="tl">
+            <li><span>Osh - 0.5</span><b>×2</b></li>
+            <li><span>Lag'mon</span><b>×1</b></li>
+            <li><span>Somsa</span><b>×3</b></li>
+          </ul>
+          <span class="acc wide m" data-i18n="kd.start">Boshlash</span>
+        </div>
+        <div class="ticket">
+          <div class="th">
+            <p class="flex items-center gap-1.5"><b>0014</b><span class="st prog" data-i18n="kd.inProgress">Jarayonda</span></p>
+            <p class="m2 mt-1 flex items-center gap-1 text-[10.5px]"><Fragment set:html={svg(I.user)} />Aziz</p>
+            <p class="mt-1.5 flex gap-1"><span class="tg pink"><span data-i18n="kd.takeout">Olib ketish</span></span></p>
+          </div>
+          <ul class="tl">
+            <li><span>Shashlik</span><b>×4</b></li>
+            <li><span>Non</span><b>×2</b></li>
+          </ul>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    slug === "ods" && (
+      <div class="p grid grid-cols-2 gap-2">
+        <div class="col">
+          <p class="flex items-baseline justify-between"><b class="text-[13px] font-semibold" data-i18n="od.preparing">Tayyorlanmoqda</b></p>
+          <ul class="mt-2 flex flex-col gap-1.5">
+            {["0031", "0032", "0033"].map((n) => (
+              <li class="num"><Fragment set:html={svg(I.noFork)} /><span><b>{n}</b><small data-i18n="kd.inProgress">Jarayonda</small></span></li>
+            ))}
+          </ul>
+        </div>
+        <div class="col">
+          <p><b class="text-[13px] font-semibold text-[var(--forest)]" data-i18n="od.ready">Tayyor</b></p>
+          <ul class="mt-2 flex flex-col gap-1.5">
+            {["0029", "0030"].map((n) => (
+              <li class="num ready"><Fragment set:html={svg(I.check)} /><span><b>{n}</b><small data-i18n="od.ready">Tayyor</small></span></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
+  }
+
+  {
+    slug === "guest" && (
+      <div class="phone">
+        <div class="flex items-start justify-between gap-2">
+          <span>
+            <span class="m2 block text-[11px] font-medium" data-i18n="gs.at">Siz shu yerdasiz</span>
+            <b class="block text-[19px] font-semibold tracking-[-0.02em]" data-i18n="gs.table5">5-stol</b>
+          </span>
+          <span class="rb"><Fragment set:html={svg(I.bag)} /><i>2</i></span>
+        </div>
+        <span class="menu-btn mt-3"><span class="flex items-center gap-2"><Fragment set:html={svg(I.book)} /><span data-i18n="gs.viewMenu">Menyuni ko‘rish</span></span><Fragment set:html={svg(I.chevron)} /></span>
+        <span class="nbtn mt-2"><Fragment set:html={svg(I.bell)} /><span data-i18n="gs.callWaiter">Ofitsiantni chaqirish</span></span>
+        <span class="nbtn mt-2"><Fragment set:html={svg(I.receipt)} /><span data-i18n="gs.requestBill">Hisobni so‘rash</span></span>
+      </div>
+    )
+  }
+
+  {
+    slug === "website" && (
+      <div class="phone sf">
+        <div class="flex items-center justify-between">
+          <span class="flex items-center gap-1.5">
+            <img src={logoDark.src} alt="" width="22" height="22" class="logo-dark h-[22px] w-[22px]" loading="lazy" decoding="async" />
+            <img src={logoLight.src} alt="" width="22" height="22" class="logo-light h-[22px] w-[22px]" loading="lazy" decoding="async" />
+          </span>
+          <span class="flex gap-2.5"><Fragment set:html={svg(I.search)} /><Fragment set:html={svg(I.bag)} /></span>
+        </div>
+        <div class="banner mt-2.5">
+          <span>
+            <b data-i18n="ws.bannerT">MacBook Pro 14. Uzun kun uchun.</b>
+            <span class="go" data-i18n="ws.see">Ko'rish</span>
+          </span>
+          <img src="/mock/store-yeah/laptop.webp" alt="" width="480" height="480" loading="lazy" decoding="async" />
+        </div>
+        <ul class="perks mt-2.5">
+          <li><Fragment set:html={svg(I.truck)} /><span data-i18n="mock.delivery">Yetkazib berish</span></li>
+          <li><Fragment set:html={svg(I.card)} /><span data-i18n="ws.cod">Qabul qilganda to'lov</span></li>
+        </ul>
+        <ul class="cats mt-2.5">
+          {["c5", "c2", "c3"].map((c) => <li><img src={`/mock/store-yeah/${c}.webp`} alt="" width="200" height="200" loading="lazy" decoding="async" /></li>)}
+        </ul>
+      </div>
+    )
+  }
+
+  {
+    slug === "dispatch" && (
+      <div class="soon">
+        <span class="soon-ico"><Fragment set:html={svg(I.bike)} /></span>
+        <b data-i18n="app.soon">Tez orada</b>
+        <span class="m2 text-[12px]" data-i18n="ds.soonD">Kuryerlarga ish taklif qilish va narx bo'yicha takliflar</span>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .acm {
+    height: 220px;
+    overflow: hidden;
+    border-radius: 16px 16px 0 0;
+    font-family: var(--font-sans);
+    line-height: 1.35;
+    text-align: left;
+  }
+  @media (min-width: 1024px) {
+    .acm {
+      height: 240px;
+    }
+  }
+  /* App tokens (light, then dark) — the apps' own surface colours. */
+  .app {
+    --s100: oklch(98.09% 0.013 115.83);
+    --s200: oklch(96.49% 0.015 119.1);
+    --s300: oklch(94.79% 0.013 115.84);
+    --s500: oklch(91.35% 0.015 119.12);
+    --on: oklch(22.26% 0.027 133.88);
+    --on2: oklch(39.23% 0.036 133.1);
+    --border: oklch(56.54% 0.038 131.64);
+    --accent: oklch(85.7% 0.17 134.56);
+    --accent-ink: oklch(28.69% 0.0839 135.05);
+    --forest: oklch(28.69% 0.0839 135.05);
+    --yellow: oklch(92% 0.16 100);
+    --cyan: oklch(86% 0.08 205);
+    --grey: oklch(56.54% 0.038 131.64);
+    background: var(--s100);
+    color: var(--on);
+  }
+  :global(:root[data-theme="dark"]) .app {
+    --s100: oklch(19.09% 0.009 137.85);
+    --s200: oklch(20.86% 0.009 137.84);
+    --s300: oklch(23.89% 0.009 137.83);
+    --s500: oklch(27.1% 0.011 139.43);
+    --on: oklch(91.24% 0.03 125.98);
+    --on2: oklch(82.4% 0.04 129.72);
+    --border: oklch(37.54% 0.023 135.14);
+    --forest: var(--accent);
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .app {
+      --s100: oklch(19.09% 0.009 137.85);
+      --s200: oklch(20.86% 0.009 137.84);
+      --s300: oklch(23.89% 0.009 137.83);
+      --s500: oklch(27.1% 0.011 139.43);
+      --on: oklch(91.24% 0.03 125.98);
+      --on2: oklch(82.4% 0.04 129.72);
+      --border: oklch(37.54% 0.023 135.14);
+      --forest: var(--accent);
+    }
+  }
+  .app :global(svg) {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .m2 {
+    color: var(--on2);
+  }
+  .p {
+    padding: 14px;
+  }
+  kbd {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0 4px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 999px;
+    background: var(--s200);
+    padding: 3px 8px;
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+  .pill :global(svg) {
+    width: 11px;
+    height: 11px;
+  }
+  .acc,
+  .ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 30px;
+    border-radius: 999px;
+    padding: 0 11px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .acc {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .ghost {
+    background: var(--s300);
+  }
+  .acc.wide {
+    display: flex;
+    width: 100%;
+  }
+  .acc.m {
+    margin: 8px 10px 10px;
+    width: auto;
+    height: 28px;
+  }
+  .lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .lines li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    border-radius: 7px;
+    background: var(--s200);
+    padding: 0 8px;
+    font-size: 12px;
+  }
+  .ln {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+  }
+  .step i {
+    display: flex;
+    width: 22px;
+    height: 22px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background: var(--s300);
+  }
+  .step i :global(svg) {
+    width: 10px;
+    height: 10px;
+  }
+  .step b {
+    width: 20px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .lp {
+    min-width: 50px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .tot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .park {
+    flex-shrink: 0;
+    border: 1px solid color-mix(in oklab, var(--on) 40%, transparent);
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 10.5px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .park.on {
+    border-color: transparent;
+    background: var(--forest);
+    color: var(--s100);
+  }
+  .chip {
+    border: 1px solid color-mix(in oklab, var(--on) 55%, transparent);
+    border-radius: 999px;
+    padding: 2px 9px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--forest);
+  }
+  .chip.on {
+    border-color: transparent;
+    background: var(--forest);
+    color: var(--s100);
+  }
+  .box {
+    border-radius: 9px;
+    background: var(--s200);
+    padding: 9px 11px;
+  }
+  .delta {
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 35%, transparent);
+    padding: 1px 6px;
+    color: var(--forest);
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .split {
+    display: flex;
+    gap: 2px;
+    height: 7px;
+  }
+  .split span {
+    border-radius: 999px;
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+  }
+
+  .ticket {
+    overflow: hidden;
+    border-radius: 9px;
+    background: var(--s200);
+  }
+  .th {
+    background: var(--s500);
+    padding: 8px 10px 9px;
+    font-size: 12px;
+  }
+  .th b {
+    font-weight: 700;
+  }
+  .st {
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #161e11;
+  }
+  .st.new {
+    background: var(--accent);
+  }
+  .st.prog {
+    background: #ffe96b;
+  }
+  .tg {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    border-radius: 999px;
+    background: var(--s300);
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .tg :global(svg) {
+    width: 10px;
+    height: 10px;
+  }
+  .tg.cyan {
+    background: oklch(88% 0.07 205);
+    color: #161e11;
+  }
+  .tg.pink {
+    background: oklch(90% 0.06 15);
+    color: oklch(45% 0.17 25);
+  }
+  .tl {
+    padding: 6px 10px 0;
+    font-size: 11.5px;
+  }
+  .tl li {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 0;
+  }
+  .tl li span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .col {
+    border-radius: 10px;
+    background: var(--s200);
+    padding: 10px;
+  }
+  .num {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border-radius: 8px;
+    background: var(--s500);
+    padding: 7px 9px;
+  }
+  .num b {
+    display: block;
+    font-size: 20px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+  .num small {
+    display: block;
+    color: var(--on2);
+    font-size: 9.5px;
+  }
+  .num.ready {
+    background: color-mix(in oklab, var(--accent) 45%, var(--s200));
+  }
+
+  /* phone-shaped crops (guest, store) */
+  .phone {
+    margin: 0 auto;
+    max-width: 236px;
+    padding: 16px 14px;
+  }
+  .rb {
+    position: relative;
+    display: flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--s300);
+  }
+  .rb :global(svg) {
+    width: 15px;
+    height: 15px;
+  }
+  .rb i {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    display: flex;
+    min-width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-size: 9.5px;
+    font-style: normal;
+    font-weight: 600;
+  }
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 999px;
+    background: var(--accent);
+    padding: 13px 14px;
+    color: var(--accent-ink);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .nbtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border-radius: 999px;
+    background: var(--s300);
+    padding: 11px 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  /* storefront palette: neutral, not the brand cream (as kdsx-storefront) */
+  .sf {
+    --s100: #ffffff;
+    --on: #141414;
+    --on2: #5f5f5f;
+    background: #fff;
+    color: #141414;
+    max-width: 250px;
+  }
+  :global(:root[data-theme="dark"]) .acm:has(.sf) {
+    background: #141414;
+  }
+  :global(:root[data-theme="dark"]) .sf {
+    background: #141414;
+    color: #f2f2f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme="light"])) .acm:has(.sf) {
+      background: #141414;
+    }
+    :global(:root:not([data-theme="light"])) .sf {
+      background: #141414;
+      color: #f2f2f2;
+    }
+  }
+  .acm:has(.sf) {
+    background: #fff;
+  }
+  .banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    border-radius: 10px;
+    background: #f4f4f6;
+    padding: 12px;
+    color: #141414;
+  }
+  .banner b {
+    display: block;
+    font-size: 13px;
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .banner .go {
+    display: inline-block;
+    margin-top: 8px;
+    border-radius: 999px;
+    background: #aab0ff;
+    padding: 4px 10px;
+    color: #1c1d3a;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .banner img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+  }
+  .perks {
+    display: flex;
+    gap: 12px;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .perks li {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .cats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .cats img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: #f4f4f6;
+    object-fit: contain;
+    padding: 6px;
+  }
+
+  .soon {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px;
+    text-align: center;
+  }
+  .soon b {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .soon-ico {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--s300);
+  }
+  .soon-ico :global(svg) {
+    width: 22px;
+    height: 22px;
+  }
+</style>

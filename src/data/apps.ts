@@ -24,6 +24,8 @@ export interface App {
   features: string[];
   /** Uzbek caption per screenshot, keyed by filename base (no extension) */
   frames?: Record<string, string>;
+  /** Not released yet: shown with a "Tez orada" badge, no trial CTA. */
+  soon?: boolean;
   /** Display order of images by filename fragment (first match wins).
    *  Matched with a "-" boundary, so "unactive" never matches "active". */
   order?: string[];
@@ -288,15 +290,8 @@ export const apps: App[] = [
     tur: "Veb-Do'kon",
     devices: "Web · PC",
     desc: "O'z domeningiz va brendingiz ostida ishlaydigan tezkor veb-sayt. Buyurtmalar to'g'ridan-to'g'ri umumiy kassaga integratsiyalanadi.",
-    order: [
-      "hero",
-      "menus",
-      "locations",
-      "about",
-      "contacts",
-      "delivery",
-      "checkout",
-    ],
+    // Gallery: yeah.uz, a live shop on the Octopos storefront (market template).
+    order: ["hero", "catalog", "product", "mobile", "dark"],
     features: [
       "O'z domeningiz va brendingiz ostida ishlash",
       "Payme, Click va Uzum orqali to'lov",
@@ -307,14 +302,11 @@ export const apps: App[] = [
       "Sayt statistikasi va har bir o'zgarish tarixi",
     ],
     frames: {
-      "website-hero": "Saytning bosh sahifasi (hero)",
-      "website-menus-1": "Onlayn menyu: taomlar ro'yxati",
-      "website-menus-2": "Menyu bo'limlari va qidiruv",
-      "website-locations": "Filiallar manzillari xaritada",
-      "website-about-us": "Biz haqimizda sahifasi",
-      "website-contacts": "Aloqa sahifasi va xarita",
-      "website-delivery": "Yetkazib berish shartlari",
-      "website-checkout": "Savat va buyurtmani rasmiylashtirish",
+      "website-hero": "Do'kon bosh sahifasi: banner, katalog va yetkazib berish",
+      "website-catalog": "Kategoriya: mahsulotlar, filtrlar va saralash",
+      "website-product": "Mahsulot sahifasi",
+      "website-mobile": "Telefondagi ko'rinish",
+      "website-dark": "Tungi rejim",
     },
     meta: [
       { label: "Tur", value: "Veb-Sayt + Do'kon" },
@@ -331,23 +323,23 @@ export const apps: App[] = [
     no: "08",
     name: "Dispatch",
     tur: "Logistika",
-    devices: "Telefon · Web",
-    desc: "Buyurtmalarni o'z kuryerlaringizga taqsimlash, ularni GPS orqali xaritada kuzatish va mijozga taxminiy yetkazib berish vaqtini ko'rsatish.",
+    devices: "Planshet · Web",
+    soon: true,
+    // Capabilities as built in kdsx-pos-v2 (dispatch route, delivery panel, inbox), not plans.
+    desc: "Yetkazib berish buyurtmalarini o'z kuryerlaringizga bering: tayinlang yoki ishni taklif qiling, kuryerlar javobini Xabarlarda ko'ring.",
     meta: [
       { label: "Tur", value: "Kuryer Boshqaruvi" },
-      { label: "Qurilmalar", value: "Telefon · Web" },
-      { label: "Oflayn", value: "GPS — Real Vaqt" },
+      { label: "Qurilmalar", value: "Planshet · Web" },
       { label: "Tillar", value: "O'zbek · Rus · Ingliz" },
-      { label: "Integratsiya", value: "Telegram · Maps API" },
-      { label: "Chiqim", value: "Yo'nalish · Statistika" },
       { label: "Yordam", value: "Telegram" },
     ],
     features: [
-      "Telegram orqali kuryerlarga buyurtma taklifi yuborish",
-      "Real vaqt xaritasida kuryerlar va manzillar",
-      "Naqd pulni yig'ish va kuryerlar bilan hisob-kitob",
-      "Kuryerlar soni cheklanmagan",
-      "Transport turi va joylashuvni real vaqtda kuzatish",
+      "Yetkazib berish buyurtmasiga kuryer tayinlash yoki almashtirish",
+      "Ishni barcha kuryerlarga yoki tanlanganlarga taklif qilish",
+      "Belgilangan narx yoki takliflar: kuryerlar narx aytadi, siz tanlaysiz",
+      "Xaritadan manzil va kuryer uchun izoh: domofon, qayerga qoldirish",
+      "Yetkazish narxi alohida yoziladi, buyurtma summasiga qo'shilmaydi",
+      "Kuryerlar javob berganda Xabarlar bo'limiga bildirishnoma",
     ],
   },
 ];

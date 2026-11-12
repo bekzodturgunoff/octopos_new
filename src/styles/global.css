@@ -1,11 +1,30 @@
 @import "tailwindcss";
 
+/* Inter, variable wght 400–700, split by script (was one 217KB file).
+ * Regenerate with fontTools: instance slnt=0, wght 400:700, then subset per range. */
 @font-face {
   font-family: "Inter";
   font-style: normal;
   font-display: swap;
-  src: url("/fonts/Inter.var.woff2") format("woff2-variations");
-  font-weight: 1 1000;
+  font-weight: 400 700;
+  src: url("/fonts/Inter-var-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2190-2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url("/fonts/Inter-var-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 700;
+  src: url("/fonts/Inter-var-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 /* Display face: Oswald 700 (Anton has no Cyrillic, so /ru would fall back).
@@ -52,7 +71,9 @@
   --color-hairline: oklch(95.7% 0.005 117.93);
   --color-link: oklch(28.69% 0.08386907740604355 135.05042975542813);
   --color-on-ink: oklch(98.09% 0.013 115.83);
-  --color-card: oklch(96.49% 0.015 119.1);
+  /* Cards read as a light lime tint of the brand (as wise.com's light-green
+   * surfaces), not as a near-invisible grey step from the page. */
+  --color-card: oklch(95.2% 0.035 131);
 
   --color-accent: oklch(85.7% 0.17 134.56);
   --color-accent-active: oklch(79.99% 0.17 134.55);
@@ -187,7 +208,7 @@
 }
 @media (min-width: 1024px) {
   .section {
-    padding-block: 112px;
+    padding-block: 96px;
   }
 }
 
@@ -198,6 +219,25 @@
 
 /* Forest surface. Re-points the tokens so every component placed inside
  * (buttons, links, hairlines, cards) reads correctly without variants. */
+/* Dark bands as rounded panels set in from the page edge (wise.com), not
+ * full-bleed stripes. .band-top rounds only the top, to run into the footer. */
+.band {
+  margin-inline: 8px;
+  border-radius: 28px;
+}
+.band-top {
+  border-radius: 28px 28px 0 0;
+}
+@media (min-width: 1024px) {
+  .band {
+    margin-inline: 16px;
+    border-radius: 40px;
+  }
+  .band-top {
+    border-radius: 40px 40px 0 0;
+  }
+}
+
 .on-forest {
   background: var(--color-forest);
   --color-page: var(--color-forest);
@@ -281,6 +321,19 @@
   .int-logo:hover img {
     filter: none;
     opacity: 1;
+  }
+}
+
+/* Brand logos are drawn for light grounds (Click and Yandex Go have dark
+ * lettering), so the tiles stay light in dark mode. */
+:root[data-theme="dark"] .int-logo {
+  background: oklch(94.5% 0.018 119.1);
+  color: oklch(22.26% 0.027 133.88);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .int-logo {
+    background: oklch(94.5% 0.018 119.1);
+    color: oklch(22.26% 0.027 133.88);
   }
 }
 

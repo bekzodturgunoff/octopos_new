@@ -73,51 +73,50 @@ function frameLabel(url: string): string {
 <Layout title={`${app.name} — Octopos`} description={app.desc} jsonLd={appLd} ogImage={ogImage}>
   <TopNav />
 
-  <div
-    class="mx-auto max-w-[1600px] px-5 pt-[9px] pb-[140px] lg:px-[32px] lg:pt-[31px] lg:pb-[150px]"
-  >
+  <div class="wrap pt-6 pb-24 lg:pt-10 lg:pb-32">
     <div class="flex items-center justify-between gap-4">
       <a
         href="/apps"
         data-i18n={has("common.back") ? "common.back" : undefined}
-        class="font-geist-mono text-[12px] leading-4 tracking-[0.72px] text-muted transition-colors duration-[350ms] ease-far hover:text-link"
+        class="rounded font-geist text-[14px] leading-5 font-medium text-muted transition-colors duration-200 ease-out hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
         >← Ilovalar</a
       >
     </div>
 
-    <div class="mt-10 grid grid-cols-1 gap-y-6 lg:mt-[41px] lg:grid-cols-[460px_1fr] lg:gap-x-16">
+    <div class="mt-8 grid grid-cols-1 gap-y-10 lg:mt-12 lg:grid-cols-[440px_1fr] lg:gap-x-16">
       <aside class:list={["self-start", app.features.length <= 7 && "lg:sticky lg:top-[110px]"]}>
+        {app.soon && <span class="inline-flex rounded-full bg-accent px-3 py-1 font-geist text-[13px] font-semibold text-accent-emphasis mb-4" data-i18n="app.soon">Tez orada</span>}
         <h1
-          class="max-w-[440px] font-anton text-[clamp(36px,11vw,52px)] leading-[0.9] tracking-[-0.69px] [overflow-wrap:anywhere] lg:text-[72px]"
+          class="display display-2 max-w-[440px] [overflow-wrap:anywhere]"
         >
           {app.name}
         </h1>
 
-        <div class="mt-[20px] h-px w-full bg-hairline" />
-
         <p
-          class="mt-[20px] font-geist text-[20px] leading-[30px] text-muted"
+          class="mt-5 font-geist text-[17px] leading-[1.6] text-muted lg:text-[18px]"
           data-i18n={`app.${app.slug}.desc`}
         >
           {app.desc}
         </p>
 
-        <ul class="mt-[24px] flex flex-col gap-2.5">
+        <ul class="mt-6 flex flex-col gap-3">
           {
             app.features.map((f, i) => (
-              <li class="flex gap-3">
-                <svg
-                  class="mt-[5px] h-3.5 w-3.5 shrink-0 text-link"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.5"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+              <li class="flex items-start gap-3">
+                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink/8 text-ink">
+                  <svg
+                    class="h-3.5 w-3.5"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
                 <span
-                  class="font-geist text-[16px] leading-[24px] text-ink/85"
+                  class="font-geist text-[16px] leading-[1.5] text-ink"
                   data-i18n={`feat.${app.slug}.${i}`}
                 >
                   {f}
@@ -127,7 +126,7 @@ function frameLabel(url: string): string {
           }
         </ul>
 
-        <dl class="mt-[24px] hidden grid-cols-1 border-t border-hairline sm:grid sm:grid-cols-2">
+        <dl class="card mt-8 hidden grid-cols-1 overflow-hidden sm:grid sm:grid-cols-2">
           {
             app.meta.map((row, i) => {
               const labelKey = `meta.${row.label}`;
@@ -135,18 +134,18 @@ function frameLabel(url: string): string {
               return (
                 <div
                   class:list={[
-                    "border-b border-hairline py-[10px]",
-                    i % 2 === 0 ? "sm:border-r sm:pr-4" : "sm:pl-4",
+                    "border-b border-ink/10 px-4 py-3",
+                    i % 2 === 0 ? "sm:border-r" : "",
                   ]}
                 >
                   <dt
-                    class="font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-muted"
+                    class="font-geist text-[13px] leading-[1.4] text-muted"
                     data-i18n={has(labelKey) ? labelKey : undefined}
                   >
                     {row.label}
                   </dt>
                   <dd
-                    class="mt-[2px] font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-ink"
+                    class="mt-0.5 font-geist text-[15px] leading-[1.4] font-medium text-ink"
                     data-i18n={has(valueKey) ? valueKey : undefined}
                   >
                     {row.value}
@@ -157,31 +156,31 @@ function frameLabel(url: string): string {
           }
           {
             app.meta.length % 2 === 1 && (
-              <div class="hidden border-b border-hairline sm:block" aria-hidden="true" />
+              <div class="hidden sm:block" aria-hidden="true" />
             )
           }
         </dl>
 
         {/* Mobile: specs behind an expander. */}
-        <details class="mt-[16px] sm:hidden">
-          <summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">
+        <details class="mt-6 sm:hidden">
+          <summary class="btn-outline btn btn-sm w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
             <span data-i18n={has("common.details") ? "common.details" : undefined}>Tafsilotlar</span>
           </summary>
-          <dl class="mt-3 overflow-hidden rounded-2xl border border-hairline">
+          <dl class="card mt-3 overflow-hidden">
             {
               app.meta.map((row) => {
                 const labelKey = `meta.${row.label}`;
                 const valueKey = `v.${row.value}`;
                 return (
-                  <div class="flex items-baseline justify-between gap-3 border-b border-hairline px-4 py-2.5 last:border-0">
+                  <div class="flex items-baseline justify-between gap-3 border-b border-ink/10 px-4 py-3 last:border-0">
                     <dt
-                      class="shrink-0 font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-muted"
+                      class="shrink-0 font-geist text-[13px] leading-[1.4] text-muted"
                       data-i18n={has(labelKey) ? labelKey : undefined}
                     >
                       {row.label}
                     </dt>
                     <dd
-                      class="text-right font-geist-mono text-[12px] leading-[18px] tracking-[0.72px] text-ink"
+                      class="text-right font-geist text-[14px] leading-[1.4] font-medium text-ink"
                       data-i18n={has(valueKey) ? valueKey : undefined}
                     >
                       {row.value}
@@ -193,20 +192,26 @@ function frameLabel(url: string): string {
           </dl>
         </details>
 
-        <div class="mt-[24px] grid grid-cols-2 gap-3">
+        <div class="mt-8 grid gap-3 sm:grid-cols-2">
+          {app.soon ? (
+            <span class="btn-outline btn w-full !px-4 pointer-events-none opacity-70" aria-disabled="true">
+              <span data-i18n="app.soon">Tez orada</span>
+            </span>
+          ) : (
           <button
             type="button"
             data-plan-trigger="starter"
-            class="btn-solid min-h-[44px] w-full px-4 py-2.5 text-center font-geist-mono text-[11px] leading-[1.2] font-medium tracking-[0.4px] sm:text-[12px]"
+            class="btn-solid btn w-full !px-4"
           >
             <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}
               >Bepul sinab ko'ring →</span
             >
           </button>
+          )}
           <a
             href={`/apps/${next.slug}`}
             aria-label={`Keyingi — ${next.name}`}
-            class="btn-outline min-h-[44px] w-full px-4 py-2.5 text-center font-geist-mono text-[11px] leading-[1.2] font-medium tracking-[0.4px] sm:text-[12px]"
+            class="btn-outline btn w-full !px-4"
           >
             <span
               data-i18n={has("cta.next") ? "cta.next" : undefined}
@@ -220,7 +225,7 @@ function frameLabel(url: string): string {
         {
           images.length > 0 ? (
             <>
-              <div class="flex flex-col gap-6 lg:gap-[40px]" data-gallery>
+              <div class="flex flex-col gap-6 lg:gap-8" data-gallery>
                 {images.map((src, i) => {
                   const base = frameBase(src);
                   const frameKey = `frame.${app.slug}.${base}`;
@@ -229,9 +234,9 @@ function frameLabel(url: string): string {
                   const dm = imgDims(src);
                   const ss = imgSrcset(src);
                   return (
-                    <figure class={i >= 3 ? "gallery-extra hidden lg:block" : undefined}>
+                    <figure class:list={[i >= 3 && "gallery-extra hidden lg:block", dm && dm.h > dm.w && "mx-auto w-full max-w-[340px]"]}>
                       <div
-                        class="group relative cursor-zoom-in overflow-hidden rounded-2xl"
+                        class="group relative cursor-zoom-in overflow-hidden rounded-[16px] bg-card"
                         style={ts.wrap}
                         data-lightbox
                       >
@@ -246,7 +251,7 @@ function frameLabel(url: string): string {
                           width={dm?.w}
                           height={dm?.h}
                           srcset={ss}
-                          sizes="(max-width:1023px) calc(100vw - 40px), 1000px"
+                          sizes="(max-width:1023px) calc(100vw - 48px), 660px"
                           loading={i === 0 ? "eager" : "lazy"}
                           fetchpriority={i === 0 ? "high" : "auto"}
                           decoding="async"
@@ -268,7 +273,7 @@ function frameLabel(url: string): string {
                           </svg>
                         </span>
                       </div>
-                      <figcaption class="mt-[14px] flex items-baseline justify-between gap-4 font-geist-mono text-[12px] leading-4 tracking-[0.72px]">
+                      <figcaption class="mt-3 flex items-baseline justify-between gap-4 font-geist text-[13px] leading-4">
                         <span
                           class="text-muted"
                           data-i18n={useKey ? frameKey : undefined}
@@ -288,7 +293,7 @@ function frameLabel(url: string): string {
                 <button
                   type="button"
                   data-gallery-more
-                  class="btn-outline mt-6 h-[44px] w-full px-6 font-geist-mono text-[12px] tracking-[0.72px] lg:hidden"
+                  class="btn-outline btn mt-6 w-full lg:hidden"
                 >
                   <span data-i18n={has("common.showAllPhotos") ? "common.showAllPhotos" : undefined}>
                     Barcha rasmlarni ko'rsatish
@@ -297,9 +302,9 @@ function frameLabel(url: string): string {
               )}
             </>
           ) : (
-            <div class="flex h-[420px] items-center justify-center border border-hairline lg:h-[560px]">
+            <div class="card flex h-[420px] items-center justify-center lg:h-[560px]">
               <span
-                class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+                class="font-geist text-[15px] text-muted"
                 data-i18n={has("imgPending") ? "imgPending" : undefined}
               >
                 Rasmlar tez orada paydo bo'ladi
@@ -313,20 +318,20 @@ function frameLabel(url: string): string {
   <Footer mobileBar />
 
   {/* ---------------- mobile sticky trial CTA ---------------- */}
-  <div
-    class="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-page/95 px-5 pt-3 backdrop-blur-md lg:hidden"
+  {!app.soon && <div
+    class="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-page/95 px-4 pt-3 backdrop-blur md:backdrop-blur-md lg:hidden"
     style="padding-bottom:max(0.75rem, env(safe-area-inset-bottom))"
   >
     <button
       type="button"
       data-plan-trigger="starter"
-      class="btn-solid h-[48px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+      class="btn-solid btn w-full"
     >
       <span data-i18n={has("cta.tryFree") ? "cta.tryFree" : undefined}
         >Bepul sinab ko'ring →</span
       >
     </button>
-  </div>
+  </div>}
 
   {/* ---------------- lightbox ---------------- */}
   <div

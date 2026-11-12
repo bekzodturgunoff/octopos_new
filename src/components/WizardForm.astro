@@ -14,20 +14,20 @@ const trialAPIBaseURL =
       role="dialog"
       aria-modal="true"
       aria-labelledby="wizard-title"
-      class="rounded-3xl border border-hairline bg-page p-5 shadow-2xl md:p-8"
+      class="card p-6 lg:p-8"
     >
       <div class="flex items-start justify-between gap-4">
         <div class="min-w-0">
           <h3
             id="wizard-title"
             data-i18n="wizard.title"
-            class="font-geist text-xl font-semibold text-ink"
+            class="display text-[26px] leading-[1.1] lg:text-[32px]"
             >Octopos hisobini yarating</h3
           >
           <p
             id="wizard-subtitle"
             data-i18n="wizard.subtitle"
-            class="mt-1 font-geist text-sm text-muted"
+            class="mt-2 font-geist text-[15px] leading-[1.5] text-muted"
             >Restoraningiz haqida ma'lumot bering — siz uchun shaxsiy demo tayyorlaymiz.</p
           >
         </div>
@@ -36,7 +36,7 @@ const trialAPIBaseURL =
           id="wizard-close"
           aria-label="Yopish"
           data-i18n-attr="aria-label:wizard.close"
-          class="btn-ghost ml-4 h-11 w-11 shrink-0 p-0 text-ink"
+          class="ml-4 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted transition-colors duration-200 ease-out hover:bg-ink/5 hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <svg
             class="h-5 w-5"
@@ -51,7 +51,7 @@ const trialAPIBaseURL =
 
       <div
         id="wizard-error"
-        class="wizard-error mt-4 hidden rounded-xl p-4 font-geist text-sm"
+        class="wizard-error mt-5 hidden rounded-[12px] p-4 font-geist text-[14px]"
         role="alert"
         aria-live="assertive"
         tabindex="-1"
@@ -64,7 +64,7 @@ const trialAPIBaseURL =
         </p>
       </div>
 
-      <form id="wizard-form" class="mt-6 space-y-4">
+      <form id="wizard-form" class="mt-7 space-y-5">
         <div class="sr-only" aria-hidden="true">
           <span data-step="1"></span>
           <span data-step="2"></span>
@@ -78,7 +78,7 @@ const trialAPIBaseURL =
           <label
             for="businessName"
             data-i18n="wizard.businessLabel"
-            class="block font-geist text-sm font-medium text-ink"
+            class="block font-geist text-[14px] font-semibold text-ink"
             >Restoran nomi</label
           >
           <input
@@ -86,7 +86,7 @@ const trialAPIBaseURL =
             name="businessName"
             type="text"
             required
-            class="mt-2 w-full rounded-xl border border-hairline bg-page px-4 py-3 font-geist shadow-sm outline-none placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            class="mt-2 h-12 w-full rounded-[12px] border border-ink/20 bg-page px-4 font-geist text-[16px] text-ink outline-none transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-muted/60 focus:border-ink focus:ring-[3px] focus:ring-accent"
             placeholder="masalan, The Burger Joint"
             data-i18n-attr="placeholder:wizard.businessPlaceholder"
           />
@@ -94,30 +94,30 @@ const trialAPIBaseURL =
 
         <cap-widget data-cap-api-endpoint="https://captcha.octopos.uz/591f8342ea"
         ></cap-widget>
-        <p id="wizard-cap-hint" class="text-center font-geist text-[11px] leading-4 text-muted">
+        <p id="wizard-cap-hint" class="text-center font-geist text-[12px] leading-[1.5] text-muted">
           Yuborishdan oldin yuqoridagi captchani bajaring
         </p>
         <button
           id="wizard-submit"
           type="submit"
-          class="btn-solid mt-2 w-full px-6 py-3 font-geist text-sm"
+          class="btn-solid btn mt-2 w-full"
           data-i18n="wizard.startTrial"
           >Sinovni boshlash</button
         >
       </form>
 
-      <div id="wizard-welcome-back" class="mt-6 hidden">
+      <div id="wizard-welcome-back" class="mt-7 hidden">
         <button
           type="button"
           id="wizard-continue"
-          class="btn-solid w-full px-6 py-3 font-geist text-sm"
+          class="btn-solid btn w-full"
           data-i18n="wizard.continue"
           >Boshqaruv paneliga o'tish</button
         >
         <button
           type="button"
           id="wizard-start-fresh"
-          class="btn-ghost mt-3 w-full px-6 py-3 font-geist text-sm"
+          class="btn-outline btn mt-3 w-full"
           data-i18n="wizard.startFresh"
           >Yangi hisob yaratish</button
         >
@@ -125,7 +125,7 @@ const trialAPIBaseURL =
 
       <div
         id="wizard-loading"
-        class="mt-6 hidden rounded-xl border border-hairline bg-page p-4 font-geist text-sm text-ink"
+        class="mt-6 hidden rounded-[12px] bg-page p-4 font-geist text-[14px] text-ink"
       >
         <div class="flex items-center gap-3">
           <span

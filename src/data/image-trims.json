@@ -1,73 +1,10 @@
 {
- "/app_images/dash/dash-account.webp": {
-  "ar": 1.3236,
-  "l": 0.1067,
-  "r": 0.1067,
-  "t": 0.0331,
-  "b": 0.016
- },
- "/app_images/dash/dash-administration.webp": {
-  "ar": 1.304,
-  "l": 0.1067,
-  "r": 0.1067,
-  "t": 0.0331,
-  "b": 0.0017
- },
- "/app_images/dash/dash-catalog-menu.webp": {
-  "ar": 1.3097,
-  "l": 0.1067,
-  "r": 0.1103,
-  "t": 0.0331,
-  "b": 0.0103
- },
- "/app_images/dash/dash-catalog.webp": {
-  "ar": 1.304,
-  "l": 0.1067,
-  "r": 0.1067,
-  "t": 0.0331,
-  "b": 0.0017
- },
- "/app_images/dash/dash-inventory.webp": {
-  "ar": 1.3256,
-  "l": 0.1067,
-  "r": 0.1031,
-  "t": 0.0331,
-  "b": 0.0131
- },
- "/app_images/dash/dash-main.webp": {
-  "ar": 1.3099,
-  "l": 0.1067,
-  "r": 0.1031,
-  "t": 0.0331,
-  "b": 0.0017
- },
- "/app_images/dash/dash-orders.webp": {
-  "ar": 1.3236,
-  "l": 0.1067,
-  "r": 0.1067,
-  "t": 0.0331,
-  "b": 0.016
- },
- "/app_images/dash/dash-reports.webp": {
-  "ar": 1.3236,
-  "l": 0.1067,
-  "r": 0.1067,
-  "t": 0.0331,
-  "b": 0.016
- },
  "/app_images/dash/dash-website-settings.webp": {
   "ar": 1.6009,
   "l": 0.0085,
   "r": 0,
   "t": 0.0016,
   "b": 0.0186
- },
- "/app_images/dash/dash-website.webp": {
-  "ar": 1.3236,
-  "l": 0.1067,
-  "r": 0.1067,
-  "t": 0.0331,
-  "b": 0.016
  },
  "/app_images/kitchen/kitchen-active-orders.webp": {
   "ar": 1.6175,
@@ -123,13 +60,6 @@
   "l": 0.0085,
   "r": 0.0014,
   "t": 0.0046,
-  "b": 0.0189
- },
- "/app_images/ods/ods.webp": {
-  "ar": 1.6315,
-  "l": 0.0085,
-  "r": 0.0103,
-  "t": 0.0189,
   "b": 0.0189
  },
  "/app_images/pos-market/pos-market-checkout.webp": {
@@ -216,54 +146,12 @@
   "t": 0.0103,
   "b": 0.0074
  },
- "/app_images/pos-restaurant/pos-floor-plan.webp": {
-  "ar": 1.627,
-  "l": 0.0049,
-  "r": 0.0049,
-  "t": 0.0217,
-  "b": 0.0046
- },
  "/app_images/pos-restaurant/pos-lock.webp": {
   "ar": 0.4648,
   "l": 0.4067,
   "r": 0.4067,
   "t": 0.1789,
   "b": 0.1789
- },
- "/app_images/pos-restaurant/pos-main-view.webp": {
-  "ar": 1.6081,
-  "l": 0.0049,
-  "r": 0.0049,
-  "t": 0.0103,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-menu.webp": {
-  "ar": 1.6081,
-  "l": 0.0049,
-  "r": 0.0049,
-  "t": 0.0103,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-more-business-day-register.webp": {
-  "ar": 1.4262,
-  "l": 0.0639,
-  "r": 0.0656,
-  "t": 0.0189,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-more-business-day.webp": {
-  "ar": 1.4262,
-  "l": 0.0639,
-  "r": 0.0656,
-  "t": 0.0189,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-more-settings-appearance.webp": {
-  "ar": 1.4262,
-  "l": 0.0639,
-  "r": 0.0656,
-  "t": 0.0189,
-  "b": 0.0046
  },
  "/app_images/pos-restaurant/pos-more-settings.webp": {
   "ar": 1.4262,
@@ -272,102 +160,11 @@
   "t": 0.0189,
   "b": 0.0046
  },
- "/app_images/pos-restaurant/pos-more.webp": {
-  "ar": 1.4431,
-  "l": 0.0639,
-  "r": 0.0656,
-  "t": 0.0303,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-notifications-requests.webp": {
-  "ar": 1.6222,
-  "l": 0.0049,
-  "r": 0.0049,
-  "t": 0.0189,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-notifications.webp": {
-  "ar": 1.6123,
-  "l": 0.0049,
-  "r": 0.0139,
-  "t": 0.0217,
-  "b": 0.0046
- },
  "/app_images/pos-restaurant/pos-orders-filter.webp": {
   "ar": 1.5976,
   "l": 0.0049,
   "r": 0,
   "t": 0.0017,
-  "b": 0.0017
- },
- "/app_images/pos-restaurant/pos-orders.webp": {
-  "ar": 1.6175,
-  "l": 0.0049,
-  "r": 0.0049,
-  "t": 0.016,
-  "b": 0.0046
- },
- "/app_images/pos-restaurant/pos-stop-list.webp": {
-  "ar": 1.6035,
-  "l": 0.0049,
-  "r": 0.0049,
-  "t": 0.0074,
-  "b": 0.0046
- },
- "/app_images/website/website-about-us.webp": {
-  "ar": 1.1713,
-  "l": 0.1478,
-  "r": 0.1478,
-  "t": 0.0046,
-  "b": 0.0331
- },
- "/app_images/website/website-checkout.webp": {
-  "ar": 1.3682,
-  "l": 0.1478,
-  "r": 0,
-  "t": 0.0017,
-  "b": 0.0017
- },
- "/app_images/website/website-contacts.webp": {
-  "ar": 1.1441,
-  "l": 0.1478,
-  "r": 0.1478,
-  "t": 0.0046,
-  "b": 0.0103
- },
- "/app_images/website/website-delivery.webp": {
-  "ar": 1.1678,
-  "l": 0.1478,
-  "r": 0.1478,
-  "t": 0.0046,
-  "b": 0.0303
- },
- "/app_images/website/website-hero.webp": {
-  "ar": 1.1342,
-  "l": 0.1478,
-  "r": 0.1478,
-  "t": 0.0046,
-  "b": 0.0017
- },
- "/app_images/website/website-locations.webp": {
-  "ar": 1.1713,
-  "l": 0.1478,
-  "r": 0.1478,
-  "t": 0.0046,
-  "b": 0.0331
- },
- "/app_images/website/website-menus-1.webp": {
-  "ar": 1.6009,
-  "l": 0.0085,
-  "r": 0,
-  "t": 0.0016,
-  "b": 0.0186
- },
- "/app_images/website/website-menus-2.webp": {
-  "ar": 1.1342,
-  "l": 0.1478,
-  "r": 0.1478,
-  "t": 0.0046,
   "b": 0.0017
  }
 }

@@ -21,7 +21,8 @@ const links = [
   data-header
   data-over-hero={overHero ? "" : undefined}
   class:list={[
-    "sticky top-0 z-50 w-full border-b border-transparent transition-[background-color,border-color] duration-200 ease-out",
+    // Static, like wise.com: the header sits at the top of the page and scrolls away with it.
+    "relative z-50 w-full border-b border-transparent transition-[background-color,border-color] duration-200 ease-out",
     overHero ? "on-forest" : "bg-page",
   ]}
 >
@@ -214,7 +215,7 @@ const links = [
         <button type="button" data-plan-trigger="starter" data-menu-link class="btn-solid btn w-full">
           <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
         </button>
-        <a href="https://t.me/octopos_support" class="btn-outline btn w-full">Telegram</a>
+        <a href="https://t.me/bekzodturgunoff" class="btn-outline btn w-full">Telegram</a>
         <button type="button" data-theme-cycle aria-label="Toggle theme" class="mt-2 self-center font-geist text-[14px] font-medium text-muted underline underline-offset-4 sm:hidden">
           <span data-i18n="theme.toggle">Mavzu</span>
         </button>
@@ -370,17 +371,15 @@ const links = [
   const overHero = header?.hasAttribute("data-over-hero") ?? false;
   let menuOpen = false;
 
-  // Forest while over the hero (or while the forest menu is open), page surface once scrolled.
+  // The header is static, so it only changes with the menu: forest over the hero
+  // or while the forest menu is open, page surface otherwise.
   const syncHeader = (): void => {
     if (!header) return;
-    const scrolled = window.scrollY > 8;
-    header.toggleAttribute("data-scrolled", scrolled && !menuOpen);
-    const forest = menuOpen || (overHero && !scrolled);
+    const forest = menuOpen || overHero;
     header.classList.toggle("on-forest", forest);
     header.classList.toggle("bg-page", !forest);
   };
   syncHeader();
-  window.addEventListener("scroll", syncHeader, { passive: true });
 
   const setMenu = (open: boolean): void => {
     menuOpen = open;
