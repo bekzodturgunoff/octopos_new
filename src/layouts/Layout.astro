@@ -73,9 +73,10 @@ const ld = (node: Record<string, unknown>) =>
     </script>
     <title>{title}</title>
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    {/* Search Console / Yandex Webmaster ownership: set these in Vercel's environment variables. */}
+    {/* Search Console: verified by the file public/googled1e706eaf11c4850.html; a meta code can be added via env. */}
     {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />}
-    {import.meta.env.PUBLIC_YANDEX_VERIFICATION && <meta name="yandex-verification" content={import.meta.env.PUBLIC_YANDEX_VERIFICATION} />}
+    {/* Yandex Webmaster: the code octopos.uz is already verified with (env var can override). */}
+    <meta name="yandex-verification" content={import.meta.env.PUBLIC_YANDEX_VERIFICATION || "6b8a1f9f108bb1c4"} />
     {description && <meta name="description" content={description} />}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />

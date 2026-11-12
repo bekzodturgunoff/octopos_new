@@ -441,6 +441,20 @@ export default function i18nStatic(): AstroIntegration {
         }
 
         await writeSitemap(root, bases.sort());
+
+        // The same 301s for Cloudflare Pages (it reads dist/_redirects, not
+        // vercel.json), so old URLs keep working on either host.
+        try {
+          const cfg = JSON.parse(await readFile(join(process.cwd(), "vercel.json"), "utf8"));
+          const lines = (cfg.redirects ?? []).map(
+            (r: { source: string; destination: string; statusCode?: number }) =>
+              `${r.source} ${r.destination} ${r.statusCode ?? 301}`,
+          );
+          await writeFile(join(root, "_redirects"), lines.join("\n") + "\n");
+          logger.info(`_redirects: ${lines.length} rules (from vercel.json)`);
+        } catch (err) {
+          logger.warn(`_redirects not written: ${String(err)}`);
+        }
         logger.info(`i18n: generated ${count} localized pages`);
       },
     },
