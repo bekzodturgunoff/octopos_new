@@ -4,7 +4,7 @@ import TopNav from "../components/TopNav.astro";
 import { apps, imagesFor, imgDims, imgSrcset } from "../data/apps";
 import AppIcon from "../components/AppIcon.astro";
 import Receipt from "../components/Receipt.astro";
-import Shot from "../components/Shot.astro";
+import Mock from "../components/Mock.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Footer from "../components/Footer.astro";
 import trims from "../data/image-trims.json";
@@ -184,7 +184,7 @@ const fiscalPoints = [
 
 type ProblemIn = {
   n: number;
-  img?: string;
+  mock?: "void" | "stock" | "shift" | "store";
   receipt?: boolean;
   /** lowest plan that includes this, shown as a pill */
   plan?: string;
@@ -205,7 +205,7 @@ const problems = ([
   },
   {
     n: 1,
-    img: "/app_images/pos-restaurant/pos-notifications-requests.webp",
+    mock: "void",
     pain: "Kassir cheklarni bekor qilyaptimi?",
     title: "Bekor qilish faqat menejer ruxsati bilan",
     body:
@@ -214,7 +214,7 @@ const problems = ([
   },
   {
     n: 2,
-    img: "/app_images/dash/dash-inventory.webp",
+    mock: "stock",
     plan: "Growth",
     pain: "Ombordan mahsulot yo'qolyaptimi?",
     title: "Texkarta sarfni hisoblaydi, inventarizatsiya farqni ko'rsatadi",
@@ -224,7 +224,7 @@ const problems = ([
   },
   {
     n: 3,
-    img: "/app_images/pos-restaurant/pos-more-business-day-register.webp",
+    mock: "shift",
     pain: "Smena oxirida kassa to'g'ri chiqmayaptimi?",
     title: "Har bir smena bitta hisobotda",
     body:
@@ -233,7 +233,7 @@ const problems = ([
   },
   {
     n: 6,
-    img: "/app_images/website/website-hero.webp",
+    mock: "store",
     pain: "Agregatorlar har buyurtmadan komissiya oladimi?",
     title: "O'z saytingiz va Telegram orqali, komissiyasiz",
     body:
@@ -255,11 +255,19 @@ const extras = [
       "Har bir savdo kanali uchun o'z narxi: zal, QR-menyu, sayt, Telegram, Yandex Eats va Uzum Tezkor. Ulgurji mijozlar uchun ham alohida narx ro'yxati." },
 ];
 
-const stats = [
-  { n: 1, v: "30+", l: "Restoran va marketlar Octopos bilan ishlaydi" },
-  { n: 2, v: "1–3 kun", l: "Ishga tushirish: menyu, uskunalar va o'qitish bilan" },
-  { n: 3, v: "Offline", l: "Internet uzilsa ham savdo davom etadi" },
-  { n: 4, v: "Telegram", l: "Orqali yordam: o'zbek, rus, ingliz va koreys tillarida" },
+
+/** Display text uses the proper Uzbek letters oʻ / gʻ, not a straight apostrophe. */
+const uzApos = (t: string) => t.replace(/([oOgG])'/g, "$1ʻ");
+
+const trust = [
+  { n: 1, t: "30+ biznes", d: "Restoran va marketlar Octopos bilan ishlaydi",
+    icon: '<path d="M3 9l1-5h16l1 5"/><path d="M4 9v11h16V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M9 20v-6h6v6"/>' },
+  { n: 2, t: "1–3 kunda ishga tushirish", d: "Menyu, uskunalar va o'qitish bilan",
+    icon: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>' },
+  { n: 3, t: "Offline ishlaydi", d: "Internet uzilsa ham savdo davom etadi",
+    icon: '<path d="M2 2l20 20"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M5 12.9a10 10 0 0 1 5.2-2.7"/><path d="M19 12.9a10 10 0 0 0-2-1.5"/><path d="M2 8.8a15 15 0 0 1 4.2-2.6"/><path d="M22 8.8a15 15 0 0 0-11.3-3.8"/><path d="M12 20h.01"/>' },
+  { n: 4, t: "Telegramda 4 tilda yordam", d: "O'zbek, rus, ingliz va koreys tillarida",
+    icon: '<path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/>' },
 ];
 
 const steps = [
@@ -348,52 +356,43 @@ const faqLd = {
       : undefined
   }
 >
-  <TopNav />
+  <TopNav overHero />
 
   <main>
-    {/* ---------------- hero ---------------- */}
-    <section class="px-5 pt-[22px] pb-[28px] lg:px-[32px] lg:pt-[68px] lg:pb-[72px]">
-      <div class="mx-auto max-w-[1600px]">
-
-        <h1
-          class="max-w-[1200px] font-anton text-[clamp(40px,11vw,64px)] leading-[1.03] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[138px]"
-          data-i18n="hero.title"
-        >
-          Eng yaxshisini ishlating, boshliq!
+    {/* ---------------- hero (forest band) ---------------- */}
+    <section class="on-forest">
+      <div class="wrap pt-10 pb-10 lg:pt-20 lg:pb-14">
+        <h1 class="display display-1 max-w-[1100px]">
+          <span data-i18n="hero.t1">Eng yaxshisini ishlating,</span>
+          <span class="text-link" data-i18n="hero.t2">boshliq!</span>
         </h1>
-
-        <div
-          class="mt-10 flex flex-col items-start gap-7 lg:flex-row lg:items-end lg:justify-between lg:gap-16"
-        >
-          <p
-            class="max-w-[600px] font-geist text-[20px] leading-[30px] text-muted"
-            data-i18n="hero.body"
-          >
-            Kassa, oshxona ekrani, QR-menyu, onlayn do'kon va yetkazib berish
-            bitta tizimda. Ombor, soliq cheklari va hisobotlar ham shu yerda.
-            Internet uzilsa ham savdo to'xtamaydi.
-          </p>
-          <div class="flex shrink-0 flex-col items-start gap-4 lg:items-end">
-            <div class="flex flex-wrap gap-3 lg:justify-end">
-              <button
-                type="button"
-                data-plan-trigger="starter"
-                class="btn-solid h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
-              >
-                <span data-i18n="hero.cta">Bepul sinab ko'ring →</span>
-              </button>
-              <a
-                href="#contact"
-                data-lead-jump
-                class="btn-outline h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
-              >
-                <span data-i18n="ct.demo">Demo so'rash</span>
-              </a>
-            </div>
-          </div>
+        <p class="mt-6 max-w-[600px] font-geist text-[16px] leading-[1.6] text-ink/90 lg:mt-8 lg:text-[18px]" data-i18n="hero.body">
+          Kassa, oshxona ekrani, QR-menyu, onlayn do'kon va yetkazib berish
+          bitta tizimda. Ombor, soliq cheklari va hisobotlar ham shu yerda.
+          Internet uzilsa ham savdo to'xtamaydi.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button type="button" data-plan-trigger="starter" class="btn-solid btn">
+            <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
+          </button>
+          <a href="#contact" data-lead-jump class="btn-outline btn">
+            <span data-i18n="ct.demo">Demo so'rash</span>
+          </a>
         </div>
+        <p class="mt-5 font-geist text-[14px] leading-[1.5] text-muted" data-i18n="hero.trust">
+          Bank kartasi shart emas · 1–3 kunda ishga tushadi · Internetsiz ishlaydi
+        </p>
+      </div>
+    </section>
 
-        <div class="relative mt-10 overflow-hidden rounded-2xl bg-card" style={heroWrapStyle}>
+    {/* Hero visual: sits half on the forest band, half on the page.
+        TODO(photo): replace the product screenshot with a real photo — café
+        counter in Uzbekistan, warm light, tablet running RestaurantPOS and our
+        printed receipt in the scene, 16:9, min 2560px wide. */}
+    <div class="relative">
+      <div class="absolute inset-x-0 top-0 h-1/2 bg-forest" aria-hidden="true"></div>
+      <div class="wrap relative">
+        <div class="relative overflow-hidden rounded-[16px] bg-card lg:rounded-[24px]" style={heroWrapStyle}>
           {
             heroImg ? (
               <img
@@ -410,135 +409,112 @@ const faqLd = {
                 decoding="async"
               />
             ) : (
-              <span class="flex h-[320px] items-center justify-center font-geist-mono text-[12px] tracking-[0.72px] text-muted">
+              <span class="flex h-[320px] items-center justify-center font-geist text-[14px] text-muted">
                 Rasmlar tez orada paydo bo'ladi
               </span>
             )
           }
         </div>
-
-        <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-hairline pt-8 lg:mt-12 lg:grid-cols-4 lg:gap-10">
-          {
-            stats.map((s) => (
-              <div>
-                <dt
-                  class="font-anton text-[32px] leading-none tracking-[-0.5px] text-ink lg:text-[44px]"
-                  data-i18n={`proof.${s.n}v`}
-                >
-                  {s.v}
-                </dt>
-                <dd
-                  class="mt-2 max-w-[260px] font-geist text-[14px] leading-[20px] text-muted lg:text-[16px] lg:leading-[24px]"
-                  data-i18n={`proof.${s.n}l`}
-                >
-                  {s.l}
-                </dd>
-              </div>
-            ))
-          }
-        </dl>
       </div>
+    </div>
+
+    {/* ---------------- trust row ---------------- */}
+    <section class="py-12 lg:py-20">
+      <ul class="wrap grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          trust.map((t) => (
+            <li class="flex items-start gap-4">
+              <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent/30 text-link">
+                <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={t.icon} />
+              </span>
+              <span>
+                <span class="block font-geist text-[17px] leading-[1.3] font-semibold" data-i18n={`trust.${t.n}t`}>{t.t}</span>
+                <span class="mt-1 block font-geist text-[15px] leading-[1.5] text-muted" data-i18n={`trust.${t.n}d`}>{t.d}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
     </section>
 
     {/* ---------------- problems → solutions ---------------- */}
-    <section
-      id="solutions"
-      class="scroll-mt-[70px] px-5 py-[32px] lg:px-[32px] lg:py-[96px]"
-    >
-      <div class="mx-auto max-w-[1600px]">
-        <h2
-          class="max-w-[1000px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
-          data-i18n="prob.heading"
-        >
+    <section id="solutions" class="scroll-mt-[72px]">
+      <div class="wrap pt-12 pb-12 lg:pt-20 lg:pb-20">
+        <h2 class="display display-2 max-w-[900px]" data-i18n="prob.heading">
           Tanish muammolar, tayyor yechimlar
         </h2>
-        <p
-          class="mt-5 max-w-[640px] font-geist text-[18px] leading-[28px] text-muted lg:text-[20px] lg:leading-[30px]"
-          data-i18n="prob.body"
-        >
+        <p class="mt-5 max-w-[620px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="prob.body">
           Har kuni kassa yonida turolmaysiz. Octopos har bir chek, har bir
           gramm mahsulot va har bir bekor qilishni yozib boradi.
         </p>
+      </div>
 
-        <div class="mt-10 flex flex-col gap-16 lg:mt-16 lg:gap-32">
-          {
-            problems.map((pr) => (
-              <article
-                class:list={[
-                  pr.receipt && "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:gap-20",
-                ]}
-              >
-                <div class:list={["min-w-0", pr.receipt ? "max-w-[820px]" : "max-w-[760px]"]}>
-                  <p
-                    class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[22px] font-medium text-link lg:text-[17px]"
-                  >
-                    <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
-                    {pr.plan && (
-                      <a
-                        href="#plans"
-                        class="rounded-full border border-hairline px-2.5 py-1 font-geist-mono text-[11px] leading-none font-normal tracking-[0.5px] text-muted transition-colors duration-300 hover:border-link/40 hover:text-ink"
-                        data-i18n="prob.planFrom"
-                        data-name={pr.plan}
-                      >
-                        {pr.plan} tarifidan
-                      </a>
+      {
+        problems.map((pr, i) => {
+          const onCard = i % 2 === 0;
+          const flip = i % 2 === 1;
+          return (
+            <article class:list={[onCard && "bg-card"]}>
+              <div class="wrap py-16 lg:py-28">
+                <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+                  <div class:list={["min-w-0", flip && "lg:order-2"]}>
+                    <p class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[1.4] font-semibold text-link lg:text-[16px]">
+                      <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
+                      {pr.plan && (
+                        <a
+                          href="#plans"
+                          class="rounded-full border border-ink/20 px-2.5 py-1 font-geist text-[12px] leading-none font-medium text-muted transition-colors duration-200 ease-out hover:border-ink/50 hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
+                          data-i18n="prob.planFrom"
+                          data-name={pr.plan}
+                        >
+                          {pr.plan} tarifidan
+                        </a>
+                      )}
+                    </p>
+                    <h3 class="display display-3 mt-4" data-i18n={`prob.${pr.n}t`}>{uzApos(pr.title)}</h3>
+                    <p class="mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n={`prob.${pr.n}d`}>
+                      {pr.body}
+                    </p>
+                  </div>
+                  <div class:list={["min-w-0", flip && "lg:order-1"]}>
+                    {pr.receipt && <Receipt />}
+                    {pr.mock && (
+                      <div class:list={["rounded-[24px]", onCard ? "lg:px-6" : "bg-card p-5 lg:p-12"]}>
+                        <div class="mx-auto max-w-[480px]"><Mock kind={pr.mock} /></div>
+                      </div>
                     )}
-                  </p>
-                  <h3
-                    class="mt-4 font-geist text-[28px] leading-[1.15] font-semibold tracking-[-0.6px] text-balance text-ink lg:text-[44px] lg:leading-[1.08] lg:tracking-[-1px]"
-                    data-i18n={`prob.${pr.n}t`}
-                  >
-                    {pr.title}
-                  </h3>
-                  <p
-                    class="mt-5 max-w-[640px] font-geist text-[17px] leading-[28px] text-muted lg:text-[19px] lg:leading-[31px]"
-                    data-i18n={`prob.${pr.n}d`}
-                  >
-                    {pr.body}
-                  </p>
-                  {pr.receipt && (
-                    <ul class="mt-6 grid gap-x-8 gap-y-3 border-t border-hairline pt-6 sm:mt-8 sm:grid-cols-2 sm:gap-y-6 sm:pt-8 lg:mt-10 lg:pt-10">
-                      {fiscalPoints.map((f) => (
-                        <li class="flex gap-3">
-                          <svg class="mt-[2px] h-5 w-5 shrink-0 text-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7" /></svg>
-                          <div>
-                            <p class="font-geist text-[16px] leading-[24px] font-semibold text-ink lg:text-[17px]" data-i18n={`fisc.${f.n}t`}>{f.t}</p>
-                            <p class="mt-1 hidden font-geist text-[15px] leading-[23px] text-muted sm:block lg:text-[16px] lg:leading-[24px]" data-i18n={`fisc.${f.n}d`}>{f.d}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  </div>
                 </div>
-                {pr.receipt && <Receipt />}
-                {pr.img && (
-                  <Shot src={pr.img} alt={pr.alt ?? ""} class="mt-8 lg:mt-12" />
+                {pr.receipt && (
+                  <ul class="mt-12 grid gap-x-10 gap-y-5 border-t border-ink/10 pt-10 sm:grid-cols-2 lg:mt-20 lg:grid-cols-3 lg:gap-y-8 lg:pt-12">
+                    {fiscalPoints.map((f) => (
+                      <li class="flex gap-3">
+                        <svg class="mt-[3px] h-5 w-5 shrink-0 text-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                        <div>
+                          <p class="font-geist text-[16px] leading-[1.4] font-semibold" data-i18n={`fisc.${f.n}t`}>{f.t}</p>
+                          <p class="mt-1 hidden font-geist text-[14px] leading-[1.5] text-muted sm:block" data-i18n={`fisc.${f.n}d`}>{f.d}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
                 )}
-              </article>
-            ))
-          }
-        </div>
-
-        <div class="mt-14 grid gap-4 md:grid-cols-2 lg:mt-24 xl:grid-cols-3">
-          {
-            extras.map((x) => (
-              <div class="rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
-                <h3
-                  class="font-geist text-[20px] leading-[1.25] font-semibold tracking-[-0.2px] text-ink lg:text-[22px]"
-                  data-i18n={`prob.x${x.n}t`}
-                >
-                  {x.title}
-                </h3>
-                <p
-                  class="mt-3 font-geist text-[17px] leading-[27px] text-muted lg:text-[18px] lg:leading-[28px]"
-                  data-i18n={`prob.x${x.n}d`}
-                >
-                  {x.body}
-                </p>
               </div>
+            </article>
+          );
+        })
+      }
+
+      <div class="wrap py-16 lg:py-28">
+        <ul class="grid gap-4 md:grid-cols-2">
+          {
+            extras.map((x, i) => (
+              <li class:list={["card p-6 lg:p-8", i === extras.length - 1 && extras.length % 2 === 1 && "md:col-span-2"]}>
+                <h3 class="font-geist text-[20px] leading-[1.3] font-semibold lg:text-[24px]" data-i18n={`prob.x${x.n}t`}>{x.title}</h3>
+                <p class="mt-3 max-w-[640px] font-geist text-[16px] leading-[1.6] text-muted" data-i18n={`prob.x${x.n}d`}>{x.body}</p>
+              </li>
             ))
           }
-        </div>
+        </ul>
       </div>
     </section>
 

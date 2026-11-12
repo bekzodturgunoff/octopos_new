@@ -141,10 +141,15 @@
   text-wrap: balance;
 }
 .display-1 {
-  font-size: clamp(52px, 8.5vw, 112px);
+  /* 375 → 48px, 768 → 72px, 1440 → 112px */
+  font-size: clamp(46px, 6vw + 26px, 112px);
 }
 .display-2 {
   font-size: clamp(40px, 5.5vw, 72px);
+}
+.display-3 {
+  font-size: clamp(30px, 3.7vw, 52px);
+  line-height: 1;
 }
 /* Hangul has no case and no condensed cut: heavy system/Noto face, roomier leading. */
 :lang(ko) .display {
@@ -159,6 +164,10 @@
 }
 :lang(ko) .display-2 {
   font-size: clamp(32px, 4.2vw, 56px);
+}
+:lang(ko) .display-3 {
+  font-size: clamp(26px, 3vw, 40px);
+  line-height: 1.2;
 }
 
 /* Page container: 1280 max, 24/48 gutters. */
