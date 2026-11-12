@@ -24,7 +24,8 @@ const I = {
   plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
   user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   clock: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
-  noFork: '<path d="m2 2 20 20"/><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v8"/><path d="M21 15V2a5 5 0 0 0-5 5v6"/>',
+  // lucide UtensilsCrossed: the icon the Order Display app shows on in-progress orders.
+  utensilsCrossed: '<path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
   bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
   book: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
@@ -142,7 +143,7 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
           <p class="col-h" data-i18n="od.preparing">Tayyorlanmoqda</p>
           <ul class="mt-2 flex flex-col gap-1.5">
             {["0031", "0032", "0033"].map((n) => (
-              <li class="num"><Fragment set:html={svg(I.noFork)} /><span><b>{n}</b><small data-i18n="kd.inProgress">Jarayonda</small></span></li>
+              <li class="num"><span class="num-ico"><Fragment set:html={svg(I.utensilsCrossed)} /></span><span><b>{n}</b><small data-i18n="kd.inProgress">Jarayonda</small></span></li>
             ))}
           </ul>
         </div>
@@ -526,6 +527,15 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
     display: block;
     color: var(--on2);
     font-size: 9.5px;
+  }
+  /* As in the app: a muted 20px-class icon beside the order number. */
+  .num-ico {
+    display: flex;
+    color: var(--on2);
+  }
+  .num-ico :global(svg) {
+    width: 16px;
+    height: 16px;
   }
   .num.ready {
     background: color-mix(in oklab, var(--accent) 45%, var(--s200));
