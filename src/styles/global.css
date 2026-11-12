@@ -259,6 +259,36 @@
   border-top: 1px solid var(--color-hairline);
 }
 
+/* Carousel track: starts on the container edge, runs off the screen edge. */
+.car-track {
+  padding-inline: max(24px, calc((100vw - 1280px) / 2 + 48px));
+  scroll-padding-inline: max(24px, calc((100vw - 1280px) / 2 + 48px));
+  scrollbar-width: none;
+}
+.car-track::-webkit-scrollbar {
+  display: none;
+}
+@media (max-width: 1023.98px) {
+  .car-track {
+    padding-inline: 24px;
+    scroll-padding-inline: 24px;
+  }
+}
+
+.plans-track {
+  scrollbar-width: none;
+  scroll-padding-inline: 24px;
+}
+.plans-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Dark theme: every plan card is dark, so the popular one gets a lime outline. */
+:root[data-theme="dark"] .plan-popular {
+  outline: 2px solid var(--color-lime);
+  outline-offset: -2px;
+}
+
 /* Buttons, redesign sizes: 48px mobile / 52px desktop, Inter 600 16px. */
 .btn {
   height: 48px;

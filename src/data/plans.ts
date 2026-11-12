@@ -25,6 +25,10 @@ export const UZ_PLAN_STRINGS: Record<string, string> = {
   "plans.orders": "Oyiga {n} ta buyurtma",
   "plans.items": "{n} ta mahsulot",
   "plans.fiscalFrom": "Fiskal chek — Starter tarifidan",
+  "plans.stockFrom": "Ombor nazorati — Growth tarifidan",
+  "plans.plus": "{name} tarifidagi hammasi, va:",
+  "plans.feature": "Imkoniyat",
+  "plans.compare": "Tariflarni solishtirish",
   "plans.loading": "Yuklanmoqda…",
   "common.showAll": "Barchasini ko'rsatish",
 };
@@ -60,7 +64,18 @@ export const formatUsd = (n: number): string =>
     maximumFractionDigits: 2,
   });
 
-export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label): string {
+/** Features this plan adds over the previous one (all of them for the first plan). */
+const addedFeatures = (plan: any, prev?: any): any[] => {
+  const had = new Set((prev?.features ?? []).map((f: any) => f.name));
+  return (plan.features ?? []).filter((f: any) => !had.has(f.name));
+};
+
+const CHECK =
+  '<svg class="mt-[3px] h-4 w-4 shrink-0 text-link" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const LOCK =
+  '<svg class="mt-[3px] h-4 w-4 shrink-0 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+
+export function renderPlanCard(plan: any, _lang: string, cycle: Cycle, L: Label, prev?: any): string {
   // Plans are priced in USD for every language; formatted here so the
   // Uzbek page doesn't get the API's "29 $" style next to "$29" elsewhere.
   const popular = plan.name === "Growth" || plan.position === 3;
@@ -78,9 +93,9 @@ export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label):
 
   const note =
     amount === 0
-      ? t("plans.noCard", "p", "mt-3 font-geist text-[13px] text-muted")
+      ? t("plans.noCard", "p", "mt-2 font-geist text-[13px] text-muted")
       : cycle === "yearly"
-        ? t("plans.saveNote", "p", "mt-3 font-geist-mono text-[11px] tracking-[0.72px] text-muted")
+        ? t("plans.saveNote", "p", "mt-2 font-geist text-[13px] text-muted")
         : "";
   const ctaKey = amount === 0 ? "plans.startFree" : "plans.getStarted";
 
@@ -97,7 +112,7 @@ export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label):
   };
   const chip = (key: string, n: number): string =>
     n > 0
-      ? `<span class="rounded-full border border-hairline px-2.5 py-1 font-geist-mono text-[10.5px] leading-none tracking-[0.3px] text-muted" data-i18n="${key}" data-n="${n}">${esc(L(key).replace("{n}", String(n)))}</span>`
+      ? `<span class="rounded-full border border-ink/20 px-2.5 py-1 font-geist text-[12px] leading-none text-muted" data-i18n="${key}" data-n="${n}">${esc(L(key).replace("{n}", String(n)))}</span>`
       : "";
   const chips = [
     chip("plans.locations", quotaMax("location")),
@@ -108,29 +123,67 @@ export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label):
     .filter(Boolean)
     .join("");
 
-  const feats = (plan.features ?? [])
-    .map(
-      (f: any) =>
-        `<li class="flex items-start gap-2.5"><svg class="mt-[3px] h-3.5 w-3.5 shrink-0 text-link" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="font-geist text-[13.5px] leading-[20px] text-ink/90"${f.description ? ` title="${esc(f.description)}"` : ""}>${esc(f.name)}</span></li>`,
-    )
-    .join("");
+  const li = (f: any) =>
+    `<li class="flex items-start gap-2.5">${CHECK}<span class="font-geist text-[15px] leading-[1.45]"${f.description ? ` title="${esc(f.description)}"` : ""}>${esc(f.name)}</span></li>`;
+  // What this tier adds: the 4–5 lines that actually differ.
+  const added = addedFeatures(plan, prev).slice(0, 5).map(li).join("");
+  const all = (plan.features ?? []).map(li).join("");
+  const plus = prev
+    ? `<p class="font-geist text-[13px] font-semibold text-muted" data-i18n="plans.plus" data-name="${esc(prev.name)}">${esc(L("plans.plus").replace("{name}", prev.name))}</p>`
+    : "";
+  // Honest gates: what the next tier unlocks.
+  const gate =
+    amount === 0
+      ? "plans.fiscalFrom"
+      : plan.slug === "starter" || plan.position === 2
+        ? "plans.stockFrom"
+        : "";
+  const gateHtml = gate
+    ? `<p class="mt-4 flex items-start gap-2.5 font-geist text-[14px] leading-[1.45] text-muted">${LOCK}${t(gate)}</p>`
+    : "";
 
-  return `<div class="relative flex flex-col rounded-[20px] border border-hairline bg-card/50 p-6 transition-colors duration-300 hover:border-link/40 ${popular ? "ring-2 ring-accent" : ""}">
-        ${popular ? t("plans.popular", "span", "absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 font-geist-mono text-[10px] tracking-[0.72px] text-accent-emphasis") : ""}
-        <p class="font-geist text-[16px] font-medium text-ink">${esc(plan.name)}</p>
-        <p class="mt-2 min-h-[36px] font-geist text-[13.5px] leading-[20px] text-muted">${esc(plan.description ?? "")}</p>
-        <div class="mt-4 flex items-baseline gap-1.5">
-          <span class="font-anton text-[40px] leading-none tracking-tight text-ink">${esc(display)}</span>
-          ${t(suffixKey, "span", "font-geist-mono text-[11px] tracking-[0.72px] text-muted")}
+  return `<div class="relative flex w-[84vw] max-w-[340px] shrink-0 snap-start flex-col rounded-[24px] p-6 lg:w-auto lg:max-w-none lg:p-7 ${popular ? "plan-popular on-forest card" : "bg-card"}">
+        ${popular ? t("plans.popular", "span", "absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 font-geist text-[12px] font-semibold text-accent-emphasis") : ""}
+        <p class="font-geist text-[18px] font-semibold">${esc(plan.name)}</p>
+        <p class="mt-1.5 font-geist text-[14px] leading-[1.5] text-muted lg:min-h-[63px]">${esc(plan.description ?? "")}</p>
+        <div class="mt-5 flex items-baseline gap-1.5">
+          <span class="display text-[52px] leading-none">${esc(display)}</span>
+          ${t(suffixKey, "span", "font-geist text-[14px] text-muted")}
         </div>
         ${note}
         ${chips ? `<div class="mt-4 flex flex-wrap gap-1.5">${chips}</div>` : ""}
-        ${amount === 0 ? `<p class="mt-3 flex items-center gap-1.5 font-geist text-[13px] text-ink/80"><svg class="h-3.5 w-3.5 shrink-0 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${t("plans.fiscalFrom")}</p>` : ""}
-        <div class="mt-5 h-px w-full bg-hairline"></div>
-        <ul class="mt-5 hidden flex-col gap-2.5 md:flex">${feats}</ul>
-        ${feats ? `<details class="mt-5 md:hidden"><summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">${t("common.showAll")}</summary><ul class="mt-4 flex flex-col gap-2.5">${feats}</ul></details>` : ""}
-        <div class="mt-auto pt-6">
-          <button type="button" data-plan-trigger="starter" data-plan-name="${esc(plan.name)}" class="${popular ? "btn-solid" : "btn-outline"} h-[44px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]">${t(ctaKey)}</button>
+        <div class="mt-6 border-t border-ink/10 pt-5">
+          ${plus}
+          <ul class="${prev ? "mt-3 " : ""}flex flex-col gap-2.5">${added}</ul>
+          ${gateHtml}
+          ${all ? `<details class="mt-4"><summary class="cursor-pointer list-none rounded font-geist text-[14px] font-semibold text-link underline underline-offset-4 [&::-webkit-details-marker]:hidden">${t("common.showAll")}</summary><ul class="mt-4 flex flex-col gap-2.5">${all}</ul></details>` : ""}
+        </div>
+        <div class="mt-auto pt-7">
+          <button type="button" data-plan-trigger="starter" data-plan-name="${esc(plan.name)}" class="${popular ? "btn-solid" : "btn-outline"} btn w-full">${t(ctaKey)}</button>
         </div>
       </div>`;
+}
+
+/** All plans as cards (each one knows the tier below it). */
+export const renderPlanCards = (plans: any[], lang: string, cycle: Cycle, L: Label): string =>
+  plans.map((p, i) => renderPlanCard(p, lang, cycle, L, plans[i - 1])).join("");
+
+/** Comparison table: rows = every feature, columns = plans. */
+export function renderPlanTable(plans: any[], L: Label): string {
+  if (!plans.length) return "";
+  const names: string[] = [];
+  for (const p of plans) for (const f of p.features ?? []) if (!names.includes(f.name)) names.push(f.name);
+  const has = (p: any, n: string) => (p.features ?? []).some((f: any) => f.name === n);
+  const yes = `<svg class="mx-auto h-5 w-5 text-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="✓"><path d="M20 6 9 17l-5-5"/></svg>`;
+  const no = `<span class="text-muted" aria-label="—">—</span>`;
+  const head = plans
+    .map((p) => `<th scope="col" class="px-3 py-4 text-center font-geist text-[15px] font-semibold">${esc(p.name)}</th>`)
+    .join("");
+  const rows = names
+    .map(
+      (n) =>
+        `<tr class="border-t border-ink/10"><th scope="row" class="py-3.5 pr-4 text-left font-geist text-[15px] font-normal">${esc(n)}</th>${plans.map((p) => `<td class="px-3 py-3.5 text-center">${has(p, n) ? yes : no}</td>`).join("")}</tr>`,
+    )
+    .join("");
+  return `<table class="w-full min-w-[560px] border-collapse"><thead><tr><th scope="col" class="py-4 pr-4 text-left font-geist text-[14px] font-semibold text-muted" data-i18n="plans.feature">${esc(L("plans.feature"))}</th>${head}</tr></thead><tbody>${rows}</tbody></table>`;
 }

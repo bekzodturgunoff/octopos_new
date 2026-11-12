@@ -13,7 +13,10 @@ export interface Testimonial {
   name: string;
   /** e.g. "Restoran egasi, Toshkent" */
   role: string;
+  /** Restaurant photo, 4:3 (shown at the top of the card). */
   photo?: string;
+  /** The one big number, e.g. { value: "−70%", label: "bekor qilingan cheklar" } */
+  stat?: { value: string; label: string };
   /** mp4/webm URL; shown with the photo as poster when present */
   video?: string;
 }

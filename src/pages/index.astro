@@ -8,21 +8,20 @@ import Mock from "../components/Mock.astro";
 import LeadForm from "../components/LeadForm.astro";
 import Footer from "../components/Footer.astro";
 import trims from "../data/image-trims.json";
-import logoLight from "../assets/logo_light.webp";
-import logoDark from "../assets/logo_dark.webp";
-import { testimonials } from "../data/testimonials";
+import { testimonials, type Testimonial } from "../data/testimonials";
 import { has } from "../data/i18n";
-import { fetchPlans, renderPlanCard, UZ_PLAN_STRINGS } from "../data/plans";
+import { fetchPlans, renderPlanCards, renderPlanTable, UZ_PLAN_STRINGS } from "../data/plans";
 
 /* Plans are rendered into the HTML at build time (SEO, no loading flash); the
  * browser refreshes them. If the API is down during the build, the page falls
  * back to the client-side fetch as before. */
 let ssrPlansHtml = "";
+let ssrTableHtml = "";
 try {
   const plans = await fetchPlans("uz", AbortSignal.timeout(8000));
-  ssrPlansHtml = plans
-    .map((p) => renderPlanCard(p, "uz", "monthly", (k) => UZ_PLAN_STRINGS[k] ?? ""))
-    .join("");
+  const uzL = (k: string) => UZ_PLAN_STRINGS[k] ?? "";
+  ssrPlansHtml = renderPlanCards(plans, "uz", "monthly", uzL);
+  ssrTableHtml = renderPlanTable(plans, uzL);
 } catch (err) {
   console.warn("[plans] build-time fetch failed, falling back to client:", err);
 }
@@ -63,103 +62,14 @@ const homeLd = [
   },
 ];
 
-const journey = [
-  {
-    n: 1,
-    app: "guest",
-    t: "Mehmon QR orqali buyurtma beradi",
-    d: "Stoldagi QR-kodni skanerlaydi, menyuni ko'radi va ilovasiz buyurtma beradi.",
-  },
-  {
-    n: 2,
-    app: "pos-restaurant",
-    t: "Ofitsiant tasdiqlaydi",
-    d: "QR-buyurtmani tasdiqlaydi yoki buyurtmani o'zi planshetda kiritadi.",
-  },
-  {
-    n: 3,
-    app: "kitchen",
-    t: "Oshxona tayyorlaydi",
-    d: "Buyurtma shu zahoti oshxona ekranida paydo bo'ladi, kutish vaqti bilan birga.",
-  },
-  {
-    n: 4,
-    app: "ods",
-    t: "Mijoz xabardor bo'ladi",
-    d: "Taom tayyor bo'lganda mijoz o'z raqamini zal ekranida ko'radi.",
-  },
-  {
-    n: 5,
-    app: "pos-restaurant",
-    t: "To'lov qabul qilinadi",
-    d: "Naqd, karta, Payme yoki Click. Hisobni bir necha kishiga bo'lib to'lash ham mumkin.",
-  },
-  {
-    n: 6,
-    app: "dash",
-    t: "Siz natijani ko'rasiz",
-    d: "Savdo, ombor qoldig'i va foyda telefoningizda darhol yangilanadi.",
-  },
-].map((s) => ({ ...s, appObj: apps.find((a) => a.slug === s.app)! }));
-const deliveryApps = ["website", "dispatch"].map((slug) => apps.find((a) => a.slug === slug)!);
+// Apps band: the order a ticket travels (guest → till → kitchen → pickup
+// screen → reports), then the other till, the own store and delivery.
+const appOrder = ["guest", "pos-restaurant", "kitchen", "ods", "dash", "pos-market", "website", "dispatch"];
+const bandApps = appOrder.map((slug) => apps.find((a) => a.slug === slug)!).filter(Boolean);
 
-const radOffsets = [37, 42, 33.5, 40, 35, 42.5, 34, 41];
-const angJitter = [0, -6, 5, -4, 7, -5, 4, -6];
-const hOffsets = [-6, -4.5, -4.5, -4, 0, 4, 4.5, 4.5];
-
-const ring = apps.map((app, i) => {
-  const ang = ((i * 45 - 90 + angJitter[i]) * Math.PI) / 180;
-  const rad = radOffsets[i];
-  return {
-    app,
-    x: 50 - rad * Math.cos(ang) + hOffsets[i],
-    y: 50 + rad * Math.sin(ang),
-  };
-});
-
-const mobileShift = [
-  "-translate-y-[calc(50%_+_7px)] sm:-translate-y-1/2",
-  "-translate-y-[calc(50%_+_7px)] sm:-translate-y-1/2",
-  "-translate-y-1/2",
-  "-translate-y-[calc(50%_-_7px)] sm:-translate-y-1/2",
-  "-translate-y-[calc(50%_-_7px)] sm:-translate-y-1/2",
-  "-translate-y-[calc(50%_-_7px)] sm:-translate-y-1/2",
-  "-translate-y-1/2",
-  "-translate-y-[calc(50%_+_7px)] sm:-translate-y-1/2",
-];
-
-const tentacles = ring.map(({ x: ox, y: oy }, i) => {
-  const dx = ox - 50;
-  const dy = oy - 50;
-  const dist = Math.hypot(dx, dy) || 1;
-  const ux = dx / dist;
-  const uy = dy / dist;
-  const ix = 50 + 8 * ux;
-  const iy = 50 + 8 * uy;
-  const px = -uy;
-  const py = ux;
-  const dir = i % 2 === 0 ? 1 : -1;
-  const amp = 1.9 + (i % 3) * 0.3;
-  const cycles = 1;
-  const N = 20;
-  const pts: { x: number; y: number; t: number }[] = [];
-  for (let s = 0; s <= N; s++) {
-    const t = s / N;
-    const off = dir * amp * Math.sin(t * Math.PI * 2 * cycles);
-    pts.push({
-      x: ix + (ox - ix) * t + px * off,
-      y: iy + (oy - iy) * t + py * off,
-      t,
-    });
-  }
-  return pts.slice(0, N).map((p, s) => {
-    const tMid = (p.t + pts[s + 1].t) / 2;
-    return {
-      d: `M ${p.x.toFixed(2)} ${p.y.toFixed(2)} L ${pts[s + 1].x.toFixed(2)} ${pts[s + 1].y.toFixed(2)}`,
-      w: (1.2 + 4 * Math.pow(1 - tMid, 1.8)).toFixed(2),
-    };
-  });
-});
+// Placeholders never reach production: Vercel sets VERCEL_ENV at build time.
+const showPlaceholders = process.env.VERCEL_ENV !== "production";
+const tmCards: (Testimonial | null)[] = testimonials.length ? testimonials.slice(0, 3) : showPlaceholders ? [null, null, null] : [];
 
 const storeTiers = [
   { name: "Start", price: "790 000", n: 1000 },
@@ -516,226 +426,169 @@ const faqLd = {
       </div>
     </section>
 
-    {/* ---------------- apps: order journey + octopus orbit ---------------- */}
-    <section class="section" data-journey>
-      <div class="wrap">
-        <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-14">
+    {/* ---------------- apps (dark band, horizontal cards) ---------------- */}
+    <section class="on-forest overflow-hidden" data-carousel>
+      <div class="wrap pt-16 lg:pt-28">
+        <div class="flex items-end justify-between gap-8">
           <div>
-            <h2
-              class="max-w-[900px] display display-2"
-              data-i18n="apps.heading"
-            >
-              Sakkizta ilova, bitta sinxron tizim.
-            </h2>
-            <p
-              class="mt-5 max-w-[600px] font-geist text-[18px] leading-[28px] text-muted lg:text-[20px] lg:leading-[30px]"
-              data-i18n="journey.body"
-            >
-              Buyurtma bir ekrandan ikkinchisiga o'zi o'tadi, hech kim uni qayta
-              yozmaydi.
+            <h2 class="display display-2 max-w-[760px]" data-i18n="apps.heading">Sakkizta ilova, bitta sinxron tizim.</h2>
+            <p class="mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="journey.body">
+              Buyurtma bir ekrandan ikkinchisiga o'zi o'tadi, hech kim uni qayta yozmaydi.
             </p>
+          </div>
+          <div class="hidden shrink-0 gap-2 lg:flex">
+            <button type="button" data-car-prev aria-label="Oldingi" data-i18n-attr="aria-label:car.prev" class="flex h-12 w-12 items-center justify-center rounded-full border border-ink/30 text-ink transition-colors duration-200 ease-out hover:border-ink disabled:opacity-30 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+            </button>
+            <button type="button" data-car-next aria-label="Keyingi" data-i18n-attr="aria-label:car.next" class="flex h-12 w-12 items-center justify-center rounded-full bg-accent text-accent-emphasis transition-colors duration-200 ease-out hover:bg-accent-active disabled:opacity-30 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        </div>
+      </div>
 
-            <ol class="relative mt-8 hidden flex-col gap-5 lg:flex">
-              <span aria-hidden="true" class="absolute top-6 bottom-6 left-[21px] w-px bg-hairline"></span>
-              {
-                journey.map((s) => (
-                  <li
-                    class="journey-step relative grid grid-cols-[44px_minmax(0,1fr)] items-start gap-4 rounded-2xl"
-                    data-apps={s.app}
-                    tabindex="0"
-                  >
-                    <span class="relative z-10 flex h-11 w-11 items-center justify-center rounded-[14px] border border-hairline bg-card text-ink ring-4 ring-page transition-colors duration-300">
-                      <AppIcon slug={s.app} class="h-5 w-5" />
-                    </span>
-                    <div class="min-w-0 pt-0.5">
-                      <h3 class="flex flex-wrap items-baseline gap-x-2 font-geist text-[17px] leading-[1.3] font-semibold text-ink lg:text-[18px]">
-                        <span class="font-geist-mono text-[12px] font-normal tracking-[0.72px] text-muted">{String(s.n).padStart(2, "0")}</span>
-                        <span data-i18n={`journey.${s.n}t`}>{s.t}</span>
-                      </h3>
-                      <p class="mt-1 font-geist text-[15px] leading-[23px] text-muted lg:text-[16px] lg:leading-[24px]" data-i18n={`journey.${s.n}d`}>
-                        {s.d}
-                      </p>
-                      <p class="mt-1.5 font-geist-mono text-[11px] tracking-[0.6px] text-muted/80">
-                        {s.appObj.name}
-                      </p>
+      <ul data-car-track tabindex="0" aria-label="Octopos ilovalari" class="car-track mt-10 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:mt-14 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+        {
+          bandApps.map((app, i) => {
+            const img = imagesFor(app.slug)[0];
+            const dims = img ? imgDims(img) : null;
+            return (
+              <li class="w-[82vw] max-w-[340px] shrink-0 snap-start lg:w-[380px] lg:max-w-none">
+                <a href={`/apps/${app.slug}`} class="card group flex h-full flex-col overflow-hidden transition-colors duration-200 ease-out hover:bg-[color-mix(in_oklab,var(--color-card)_88%,white)] focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+                  <div class="p-6 lg:p-8">
+                    <p class="font-geist text-[14px] font-medium text-muted tabular-nums">{String(i + 1).padStart(2, "0")}</p>
+                    <h3 class="mt-3 font-geist text-[24px] leading-[1.2] font-semibold lg:text-[28px]">{app.name}</h3>
+                    <p class="mt-1.5 font-geist text-[16px] leading-[1.5] text-muted" data-i18n={has(`v.${app.tur}`) ? `v.${app.tur}` : undefined}>{app.tur}</p>
+                  </div>
+                  {img ? (
+                    <div class="mt-auto pl-6 lg:pl-8">
+                      <img
+                        src={img}
+                        srcset={imgSrcset(img) ?? undefined}
+                        sizes="380px"
+                        width={dims?.w}
+                        height={dims?.h}
+                        alt=""
+                        class="block h-[200px] w-full rounded-tl-[16px] object-cover object-left-top lg:h-[230px]"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </div>
-                  </li>
-                ))
-              }
-            </ol>
+                  ) : (
+                    /* TODO(screenshot): no capture of this app yet (public/app_images/<slug>/). */
+                    <div class="mt-auto flex h-[200px] items-center justify-center rounded-tl-[16px] bg-page/5 text-muted lg:h-[230px] ml-6 lg:ml-8">
+                      <AppIcon slug={app.slug} class="h-16 w-16" />
+                    </div>
+                  )}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
 
-            <p class="mt-6 hidden max-w-[600px] font-geist text-[15px] leading-[23px] text-muted lg:block">
-              <span class="font-semibold text-ink" data-i18n="journey.dt">Yetkazib berish bo'lsa</span>
-              <span aria-hidden="true">·</span>
-              <span data-i18n="journey.dd">Sayt yoki Telegram'dan kelgan buyurtma ham shu yo'ldan o'tadi, so'ng Dispatch uni Telegram orqali kuryerga beradi va siz kuryerni xaritada kuzatasiz.</span>
+      <div class="wrap pt-6 pb-16 lg:pt-10 lg:pb-28">
+        <a href="/apps" class="btn-outline btn"><span data-i18n="apps.viewAll">Barcha ilovalar →</span></a>
+      </div>
+    </section>
+
+    {/* ---------------- commission calculator (centrepiece) ---------------- */}
+    <section class="section" data-calc data-addon="store">
+      <div class="wrap">
+        <div class="mx-auto max-w-[860px] text-center">
+          <h2 class="display display-2" data-i18n="calc.heading">Agregatorlarga oyiga qancha komissiya toʻlayapsiz?</h2>
+          <p class="mx-auto mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="calc.body">
+            O'z raqamlaringizni kiriting va o'z onlayn do'koningiz narxi bilan solishtiring.
+          </p>
+        </div>
+
+        <div class="card mx-auto mt-10 max-w-[1040px] p-6 lg:mt-14 lg:p-12">
+          <div class="grid gap-4 text-left sm:grid-cols-3">
+            <label class="block">
+              <span class="block font-geist text-[14px] font-semibold" data-i18n="calc.orders">Oyiga onlayn buyurtmalar</span>
+              <span class="mt-2 flex h-14 items-center gap-2 rounded-[12px] border border-ink/20 bg-page px-4 transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ink focus-within:ring-[3px] focus-within:ring-accent"><input class="w-full min-w-0 bg-transparent font-geist text-[18px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-muted/60" inputmode="numeric" placeholder="500" data-calc-orders /></span>
+            </label>
+            <label class="block">
+              <span class="block font-geist text-[14px] font-semibold" data-i18n="calc.check">O'rtacha chek</span>
+              <span class="mt-2 flex h-14 items-center gap-2 rounded-[12px] border border-ink/20 bg-page px-4 transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ink focus-within:ring-[3px] focus-within:ring-accent"><input class="w-full min-w-0 bg-transparent font-geist text-[18px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-muted/60" inputmode="numeric" placeholder="120 000" data-calc-check /><span class="shrink-0 text-muted" data-i18n="calc.som">so'm</span></span>
+            </label>
+            <label class="block">
+              <span class="block font-geist text-[14px] font-semibold" data-i18n="calc.commission">Agregator komissiyasi</span>
+              <span class="mt-2 flex h-14 items-center gap-2 rounded-[12px] border border-ink/20 bg-page px-4 transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ink focus-within:ring-[3px] focus-within:ring-accent"><input class="w-full min-w-0 bg-transparent font-geist text-[18px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-muted/60" inputmode="decimal" placeholder="—" data-calc-rate /><span class="shrink-0 text-muted">%</span></span>
+            </label>
+          </div>
+
+          <div class="mt-8 border-t border-ink/10 pt-8 lg:mt-10 lg:pt-10" aria-live="polite">
+            <p class="text-center font-geist text-[16px] leading-[1.6] text-muted" data-calc-empty data-i18n="calc.empty">
+              Uchala maydonni to'ldiring — natija shu yerda chiqadi.
             </p>
-
-            <div class="mt-8 hidden lg:block">
-              <a
-                href="/apps"
-                class="btn-outline h-[44px] px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
-              >
-                <span data-i18n="apps.viewAll">Barcha ilovalar →</span>
-              </a>
+            <div class="hidden" data-calc-result>
+              <dl class="grid gap-6 sm:grid-cols-2">
+                <div>
+                  <dt class="font-geist text-[15px] text-muted" data-i18n="calc.youPay">Agregatorga komissiya</dt>
+                  <dd class="mt-1 font-geist text-[24px] leading-[1.2] font-semibold tabular-nums lg:text-[28px]"><span data-calc-fee></span> <span class="text-[15px] font-normal text-muted" data-i18n="calc.somMo">so'm/oy</span></dd>
+                </div>
+                <div>
+                  <dt class="font-geist text-[15px] text-muted"><span data-i18n="calc.store">Onlayn do'kon</span> <span data-calc-tier></span></dt>
+                  <dd class="mt-1 font-geist text-[24px] leading-[1.2] font-semibold tabular-nums lg:text-[28px]"><span data-calc-cost></span> <span class="text-[15px] font-normal text-muted" data-i18n="calc.somMo">so'm/oy</span></dd>
+                </div>
+              </dl>
+              <div class="mt-8">
+                <p class="hidden" data-calc-save>
+                  <span class="block font-geist text-[16px] font-semibold text-link" data-i18n="calc.save">Har oy tejaysiz</span>
+                  <span class="display mt-2 block text-[clamp(38px,10.5vw,112px)] leading-none whitespace-nowrap tabular-nums"><span data-calc-diff></span> <span class="font-geist text-[18px] font-normal tracking-normal text-muted" data-i18n="calc.som">so'm</span></span>
+                </p>
+                <p class="hidden font-geist text-[18px] leading-[1.5]" data-calc-nosave data-i18n="calc.noSave">Bu hajmda agregator hozircha arzonroq. Buyurtmalar ko'paysa, qayta hisoblang.</p>
+                <p class="hidden font-geist text-[18px] leading-[1.5]" data-calc-big data-i18n="calc.big">10 000 dan ortiq buyurtma uchun narxni alohida kelishamiz — Telegramga yozing.</p>
+              </div>
+              <p class="mt-6 font-geist text-[14px] leading-[1.5] text-muted" data-i18n="calc.note">Kuryer va to'lov tizimi xarajatlari hisobga olinmagan.</p>
             </div>
           </div>
+        </div>
 
-          {/* Mobile: all 8 apps as a list (the octopus is desktop-only). */}
-          <ul class="grid grid-cols-2 gap-3 lg:hidden">
-            {
-              apps.map((app) => (
-                <li>
-                  <a
-                    href={`/apps/${app.slug}`}
-                    class="flex h-full flex-col items-start gap-3 rounded-2xl border border-hairline bg-card/40 p-4 transition-colors duration-300 active:bg-card"
-                  >
-                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] border border-hairline bg-card text-ink">
-                      <AppIcon slug={app.slug} class="h-5 w-5" />
-                    </span>
-                    <span class="min-w-0 max-w-full">
-                      <span class="block font-geist text-[15px] leading-[20px] font-semibold text-ink">{app.name}</span>
-                      <span
-                        class="mt-0.5 block font-geist text-[13px] leading-[18px] text-muted"
-                        data-i18n={has(`v.${app.tur}`) ? `v.${app.tur}` : undefined}
-                      >
-                        {app.tur}
-                      </span>
-                    </span>
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-
-          <div
-            class="relative mx-auto hidden aspect-square w-full lg:block"
-          >
-          <svg
-            class="pointer-events-none absolute inset-0 h-full w-full text-ink opacity-30"
-            viewBox="0 0 100 100"
-            fill="none"
-            aria-hidden="true"
-          >
-            {
-              tentacles.map((segs, wi) => (
-                <g
-                  class="octo-wire"
-                  style={`animation-delay:${(-wi * 0.6).toFixed(1)}s`}
-                >
-                  {segs.map((s) => (
-                    <path
-                      d={s.d}
-                      stroke="currentColor"
-                      stroke-width={s.w}
-                      stroke-linecap="round"
-                      vector-effect="non-scaling-stroke"
-                    />
-                  ))}
-                </g>
-              ))
-            }
-          </svg>
-
-          <a
-            href="/apps"
-            class="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 rounded-full border border-hairline bg-page transition-transform duration-300 ease-far hover:scale-[1.04]"
-            aria-label="Octopos"
-          >
-            <img
-              src={logoDark.src}
-              alt="Octopos"
-              width="128"
-              height="128"
-              class="logo-dark block h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32"
-              loading="eager"
-              fetchpriority="high"
-            />
-            <img
-              src={logoLight.src}
-              alt=""
-              width="128"
-              height="128"
-              class="logo-light block h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32"
-              aria-hidden="true"
-              loading="eager"
-            />
-          </a>
-
-          {
-            ring.map(({ app, x, y }, i) => (
-              <a
-                href={`/apps/${app.slug}`}
-                title={app.tur}
-                aria-label={`${app.name} — ${app.tur}`}
-                class={`group absolute z-10 flex -translate-x-1/2 flex-col items-center ${mobileShift[i]}`}
-                data-orbit-app={app.slug}
-                style={`left:${x.toFixed(2)}%;top:${y.toFixed(2)}%`}
-              >
-                <div
-                  class="octo-tile flex flex-col items-center"
-                  style={`animation-delay:${(-i * 0.55).toFixed(1)}s`}
-                >
-                  <span class="flex h-[54px] w-[54px] items-center justify-center rounded-[20px] border border-hairline bg-card text-ink transition-all duration-300 ease-far group-hover:scale-[1.08] group-hover:border-link/40 group-hover:bg-ink group-hover:text-on-ink group-data-[lit]:scale-[1.08] group-data-[lit]:border-link/40 group-data-[lit]:bg-ink group-data-[lit]:text-on-ink sm:h-[70px] sm:w-[70px]">
-                    <AppIcon slug={app.slug} class="h-7 w-7 sm:h-8 sm:w-8" />
-                  </span>
-                  <span class="mt-1.5 hidden whitespace-nowrap font-geist-mono text-[10px] leading-[1.2] tracking-[0.6px] text-muted min-[360px]:block">
-                    {app.name}
-                  </span>
-                </div>
-              </a>
-            ))
-          }
-          </div>
+        <div class="mt-8 flex justify-center">
+          <button type="button" data-plan-trigger="starter" class="btn-solid btn"><span data-i18n="calc.cta">Onlayn do'konni sinab ko'ring</span></button>
         </div>
       </div>
     </section>
 
-    {/* ---------------- testimonials (renders only when data exists) ---------------- */}
+    {/* ---------------- testimonials ----------------
+        Real entries come from src/data/testimonials.ts. Until then the three
+        slots below are PLACEHOLDERS, shown on previews only (never in production).
+        TODO(owner) per card: restaurant photo (4:3, warm light), one short
+        owner quote, ONE number with its label, and whether the name may be shown. */}
     {
-      testimonials.length > 0 && (
-        <section class="section">
+      tmCards.length > 0 && (
+        <section class="section bg-card">
           <div class="wrap">
-            <h2
-              class="max-w-[1000px] display display-2"
-              data-i18n="tm.heading"
-            >
-              Mijozlarimiz nima deydi
-            </h2>
-            <div class="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {testimonials.map((t) => (
-                <figure class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
-                  {t.video ? (
-                    <video
-                      class="mb-5 aspect-video w-full rounded-xl bg-card object-cover"
-                      src={t.video}
-                      poster={t.photo}
-                      controls
-                      preload="none"
-                      playsinline
-                    />
-                  ) : null}
-                  <blockquote class="font-geist text-[18px] leading-[28px] text-ink">
-                    “{t.quote}”
-                  </blockquote>
-                  <figcaption class="mt-auto flex items-center gap-3 pt-6">
-                    {t.photo && !t.video ? (
-                      <img
-                        src={t.photo}
-                        alt=""
-                        width="44"
-                        height="44"
-                        class="h-11 w-11 rounded-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : null}
-                    <span>
-                      <span class="block font-geist text-[15px] font-medium text-ink">{t.name}</span>
-                      <span class="block font-geist text-[14px] text-muted">{t.role}</span>
-                    </span>
-                  </figcaption>
-                </figure>
+            <h2 class="display display-2 max-w-[760px]" data-i18n="tm.heading">Mijozlarimiz nima deydi</h2>
+            <ul class="mt-10 grid gap-4 md:grid-cols-3 lg:mt-14">
+              {tmCards.map((t) => (
+                <li class="flex flex-col overflow-hidden rounded-[24px] bg-page">
+                  {t?.photo ? (
+                    <img src={t.photo} alt="" class="aspect-[4/3] w-full object-cover" loading="lazy" decoding="async" />
+                  ) : (
+                    <div class="flex aspect-[4/3] w-full items-center justify-center border-b border-dashed border-ink/25 font-geist text-[14px] text-muted">
+                      <span data-i18n="tm.phPhoto">Restoran surati</span>
+                    </div>
+                  )}
+                  <figure class="flex flex-1 flex-col p-6 lg:p-8">
+                    <p class="display text-[56px] leading-none text-link lg:text-[72px]">{t?.stat?.value ?? "—"}</p>
+                    <p class="mt-2 font-geist text-[15px] font-semibold" data-i18n={t ? undefined : "tm.phStat"}>{t?.stat?.label ?? "Bitta aniq raqam va uning izohi"}</p>
+                    <blockquote class="mt-5 font-geist text-[17px] leading-[1.55]" data-i18n={t ? undefined : "tm.phQuote"}>
+                      {t ? `“${t.quote}”` : "Restoran egasining qisqa fikri shu yerda bo'ladi."}
+                    </blockquote>
+                    <figcaption class="mt-auto pt-6 font-geist text-[14px] text-muted">
+                      {t ? (
+                        <><span class="block font-semibold text-ink">{t.name}</span><span class="block">{t.role}</span></>
+                      ) : (
+                        <span data-i18n="tm.phRole">Restoran egasi, shahar</span>
+                      )}
+                    </figcaption>
+                  </figure>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </section>
       )
@@ -748,7 +601,7 @@ const faqLd = {
           class="display display-2"
           data-i18n="int.heading"
         >
-          To'lov tizimlari va xizmatlar bilan integratsiya
+          Toʻlov tizimlari va xizmatlar bilan integratsiya
         </h2>
 
         {/* Mobile: 4 key integrations + expander for the rest. */}
@@ -837,67 +690,46 @@ const faqLd = {
       <div class="wrap">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <h2
-              class="display display-2"
-              data-i18n="plans.heading"
-            >
-              Yagona va shaffof obuna
-            </h2>
-            <p
-              class="mt-4 max-w-[520px] font-geist text-[20px] leading-[30px] text-muted"
-              data-i18n="plans.body"
-            >
+            <h2 class="display display-2" data-i18n="plans.heading">Yagona va shaffof obuna</h2>
+            <p class="mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="plans.body">
               Bepul tarifdan boshlang va biznes o'sgani sari keyingi tarifga o'ting. Qo'shimcha xizmatlar narxi pastda.
             </p>
           </div>
 
           <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-            <div
-              class="flex gap-1 rounded-full border border-hairline p-1 font-geist-mono text-[12px] tracking-[0.72px]"
-              role="group"
-              aria-label="Billing period"
-            >
-              <button
-                type="button"
-                data-cycle="monthly"
-                aria-pressed="true"
-                class="seg-toggle seg-toggle-on px-4"
-                data-i18n="plans.monthly">Oylik</button
-              >
-              <button
-                type="button"
-                data-cycle="yearly"
-                aria-pressed="false"
-                class="seg-toggle seg-toggle-off px-4"
-                data-i18n="plans.yearly">Yillik</button
-              >
+            <div class="flex gap-1 rounded-full border border-ink/20 p-1 font-geist text-[14px] font-semibold" role="group" aria-label="Billing period">
+              <button type="button" data-cycle="monthly" aria-pressed="true" class="seg-toggle seg-toggle-on px-4" data-i18n="plans.monthly">Oylik</button>
+              <button type="button" data-cycle="yearly" aria-pressed="false" class="seg-toggle seg-toggle-off px-4" data-i18n="plans.yearly">Yillik</button>
             </div>
-            <span
-              class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
-              data-i18n="plans.saveNote">Yillik to'lov · 10% tejamkorlik</span
-            >
+            <span class="font-geist text-[14px] text-muted" data-i18n="plans.saveNote">Yillik to'lov · 10% tejamkorlik</span>
           </div>
         </div>
 
         <p
           id="plans-loading"
-          class:list={[
-            "mt-10 font-geist-mono text-[12px] tracking-[0.72px] text-muted",
-            ssrPlansHtml && "hidden",
-          ]}
+          class:list={["mt-10 font-geist text-[14px] text-muted", ssrPlansHtml && "hidden"]}
           data-i18n="plans.loading"
         >
           Yuklanmoqda…
         </p>
+        {/* <1024: swipeable cards; ≥1024: four across. */}
         <div
           id="plans-grid"
-          class="mt-12 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4"
+          class="plans-track -mx-6 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pt-4 pb-2 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-4 lg:items-stretch lg:overflow-visible lg:px-0"
           set:html={ssrPlansHtml}
         />
-        <p class="mt-5 font-geist text-[15px] leading-[23px] text-muted">
+        <p class="mt-6 max-w-[760px] font-geist text-[15px] leading-[1.6] text-muted">
           <span data-i18n="plans.ordersNote">Har bir tarifda oyiga 50 ta onlayn buyurtma (sayt va Telegram) bor. Ko'proq kerak bo'lsa —</span>
-          <a href="#addons" class="text-link hover:underline" data-i18n="plans.ordersLink">Onlayn do'kon qo'shimchasi</a>.
+          <a href="#addons" class="font-semibold text-link underline underline-offset-4" data-i18n="plans.ordersLink">Onlayn do'kon qo'shimchasi</a>.
         </p>
+
+        <details class="group mt-8 rounded-[24px] bg-card" data-plan-compare>
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-[24px] px-6 py-5 font-geist text-[17px] font-semibold lg:px-8 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+            <span data-i18n="plans.compare">Tariflarni solishtirish</span>
+            <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+          </summary>
+          <div id="plans-table" class="overflow-x-auto px-6 pb-6 lg:px-8 lg:pb-8" set:html={ssrTableHtml} />
+        </details>
         <noscript>
           <p class="mt-10 font-geist text-[16px] leading-[24px] text-muted">
             Narxlarni ko'rish uchun <a href="https://t.me/octopos_support" class="text-link hover:underline" target="_blank" rel="noopener">Telegram orqali yozing</a>.
@@ -1240,59 +1072,6 @@ const faqLd = {
             </div>
           </div>
         </div>
-
-        {/* aggregator commission vs own online store */}
-        <div class="mt-4 rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-calc>
-          <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
-            <div>
-              <h3 class="font-geist text-[22px] leading-[1.2] font-semibold tracking-[-0.3px] lg:text-[28px]" data-i18n="calc.heading">
-                Agregatorlarga oyiga qancha komissiya to'layapsiz?
-              </h3>
-              <p class="mt-3 max-w-[560px] font-geist text-[16px] leading-[25px] text-muted lg:text-[17px] lg:leading-[27px]" data-i18n="calc.body">
-                O'z raqamlaringizni kiriting va o'z onlayn do'koningiz narxi bilan solishtiring.
-              </p>
-              <div class="mt-6 grid gap-4 sm:grid-cols-3">
-                <label class="block">
-                  <span class="block font-geist text-[14px] font-medium" data-i18n="calc.orders">Oyiga onlayn buyurtmalar</span>
-                  <span class="mt-2 flex items-center gap-2 rounded-xl border border-hairline bg-page px-4 py-3 transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"><input class="w-full min-w-0 bg-transparent font-geist text-[16px] text-ink outline-none placeholder:text-muted/70" inputmode="numeric" placeholder="500" data-calc-orders /></span>
-                </label>
-                <label class="block">
-                  <span class="block font-geist text-[14px] font-medium" data-i18n="calc.check">O'rtacha chek</span>
-                  <span class="mt-2 flex items-center gap-2 rounded-xl border border-hairline bg-page px-4 py-3 transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"><input class="w-full min-w-0 bg-transparent font-geist text-[16px] text-ink outline-none placeholder:text-muted/70" inputmode="numeric" placeholder="120 000" data-calc-check /><span class="shrink-0 text-muted" data-i18n="calc.som">so'm</span></span>
-                </label>
-                <label class="block">
-                  <span class="block font-geist text-[14px] font-medium" data-i18n="calc.commission">Agregator komissiyasi</span>
-                  <span class="mt-2 flex items-center gap-2 rounded-xl border border-hairline bg-page px-4 py-3 transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"><input class="w-full min-w-0 bg-transparent font-geist text-[16px] text-ink outline-none placeholder:text-muted/70" inputmode="decimal" placeholder="—" data-calc-rate /><span class="shrink-0 text-muted">%</span></span>
-                </label>
-              </div>
-            </div>
-
-            <div class="flex flex-col justify-center rounded-xl border border-hairline bg-page p-5 lg:p-6" aria-live="polite">
-              <p class="font-geist text-[15px] leading-[23px] text-muted" data-calc-empty data-i18n="calc.empty">
-                Uchala maydonni to'ldiring — natija shu yerda chiqadi.
-              </p>
-              <dl class="hidden flex-col gap-3 font-geist text-[15px] leading-[22px]" data-calc-result>
-                <div class="flex items-baseline justify-between gap-4">
-                  <dt class="text-muted" data-i18n="calc.youPay">Agregatorga komissiya</dt>
-                  <dd class="text-right font-semibold text-ink tabular-nums"><span data-calc-fee></span> <span data-i18n="calc.somMo">so'm/oy</span></dd>
-                </div>
-                <div class="flex items-baseline justify-between gap-4">
-                  <dt class="text-muted"><span data-i18n="calc.store">Onlayn do'kon</span> <span data-calc-tier></span></dt>
-                  <dd class="text-right font-semibold text-ink tabular-nums"><span data-calc-cost></span> <span data-i18n="calc.somMo">so'm/oy</span></dd>
-                </div>
-                <div class="mt-1 border-t border-hairline pt-4">
-                  <p class="hidden" data-calc-save>
-                    <span class="block text-muted" data-i18n="calc.save">Har oy tejaysiz</span>
-                    <span class="mt-1 block font-anton text-[40px] leading-none tracking-tight text-ink tabular-nums lg:text-[48px]"><span data-calc-diff></span> <span class="font-geist text-[15px] font-normal tracking-normal text-muted" data-i18n="calc.som">so'm</span></span>
-                  </p>
-                  <p class="hidden text-ink" data-calc-nosave data-i18n="calc.noSave">Bu hajmda agregator hozircha arzonroq. Buyurtmalar ko'paysa, qayta hisoblang.</p>
-                  <p class="hidden text-ink" data-calc-big data-i18n="calc.big">10 000 dan ortiq buyurtma uchun narxni alohida kelishamiz — Telegramga yozing.</p>
-                </div>
-                <p class="font-geist text-[13px] leading-[19px] text-muted" data-i18n="calc.note">Kuryer va to'lov tizimi xarajatlari hisobga olinmagan.</p>
-              </dl>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -1473,21 +1252,29 @@ const faqLd = {
       }),
     );
 
-    // Hovering / focusing a journey step lights up its app(s) in the octopus.
-    (() => {
-      const root = document.querySelector<HTMLElement>("[data-journey]");
-      if (!root) return;
-      const tiles = [...root.querySelectorAll<HTMLElement>("[data-orbit-app]")];
-      const light = (slugs: string[]) =>
-        tiles.forEach((t) => t.toggleAttribute("data-lit", slugs.includes(t.dataset.orbitApp ?? "")));
-      root.querySelectorAll<HTMLElement>(".journey-step").forEach((step) => {
-        const slugs = (step.dataset.apps ?? "").split(" ");
-        step.addEventListener("mouseenter", () => light(slugs));
-        step.addEventListener("focus", () => light(slugs));
-        step.addEventListener("mouseleave", () => light([]));
-        step.addEventListener("blur", () => light([]));
-      });
-    })();
+    // Apps carousel: arrows scroll one card; first scroll is tracked once.
+    document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((root) => {
+      const track = root.querySelector<HTMLElement>("[data-car-track]");
+      const prev = root.querySelector<HTMLButtonElement>("[data-car-prev]");
+      const next = root.querySelector<HTMLButtonElement>("[data-car-next]");
+      if (!track) return;
+      const step = () => (track.querySelector("li")?.getBoundingClientRect().width ?? 320) + 16;
+      const sync = () => {
+        if (prev) prev.disabled = track.scrollLeft < 8;
+        if (next) next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 8;
+      };
+      prev?.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+      next?.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+      let tracked = false;
+      track.addEventListener("scroll", () => {
+        sync();
+        if (!tracked && track.scrollLeft > 40) {
+          tracked = true;
+          (window as any).octoTrack?.("apps_carousel_scroll");
+        }
+      }, { passive: true });
+      sync();
+    });
   </script>
 
   <script>
@@ -1518,8 +1305,7 @@ const faqLd = {
         const ready = o > 0 && c > 0 && r > 0;
         q("[data-calc-empty]").classList.toggle("hidden", ready);
         q("[data-calc-result]").classList.toggle("hidden", !ready);
-        q("[data-calc-result]").classList.toggle("flex", ready);
-        if (!ready) return;
+                if (!ready) return;
         const fee = (o * c * r) / 100;
         const tier = TIERS.find((t) => o <= t.n);
         q("[data-calc-fee]").textContent = fmt(fee);
@@ -1532,7 +1318,7 @@ const faqLd = {
         q("[data-calc-big]").classList.toggle("hidden", Boolean(tier));
         if (!tracked) {
           tracked = true;
-          (window as any).octoTrack?.("calc_used");
+          (window as any).octoTrack?.("calculator_used");
         }
       };
       [orders, check, rate].forEach((el) => el.addEventListener("input", update));
@@ -1544,7 +1330,8 @@ const faqLd = {
       apiLangFor,
       esc,
       fetchPlans,
-      renderPlanCard,
+      renderPlanCards,
+      renderPlanTable,
       UZ_PLAN_STRINGS,
       type Cycle,
     } from "../data/plans";
@@ -1566,8 +1353,10 @@ const faqLd = {
         ? (UZ_PLAN_STRINGS[k] ?? "")
         : (STRINGS[k]?.[lang as Lang] ?? UZ_PLAN_STRINGS[k] ?? "");
 
-    const card = (plan: any, lang: string): string =>
-      renderPlanCard(plan, lang, cycle, (k) => L(k, lang));
+    const table = document.getElementById("plans-table");
+    document.querySelector("[data-plan-compare]")?.addEventListener("toggle", (e) => {
+      if ((e.currentTarget as HTMLDetailsElement).open) (window as any).octoTrack?.("pricing_table_expand");
+    });
 
     const FALLBACK: Partial<Record<string, string>> = {
       uz: "Narxlarni ko'rish uchun",
@@ -1588,7 +1377,8 @@ const faqLd = {
         grid.innerHTML = `<p class="col-span-full font-geist text-[16px] leading-[24px] text-muted">${msg} — <a href="https://t.me/octopos_support" class="text-link hover:underline" target="_blank" rel="noopener">@octopos_support</a></p>`;
         return;
       }
-      grid.innerHTML = plans.map((p) => card(p, lang)).join("");
+      grid.innerHTML = renderPlanCards(plans, lang, cycle, (k) => L(k, lang));
+      if (table) table.innerHTML = renderPlanTable(plans, (k) => L(k, lang));
     }
 
     async function load(): Promise<void> {
