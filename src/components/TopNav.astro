@@ -3,6 +3,11 @@ import logoDark from "../assets/logo_dark.webp";
 import logoLight from "../assets/logo_light.webp";
 import { LANGS } from "../data/i18n";
 
+interface Props {
+  /** The page starts with a forest hero: the header sits on forest until scrolled. */
+  overHero?: boolean;
+}
+const { overHero = false } = Astro.props;
 const path = Astro.url.pathname;
 const links = [
   { href: "/apps", key: "nav.apps" },
@@ -13,18 +18,21 @@ const links = [
 ---
 
 <header
-  class="sticky top-0 z-50 w-full border-b border-hairline bg-page/90 backdrop-blur-md"
+  data-header
+  data-over-hero={overHero ? "" : undefined}
+  class:list={[
+    "sticky top-0 z-50 w-full border-b border-transparent transition-[background-color,border-color] duration-200 ease-out",
+    overHero ? "on-forest" : "bg-page",
+  ]}
 >
-  <div
-    class="mx-auto flex h-[56px] max-w-[1600px] items-center justify-between gap-4 px-5 lg:px-[32px]"
-  >
-    <a href="/" class="flex shrink-0 items-center gap-2.5">
+  <div class="wrap flex h-16 items-center justify-between gap-4 lg:h-[72px]">
+    <a href="/" class="flex shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
       <img
         src={logoDark.src}
         alt="Octopos"
         width="40"
         height="40"
-        class="logo-dark block h-10 w-10 lg:h-11 lg:w-11"
+        class="logo-dark block h-9 w-9 lg:h-10 lg:w-10"
         loading="eager"
         fetchpriority="high"
       />
@@ -33,35 +41,32 @@ const links = [
         alt=""
         width="40"
         height="40"
-        class="logo-light block h-10 w-10 lg:h-11 lg:w-11"
+        class="logo-light block h-9 w-9 lg:h-10 lg:w-10"
         aria-hidden="true"
         loading="eager"
       />
-      <span
-        class="font-geist text-[16px] leading-none font-semibold tracking-[-0.2px] text-ink"
-        >Octopos</span
-      >
+      <span class="font-geist text-[18px] leading-none font-semibold tracking-[-0.2px] text-ink">Octopos</span>
     </a>
 
-    <div class="flex items-center gap-3 lg:gap-5">
-      <nav class="hidden items-center gap-5 lg:flex" aria-label="Primary">
+    <div class="flex items-center gap-2 lg:gap-3">
+      <nav class="mr-3 hidden items-center gap-7 lg:flex" aria-label="Primary">
         {
           links.map((l) => (
             <a
               href={l.href}
               data-i18n={l.key}
               class:list={[
-                "font-geist-mono text-[16px] leading-6 tracking-[0.72px] transition-colors duration-[350ms] ease-far hover:text-link",
-                !l.href.includes("#") && path === l.href ? "text-ink" : "text-ink/80",
+                "rounded-full font-geist text-[16px] leading-6 font-medium transition-colors duration-200 ease-out hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent",
+                !l.href.includes("#") && path === l.href ? "text-ink" : "text-ink/75",
               ]}
             >
               {l.key === "nav.apps"
-                ? "Ilovalar"
-                : l.key === "nav.solutions"
-                  ? "Yechimlar"
-                  : l.key === "nav.pricing"
-                    ? "Tariflar"
-                    : "Aloqa"}
+              ? "Ilovalar"
+              : l.key === "nav.solutions"
+                ? "Yechimlar"
+                : l.key === "nav.pricing"
+                  ? "Tariflar"
+                  : "Aloqa"}
             </a>
           ))
         }
@@ -74,7 +79,7 @@ const links = [
           aria-label="Language"
           data-i18n-attr="aria-label:nav.lang"
           aria-haspopup="true"
-          class="flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-hairline px-4 font-geist-mono text-[12px] leading-5 font-medium tracking-[0.72px] text-ink transition-colors duration-[350ms] ease-far hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          class="flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-hairline px-4 font-geist text-[14px] leading-5 font-semibold text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span data-lang-code>UZ</span>
           <svg
@@ -108,11 +113,12 @@ const links = [
         </div>
       </div>
 
+
       <button
         type="button"
         data-theme-cycle
         aria-label="Toggle theme"
-        class="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex"
+        class="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-full border border-hairline text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex"
       >
         <span
           data-icon="light"
@@ -145,13 +151,20 @@ const links = [
         </span>
       </button>
 
+
+      <div class="hidden lg:block">
+        <button type="button" data-plan-trigger="starter" class="btn-solid btn btn-sm">
+          <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
+        </button>
+      </div>
+
       <button
         type="button"
         data-burger
         aria-label="Menu"
         data-i18n-attr="aria-label:nav.menu"
         aria-expanded="false"
-        class="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-[350ms] ease-far hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
+        class="flex h-11 w-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
       >
         <span class="relative block h-3.5 w-[18px]" aria-hidden="true">
           <span
@@ -171,50 +184,58 @@ const links = [
     </div>
   </div>
 
+  {/* Mobile: full-screen menu on forest. */}
   <div
     data-mobile-menu
-    class="hidden border-t border-hairline bg-page lg:hidden"
+    class="on-forest fixed inset-x-0 top-16 bottom-0 z-50 hidden overflow-y-auto overscroll-contain lg:hidden"
   >
-    <nav class="mx-auto flex max-w-[1600px] flex-col px-5" aria-label="Mobile">
-      {
-        links.map((l) => (
-          <a
-            href={l.href}
-            data-i18n={l.key}
-            class="group flex items-center border-b border-hairline py-4 font-geist text-[16px] leading-none font-medium text-ink transition-colors duration-300 last:border-0 hover:text-link"
-          >
-            {l.key === "nav.apps"
+    <div class="wrap flex min-h-full flex-col pt-4 pb-8">
+      <nav class="flex flex-col" aria-label="Mobile">
+        {
+          links.map((l) => (
+            <a
+              href={l.href}
+              data-i18n={l.key}
+              data-menu-link
+              class="display border-b border-hairline py-5 text-[40px] text-ink transition-colors duration-200 hover:text-link focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              {l.key === "nav.apps"
               ? "Ilovalar"
               : l.key === "nav.solutions"
                 ? "Yechimlar"
                 : l.key === "nav.pricing"
                   ? "Tariflar"
                   : "Aloqa"}
-          </a>
-        ))
-      }
-    </nav>
-    <div class="mx-auto max-w-[1600px] px-5 pt-4 sm:hidden">
-      <button
-        type="button"
-        data-theme-cycle
-        aria-label="Toggle theme"
-        class="btn-outline h-[44px] w-full px-6 font-geist-mono text-[12px] tracking-[0.72px]"
-      >
-        <span data-i18n="theme.toggle">Mavzu</span>
-      </button>
-    </div>
-    <div class="mx-auto max-w-[1600px] px-5 pt-4 pb-6 sm:pt-5">
-      <button
-        type="button"
-        data-plan-trigger="starter"
-        class="btn-solid h-[48px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
-      >
-        <span data-i18n="cta.tryFree">Bepul sinab ko'ring →</span>
-      </button>
+            </a>
+          ))
+        }
+      </nav>
+      <div class="mt-auto flex flex-col gap-3 pt-8">
+        <button type="button" data-plan-trigger="starter" data-menu-link class="btn-solid btn w-full">
+          <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
+        </button>
+        <a href="https://t.me/octopos_support" class="btn-outline btn w-full">Telegram</a>
+        <button type="button" data-theme-cycle aria-label="Toggle theme" class="mt-2 self-center font-geist text-[14px] font-medium text-muted underline underline-offset-4 sm:hidden">
+          <span data-i18n="theme.toggle">Mavzu</span>
+        </button>
+      </div>
     </div>
   </div>
 </header>
+
+<style is:global>
+  /* Scrolled (or any page without a forest hero): page surface + hairline. */
+  [data-header][data-scrolled] {
+    border-bottom-color: var(--color-hairline);
+  }
+  /* On forest the light logo is always the right one, whatever the theme. */
+  .on-forest .logo-dark {
+    display: none !important;
+  }
+  .on-forest .logo-light {
+    display: block !important;
+  }
+</style>
 
 <script>
   import { applyLang, getLang, localizePath, type Lang } from "../data/i18n";
@@ -345,8 +366,40 @@ const links = [
     bottom?.classList.toggle("-rotate-45", open);
   };
 
-  burger?.addEventListener("click", () => {
-    const open = mobile?.classList.toggle("hidden") === false;
+  const header = document.querySelector<HTMLElement>("[data-header]");
+  const overHero = header?.hasAttribute("data-over-hero") ?? false;
+  let menuOpen = false;
+
+  // Forest while over the hero (or while the forest menu is open), page surface once scrolled.
+  const syncHeader = (): void => {
+    if (!header) return;
+    const scrolled = window.scrollY > 8;
+    header.toggleAttribute("data-scrolled", scrolled && !menuOpen);
+    const forest = menuOpen || (overHero && !scrolled);
+    header.classList.toggle("on-forest", forest);
+    header.classList.toggle("bg-page", !forest);
+  };
+  syncHeader();
+  window.addEventListener("scroll", syncHeader, { passive: true });
+
+  const setMenu = (open: boolean): void => {
+    menuOpen = open;
+    mobile?.classList.toggle("hidden", !open);
+    document.documentElement.classList.toggle("overflow-hidden", open);
     setBurger(open);
+    syncHeader();
+  };
+  burger?.addEventListener("click", () => setMenu(!menuOpen));
+  mobile?.querySelectorAll("[data-menu-link]").forEach((el) =>
+    el.addEventListener("click", () => setMenu(false)),
+  );
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && menuOpen) {
+      setMenu(false);
+      burger?.focus();
+    }
+  });
+  window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
+    if (e.matches && menuOpen) setMenu(false);
   });
 </script>

@@ -34,6 +34,12 @@ export const STRINGS: Record<string, Dict> = {
     ko: "솔루션",
     tr: "Çözümler",
   },
+  "nav.cta": {
+    en: "Try it free",
+    ru: "Попробовать бесплатно",
+    ko: "무료로 시작",
+    tr: "Ücretsiz deneyin",
+  },
   "nav.pricing": { en: "Pricing", ru: "Тарифы", ko: "요금제", tr: "Fiyatlar" },
   "nav.contact": {
     en: "Contact",

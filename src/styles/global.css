@@ -8,8 +8,36 @@
   font-weight: 1 1000;
 }
 
+/* Display face: Oswald 700 (Anton has no Cyrillic, so /ru would fall back).
+ * Three subsets, ~31KB total; the browser only fetches what a page uses. */
+@font-face {
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Oswald-700-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Oswald-700-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Oswald";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/Oswald-700-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
 @theme {
-  /* One font only: Inter (same as the Octopos apps). */
+  /* Body/UI: Inter (same as the Octopos apps). Display: Oswald, see .display. */
+  --font-display: "Oswald", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-anton: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-geist: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -32,16 +60,15 @@
 
   /* Primary surface: dark green on light, bright green on dark (kdsx apps). */
 
+  /* Forest is a SURFACE (hero, apps band, final CTA, footer), see .on-forest. */
+  --color-forest: #163300;
+  --color-forest-card: #1f4208;
+  --color-lime: #9fe870;
+
   --color-error-bright: oklch(50.6% 0.193 27.7);
   --color-error-low: oklch(91.83% 0.04177126481295753 25.22590685781077);
 
   --ease-far: cubic-bezier(0.22, 0.8, 0.25, 1);
-}
-
-@media (max-width: 639.98px) {
-  :root {
-    --radius-2xl: 3px;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -54,6 +81,8 @@
     --color-link: oklch(85.7% 0.17 134.56);
     --color-on-ink: oklch(19.09% 0.009 137.85);
     --color-card: oklch(26% 0.009 137.85);
+    --color-forest: #121511;
+    --color-forest-card: #222521;
     --color-error-bright: oklch(83.83% 0.089 26.76);
     --color-error-low: oklch(25.2% 0.011 91.73);
   }
@@ -68,6 +97,8 @@
   --color-link: oklch(85.7% 0.17 134.56);
   --color-on-ink: oklch(19.09% 0.009 137.85);
   --color-card: oklch(26% 0.009 137.85);
+  --color-forest: #121511;
+  --color-forest-card: #222521;
   --color-error-bright: oklch(83.83% 0.089 26.76);
   --color-error-low: oklch(25.2% 0.011 91.73);
 }
@@ -93,9 +124,111 @@
   }
 }
 
-/* Display headings keep their impact now that everything is Inter. */
+/* Legacy display class (sections not yet rebuilt). */
 .font-anton {
   font-weight: 700;
+}
+
+/* ---------- design system (redesign) ---------- */
+
+/* Display type: bold condensed uppercase. H1/H2/big numerals only. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+.display-1 {
+  font-size: clamp(52px, 8.5vw, 112px);
+}
+.display-2 {
+  font-size: clamp(40px, 5.5vw, 72px);
+}
+/* Hangul has no case and no condensed cut: heavy system/Noto face, roomier leading. */
+:lang(ko) .display {
+  font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", var(--font-sans);
+  font-weight: 800;
+  text-transform: none;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+:lang(ko) .display-1 {
+  font-size: clamp(40px, 6vw, 80px);
+}
+:lang(ko) .display-2 {
+  font-size: clamp(32px, 4.2vw, 56px);
+}
+
+/* Page container: 1280 max, 24/48 gutters. */
+.wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+@media (min-width: 1024px) {
+  .wrap {
+    padding-inline: 48px;
+  }
+}
+.section {
+  padding-block: 64px;
+}
+@media (min-width: 1024px) {
+  .section {
+    padding-block: 112px;
+  }
+}
+
+.card {
+  border-radius: 24px;
+  background: var(--color-card);
+}
+
+/* Forest surface. Re-points the tokens so every component placed inside
+ * (buttons, links, hairlines, cards) reads correctly without variants. */
+.on-forest {
+  background: var(--color-forest);
+  --color-page: var(--color-forest);
+  --color-card: var(--color-forest-card);
+  --color-ink: #f8faf0;
+  --color-muted: #c9d8bd;
+  --color-hairline: color-mix(in oklab, #f8faf0 16%, transparent);
+  --color-link: var(--color-lime);
+  --color-on-ink: #163300;
+  color: var(--color-ink);
+}
+
+/* A forest CARD (not a full band) must stay visible on the dark page. */
+.card.on-forest {
+  background: var(--color-forest-card);
+  --color-card: var(--color-forest-card);
+}
+/* Dark theme: forest bands equal the page, so separate them with a hairline. */
+:root[data-theme="dark"] footer.on-forest {
+  border-top: 1px solid var(--color-hairline);
+}
+
+/* Buttons, redesign sizes: 48px mobile / 52px desktop, Inter 600 16px. */
+.btn {
+  height: 48px;
+  padding-inline: 28px;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+@media (min-width: 1024px) {
+  .btn {
+    height: 52px;
+  }
+}
+.btn-sm {
+  height: 40px;
+  padding-inline: 20px;
+  font-size: 15px;
 }
 
 /* App-style buttons (matches kdsx-react buttonVariants). */
@@ -109,7 +242,7 @@
   background: var(--color-accent);
   color: var(--color-accent-emphasis);
   transition:
-    background-color 0.3s ease,
+    background-color 0.2s ease-out,
     transform 0.1s ease;
   cursor: pointer;
 }
@@ -120,7 +253,7 @@
   transform: scale(0.98);
 }
 .btn-solid:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
 .btn-solid:disabled {
@@ -138,7 +271,7 @@
   background: var(--color-card);
   color: var(--color-ink);
   transition:
-    background-color 0.3s ease,
+    background-color 0.2s ease-out,
     transform 0.1s ease;
   cursor: pointer;
 }
@@ -149,7 +282,7 @@
   transform: scale(0.98);
 }
 .btn-ghost:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
 .btn-ghost:disabled {
@@ -167,24 +300,24 @@
   white-space: nowrap;
   border-radius: 999px;
   font-weight: 600;
-  border: 1px solid var(--color-hairline);
+  border: 1.5px solid color-mix(in oklab, currentColor 45%, transparent);
   color: var(--color-ink);
   transition:
     border-color 0.3s ease,
     color 0.3s ease,
-    background-color 0.3s ease,
+    background-color 0.2s ease-out,
     transform 0.1s ease;
   cursor: pointer;
 }
 .btn-outline:hover {
-  border-color: var(--color-link);
-  color: var(--color-link);
+  border-color: currentColor;
+  background: color-mix(in oklab, currentColor 8%, transparent);
 }
 .btn-outline:active {
   transform: scale(0.98);
 }
 .btn-outline:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
 .btn-outline:disabled {
@@ -207,7 +340,7 @@
   color: var(--color-on-ink);
   transition:
     border-color 0.3s ease,
-    background-color 0.3s ease,
+    background-color 0.2s ease-out,
     transform 0.1s ease;
   cursor: pointer;
 }
@@ -220,7 +353,7 @@
   transform: scale(0.98);
 }
 .btn-outline-inverted:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
 .btn-outline-inverted:disabled {
@@ -240,12 +373,12 @@
   min-height: 44px;
   padding: 10px 20px;
   transition:
-    background-color 0.3s ease,
+    background-color 0.2s ease-out,
     color 0.3s ease;
   cursor: pointer;
 }
 .seg-toggle:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 3px solid var(--color-accent);
   outline-offset: 2px;
 }
 .seg-toggle-on {

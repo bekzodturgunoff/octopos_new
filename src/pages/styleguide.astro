@@ -1,0 +1,83 @@
+---
+/**
+ * Design-system reference for the redesign (not linked, not indexed).
+ * Shows the tokens and components every section is built from.
+ */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "../components/TopNav.astro";
+import Footer from "../components/Footer.astro";
+
+const swatches = [
+  { n: "page", c: "bg-page", hex: "#F8FAF0" },
+  { n: "card", c: "bg-card", hex: "#F2F5EA" },
+  { n: "ink", c: "bg-ink", hex: "#161E11" },
+  { n: "muted", c: "bg-muted", hex: "#3E4A36" },
+  { n: "lime", c: "bg-accent", hex: "#9FE870" },
+  { n: "forest", c: "bg-forest", hex: "#163300" },
+];
+---
+
+<Layout title="Octopos — design system" noindex>
+  <TopNav overHero />
+  <main>
+    <section class="on-forest">
+      <div class="wrap pt-10 pb-20 lg:pt-16 lg:pb-28">
+        <h1 class="display display-1">Eng yaxshisini ishlating, <span class="text-link">boshliq!</span></h1>
+        <p class="mt-6 max-w-[620px] font-geist text-[18px] leading-[1.6] text-ink/90">
+          Display: Oswald 700, uppercase, 0.95 line-height. Body: Inter 18/1.6. Forest is a surface; lime is the only accent.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button type="button" class="btn-solid btn">Bepul sinab ko'ring</button>
+          <button type="button" class="btn-outline btn">Demo so'rash</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <h2 class="display display-2">Sakkizta ilova, bitta tizim</h2>
+        <p class="mt-5 max-w-[620px] font-geist text-[18px] leading-[1.6] text-muted">
+          H2 on the light page. Text never runs wider than about 65 characters. One idea per section.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <button type="button" class="btn-solid btn">Primary</button>
+          <button type="button" class="btn-outline btn">Secondary</button>
+          <button type="button" class="btn-solid btn btn-sm">Small</button>
+          <button type="button" class="btn-outline btn btn-sm">Small</button>
+          <button type="button" class="btn-solid btn" disabled>Disabled</button>
+        </div>
+
+        <div class="mt-14 grid gap-4 md:grid-cols-3">
+          <div class="card p-8">
+            <p class="display text-[64px] text-link">30+</p>
+            <h3 class="mt-4 font-geist text-[24px] leading-[1.25] font-semibold">Card, 24px radius</h3>
+            <p class="mt-2 font-geist text-[16px] leading-[1.6] text-muted">No shadow, no border: the card colour does the work.</p>
+          </div>
+          <div class="card p-8">
+            <span class="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-accent-emphasis">
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+            </span>
+            <h3 class="mt-5 font-geist text-[24px] leading-[1.25] font-semibold">Icon in a lime circle</h3>
+            <p class="mt-2 font-geist text-[16px] leading-[1.6] text-muted">Outline icons, 1.75px stroke, forest on lime.</p>
+          </div>
+          <div class="card on-forest p-8">
+            <p class="display text-[64px] text-link">1–3</p>
+            <h3 class="mt-4 font-geist text-[24px] leading-[1.25] font-semibold">Card on forest</h3>
+            <p class="mt-2 font-geist text-[16px] leading-[1.6] text-muted">Same tokens, re-pointed by the surface.</p>
+          </div>
+        </div>
+
+        <ul class="mt-14 grid grid-cols-3 gap-4 md:grid-cols-6">
+          {swatches.map((s) => (
+            <li>
+              <span class:list={["block h-20 rounded-[16px] border border-hairline", s.c]} />
+              <p class="mt-2 font-geist text-[14px] font-semibold">{s.n}</p>
+              <p class="font-geist text-[13px] text-muted">{s.hex}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

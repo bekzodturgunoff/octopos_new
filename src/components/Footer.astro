@@ -1,0 +1,114 @@
+---
+/**
+ * Site footer, on the forest surface (same in every theme: forest tokens are
+ * re-pointed by .on-forest, and become near-black in dark mode).
+ *
+ * TODO(owner): legal + social links. Fill `legal` / `social` below once the
+ * pages and accounts exist; the row renders itself when they are non-empty.
+ *   - Terms (oferta), Privacy pages
+ *   - Instagram, YouTube, Telegram channel
+ */
+import { apps } from "../data/apps";
+import logoLight from "../assets/logo_light.webp";
+
+interface Props {
+  /** Leave room for the sticky mobile call bar (homepage). */
+  mobileBar?: boolean;
+}
+const { mobileBar = false } = Astro.props;
+
+const company = [
+  { href: "/#solutions", key: "nav.solutions", uz: "Yechimlar" },
+  { href: "/#plans", key: "nav.pricing", uz: "Tariflar" },
+  { href: "/#contact", key: "nav.contact", uz: "Aloqa" },
+  { href: "https://docs.octopos.uz", key: "ft.docs", uz: "Hujjatlar" },
+  { href: "/agent", key: "ft.agent", uz: "Octopos Agent" },
+];
+const contacts = [
+  { href: "tel:+998941500330", label: "+998 94 150 03 30" },
+  { href: "tel:+998501886669", label: "+998 50 188 66 69" },
+  { href: "mailto:support@octopos.uz", label: "support@octopos.uz" },
+  { href: "https://t.me/octopos_support", label: "@octopos_support" },
+];
+const pay = [
+  { src: "/payments/payme.webp", alt: "Payme", w: 56 },
+  { src: "/payments/click.webp", alt: "Click", w: 71 },
+  { src: "/payments/dodo-payments.webp", alt: "Dodo Payments", w: 45 },
+];
+const legal: { href: string; key: string; uz: string }[] = [];
+const social: { href: string; label: string }[] = [];
+
+const head = "font-geist text-[14px] font-semibold text-muted";
+const link =
+  "rounded font-geist text-[16px] leading-6 text-ink/85 transition-colors duration-200 ease-out hover:text-link focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent";
+---
+
+<footer class:list={["on-forest", mobileBar && "pb-[72px] lg:pb-0"]}>
+  <div class="wrap py-16 lg:py-24">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,1.3fr)_repeat(3,minmax(0,1fr))] lg:gap-10">
+      <div>
+        <a href="/" class="inline-flex items-center gap-3 rounded-full focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+          <img src={logoLight.src} alt="" width="44" height="44" class="h-11 w-11" loading="lazy" />
+          <span class="font-geist text-[22px] leading-none font-semibold tracking-[-0.3px]">Octopos</span>
+        </a>
+        <p class="mt-5 max-w-[300px] font-geist text-[16px] leading-[25px] text-muted" data-i18n="ft.tagline">
+          Restoran, kafe va do'konlar uchun kassa tizimi.
+        </p>
+      </div>
+
+      <nav aria-label="Product">
+        <p class={head} data-i18n="ft.product">Mahsulot</p>
+        <ul class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-1">
+          {apps.map((a) => (
+            <li><a href={`/apps/${a.slug}`} class={link}>{a.name}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="Company">
+        <p class={head} data-i18n="ft.company">Kompaniya</p>
+        <ul class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-1">
+          {company.map((l) => (
+            <li><a href={l.href} class={link} data-i18n={l.key}>{l.uz}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <div>
+        <p class={head} data-i18n="ft.contact">Aloqa</p>
+        <ul class="mt-5 flex flex-col gap-3">
+          {contacts.map((c) => (
+            <li><a href={c.href} class={link}>{c.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-14 flex flex-col gap-6 border-t border-hairline pt-8 lg:mt-20 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <span class="font-geist text-[14px] text-muted" data-i18n="ft.payments">To'lov usullari</span>
+        {/* brand marks keep their own colours, on light chips */}
+        {pay.map((l) => (
+          <span class="flex h-9 items-center rounded-full bg-[#f8faf0] px-4">
+            <img src={l.src} alt={l.alt} class="h-[18px] w-auto" width={l.w} height="18" loading="lazy" />
+          </span>
+        ))}
+      </div>
+
+      {(legal.length > 0 || social.length > 0) && (
+        <ul class="flex flex-wrap gap-x-6 gap-y-2">
+          {legal.map((l) => (
+            <li><a href={l.href} class:list={[link, "text-[14px]"]} data-i18n={l.key}>{l.uz}</a></li>
+          ))}
+          {social.map((l) => (
+            <li><a href={l.href} class:list={[link, "text-[14px]"]} rel="noopener">{l.label}</a></li>
+          ))}
+        </ul>
+      )}
+
+      <p class="font-geist text-[14px] text-muted">
+        © 2026 Octopos Soft MChJ · <span data-i18n="ft.rights">Barcha huquqlar himoyalangan</span>
+      </p>
+    </div>
+  </div>
+</footer>
