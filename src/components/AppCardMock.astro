@@ -105,12 +105,13 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
 
   {
     slug === "kitchen" && (
-      <div class="p grid grid-cols-[1fr_0.55fr] gap-2">
+      <div class="p grid grid-cols-2 gap-2">
+        {/* Two whole tickets side by side (equal columns, nothing cut off). */}
         <div class="ticket">
           <div class="th">
-            <p class="flex items-center gap-1.5"><b>0015</b><span class="st new" data-i18n="kd.new">Yangi</span><span class="ml-auto flex items-center gap-1 m2 text-[10.5px]"><Fragment set:html={svg(I.clock)} />13:42</span></p>
-            <p class="m2 mt-1 flex items-center gap-1 text-[10.5px]"><Fragment set:html={svg(I.user)} />Dilnoza</p>
-            <p class="mt-1.5 flex gap-1"><span class="tg cyan"><Fragment set:html={svg(I.utensils)} /><span data-i18n="kd.dineIn">Joyida</span></span><span class="tg"><span data-i18n="kd.table">Stol</span>: 4</span></p>
+            <p class="flex flex-wrap items-center gap-x-1.5 gap-y-1"><b>0015</b><span class="st new" data-i18n="kd.new">Yangi</span></p>
+            <p class="m2 mt-1 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10.5px]"><Fragment set:html={svg(I.user)} />Dilnoza<span class="ml-auto flex items-center gap-1"><Fragment set:html={svg(I.clock)} />13:42</span></p>
+            <p class="mt-1.5 flex flex-wrap gap-1"><span class="tg cyan"><Fragment set:html={svg(I.utensils)} /><span data-i18n="kd.dineIn">Joyida</span></span><span class="tg"><span data-i18n="kd.table">Stol</span>: 4</span></p>
           </div>
           <ul class="tl">
             <li><span>Osh - 0.5</span><b>×2</b></li>
@@ -121,9 +122,9 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
         </div>
         <div class="ticket">
           <div class="th">
-            <p class="flex items-center gap-1.5"><b>0014</b><span class="st prog" data-i18n="kd.inProgress">Jarayonda</span></p>
+            <p class="flex flex-wrap items-center gap-x-1.5 gap-y-1"><b>0014</b><span class="st prog" data-i18n="kd.inProgress">Jarayonda</span></p>
             <p class="m2 mt-1 flex items-center gap-1 text-[10.5px]"><Fragment set:html={svg(I.user)} />Aziz</p>
-            <p class="mt-1.5 flex gap-1"><span class="tg pink"><span data-i18n="kd.takeout">Olib ketish</span></span></p>
+            <p class="mt-1.5 flex flex-wrap gap-1"><span class="tg pink"><span data-i18n="kd.takeout">Olib ketish</span></span></p>
           </div>
           <ul class="tl">
             <li><span>Shashlik</span><b>×4</b></li>
@@ -138,7 +139,7 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
     slug === "ods" && (
       <div class="p grid grid-cols-2 gap-2">
         <div class="col">
-          <p class="flex items-baseline justify-between"><b class="text-[13px] font-semibold" data-i18n="od.preparing">Tayyorlanmoqda</b></p>
+          <p class="col-h" data-i18n="od.preparing">Tayyorlanmoqda</p>
           <ul class="mt-2 flex flex-col gap-1.5">
             {["0031", "0032", "0033"].map((n) => (
               <li class="num"><Fragment set:html={svg(I.noFork)} /><span><b>{n}</b><small data-i18n="kd.inProgress">Jarayonda</small></span></li>
@@ -146,7 +147,7 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
           </ul>
         </div>
         <div class="col">
-          <p><b class="text-[13px] font-semibold text-[var(--forest)]" data-i18n="od.ready">Tayyor</b></p>
+          <p class="col-h ready" data-i18n="od.ready">Tayyor</p>
           <ul class="mt-2 flex flex-col gap-1.5">
             {["0029", "0030"].map((n) => (
               <li class="num ready"><Fragment set:html={svg(I.check)} /><span><b>{n}</b><small data-i18n="od.ready">Tayyor</small></span></li>
@@ -422,6 +423,7 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
   }
 
   .ticket {
+    min-width: 0;
     overflow: hidden;
     border-radius: 9px;
     background: var(--s200);
@@ -487,9 +489,22 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
   }
 
   .col {
+    min-width: 0;
     border-radius: 10px;
     background: var(--s200);
     padding: 10px;
+  }
+  /* Both column headings share one style, so they line up. */
+  .col-h {
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .col-h.ready {
+    color: var(--forest);
   }
   .num {
     display: flex;
