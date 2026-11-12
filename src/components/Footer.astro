@@ -18,17 +18,21 @@ interface Props {
 const { mobileBar = false } = Astro.props;
 
 const company = [
-  { href: "/#solutions", key: "nav.solutions", uz: "Yechimlar" },
+  // The solutions hub (each language's own URL is set by the i18n build step).
+  { href: "/yechimlar/", key: "nav.solutions", uz: "Yechimlar" },
   { href: "/#plans", key: "nav.pricing", uz: "Tariflar" },
   { href: "/#contact", key: "nav.contact", uz: "Aloqa" },
   { href: "https://docs.octopos.uz", key: "ft.docs", uz: "Hujjatlar" },
+  // Guides hub (each language's own URL is set by the i18n build step).
+  { href: "/qollanmalar/", key: "nav.guides", uz: "Qo'llanmalar" },
   { href: "/agent", key: "ft.agent", uz: "Octopos Agent" },
+  { href: "/privacy", key: "legal.privacy.title", uz: "Maxfiylik siyosati" },
+  { href: "/terms", key: "legal.terms.title", uz: "Foydalanish shartlari" },
 ];
 const contacts = [
   { href: "tel:+998941500330", label: "+998 94 150 03 30" },
   { href: "tel:+998501886669", label: "+998 50 188 66 69" },
   { href: "mailto:support@octopos.uz", label: "support@octopos.uz" },
-  { href: "https://t.me/bekzodturgunoff", label: "@bekzodturgunoff" },
 ];
 const pay = [
   { src: "/payments/payme.webp", alt: "Payme", w: 56 },
@@ -36,10 +40,7 @@ const pay = [
   { src: "/payments/click-dark.svg", alt: "Click", w: 70 },
   { src: "/payments/dodo-payments.webp", alt: "Dodo Payments", w: 45 },
 ];
-const legal: { href: string; key: string; uz: string }[] = [
-  { href: "/privacy", key: "legal.privacy.title", uz: "Maxfiylik siyosati" },
-  { href: "/terms", key: "legal.terms.title", uz: "Foydalanish shartlari" },
-];
+const legal: { href: string; key: string; uz: string }[] = [];
 const social: { href: string; label: string }[] = [];
 
 const head = "font-geist text-[14px] font-semibold text-muted";
@@ -71,7 +72,8 @@ const link =
 
       <nav aria-label="Company">
         <p class={head} data-i18n="ft.company">Kompaniya</p>
-        <ul class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 lg:grid-cols-1">
+        {/* One column below sm: «Политика конфиденциальности» is too long for half a phone. */}
+        <ul class="mt-5 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-1">
           {company.map((l) => (
             <li><a href={l.href} class={link} data-i18n={l.key}>{l.uz}</a></li>
           ))}

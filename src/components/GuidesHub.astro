@@ -1,0 +1,49 @@
+---
+/** Guides index for one language (/qollanmalar/, /ru/gidy/, /en/guides/). */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "./TopNav.astro";
+import Footer from "./Footer.astro";
+import { GUIDES, GUIDE_LANGS, GUIDE_UI, guidePath, guideHubPath, type GuideLang } from "../data/guides";
+
+interface Props {
+  lang: GuideLang;
+}
+const { lang } = Astro.props;
+const ui = GUIDE_UI[lang];
+const SITE = "https://octopos.uz";
+const alternates = [
+  ...GUIDE_LANGS.map((l) => ({ lang: l, href: SITE + guideHubPath(l) })),
+  { lang: "x-default", href: SITE + guideHubPath("uz") },
+];
+---
+
+<Layout title={`${ui.hub} | Octopos`} description={ui.hubLead} lang={lang} alternates={alternates}>
+  <TopNav />
+  <main>
+    <section class="on-forest band mt-2">
+      <div class="wrap pt-10 pb-12 lg:pt-16 lg:pb-16">
+        <h1 class="display display-1">{ui.hub}</h1>
+        <p class="mt-5 max-w-[680px] font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]">{ui.hubLead}</p>
+      </div>
+    </section>
+    <section class="section">
+      <ul class="wrap grid gap-4 md:grid-cols-2">
+        {
+          GUIDES.map((g) => (
+            <li class="min-w-0">
+              <a
+                href={guidePath(g, lang)}
+                class="card flex h-full flex-col p-6 transition-colors duration-200 ease-out hover:bg-[color-mix(in_oklab,var(--color-card)_88%,white)] focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent lg:p-8"
+              >
+                <h2 class="font-geist text-[22px] leading-[1.3] font-semibold">{g.content[lang].h1}</h2>
+                <p class="mt-3 font-geist text-[16px] leading-[1.6] text-muted">{g.content[lang].desc}</p>
+                <span class="mt-auto pt-5 font-geist text-[15px] font-semibold text-link">{ui.read} →</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+  <Footer />
+</Layout>

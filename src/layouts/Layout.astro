@@ -11,16 +11,25 @@ interface Props {
   ogImage?: string;
   /** Keep the page out of search results and the sitemap. */
   noindex?: boolean;
+  /** The page's language when it is built directly in it (solution pages). */
+  lang?: string;
+  /** Language versions with their own URLs (solution pages). Pages without
+   * this get the standard set from the i18n-static build step. */
+  alternates?: { lang: string; href: string }[];
 }
 
-const { title, description, jsonLd, preloadImage, ogImage, noindex } = Astro.props;
+const { title, description, jsonLd, preloadImage, ogImage, noindex, lang = "uz", alternates } = Astro.props;
+// Share image: 1200×630 cards in /og/ (scripts/og.mjs); the build swaps the
+// home card for each language's own (i18n-static).
+const og = new URL(ogImage ?? "/og/home-uz.png", Astro.site ?? "https://octopos.uz").toString();
+const ogIsCard = og.includes("/og/");
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
 const ld = (node: Record<string, unknown>) =>
   JSON.stringify(node).replace(/<\//g, "<\\/");
 ---
 
 <!doctype html>
-<html lang="uz">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -64,6 +73,9 @@ const ld = (node: Record<string, unknown>) =>
     </script>
     <title>{title}</title>
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {/* Search Console / Yandex Webmaster ownership: set these in Vercel's environment variables. */}
+    {import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION && <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION} />}
+    {import.meta.env.PUBLIC_YANDEX_VERIFICATION && <meta name="yandex-verification" content={import.meta.env.PUBLIC_YANDEX_VERIFICATION} />}
     {description && <meta name="description" content={description} />}
     {canonical && <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
@@ -71,13 +83,12 @@ const ld = (node: Record<string, unknown>) =>
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     {canonical && <meta property="og:url" content={canonical} />}
-    <meta property="og:image" content={ogImage ?? (Astro.site ? new URL("/og.png", Astro.site).toString() : "/og.png")} />
-    {/* Size is only known for the default share card; app pages share a screenshot of another size. */}
-    {!ogImage && <meta property="og:image:width" content="1200" />}
-    {!ogImage && <meta property="og:image:height" content="630" />}
+    <meta property="og:image" content={og} />
+    {ogIsCard && <meta property="og:image:width" content="1200" />}
+    {ogIsCard && <meta property="og:image:height" content="630" />}
     <meta name="twitter:title" content={title} />
     {description && <meta name="twitter:description" content={description} />}
-    <meta name="twitter:image" content={ogImage ?? (Astro.site ? new URL("/og.png", Astro.site).toString() : "/og.png")} />
+    <meta name="twitter:image" content={og} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="shortcut icon" href="/favicon.ico" />
@@ -91,6 +102,7 @@ const ld = (node: Record<string, unknown>) =>
         fetchpriority="high"
       />
     )}
+    {alternates?.map((a) => <link rel="alternate" hreflang={a.lang} href={a.href} />)}
     {jsonLd?.map((node) => (
       <script is:inline type="application/ld+json" set:html={ld(node)} />
     ))}

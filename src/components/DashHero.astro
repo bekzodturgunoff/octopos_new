@@ -1,0 +1,483 @@
+---
+/**
+ * Dash home screen (Asosiy · Foyda va zarar), rebuilt in HTML for the Dash app
+ * page's hero and the Dash solution pages.
+ *
+ * Layout, sizes and colours are the live app's (kdsx-dash-v2 home route,
+ * 1440×900, light theme): sidebar with the eight sections and the apps list,
+ * the period chips, the profit-and-loss KPI cards and "Pul qayerga ketadi".
+ * Labels are the Dash's own translations (public/locales, keys noted in
+ * i18n.ts under dash.*). Figures are demo data that add up, the same ones the
+ * homepage's P&L mock uses: COGS 35% + labour 12% + operating costs 8% +
+ * operating profit 45% of 4 820 000 net sales.
+ *
+ * Scales as one piece with its container (1em = 16px at 1440px), shown whole
+ * at every width, always in the light theme.
+ */
+import logo from "../assets/logo_dark.webp"; // dark artwork: the mock is always light
+
+
+const nav = [
+  { k: "dash.home", t: "Asosiy", i: '<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' },
+  { k: "dash.catalog", t: "Katalog", i: '<path d="m16 6 4 14"/><path d="M12 6v14"/><path d="M8 8v12"/><path d="M4 4v16"/>' },
+  { k: "dash.orders", t: "Buyurtmalar", i: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>' },
+  { k: "dash.store", t: "Onlayn do'kon", dot: true, i: '<path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/>' },
+  { k: "dash.inventory", t: "Inventarizatsiya", i: '<path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z"/><path d="m7 16.5-4.74-2.85"/><path d="m7 16.5 5-3"/><path d="M7 16.5v5.17"/><path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z"/><path d="m17 16.5-5-3"/><path d="m17 16.5 4.74-2.85"/><path d="M17 16.5v5.17"/><path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z"/><path d="M12 8 7.26 5.15"/><path d="m12 8 4.74-2.85"/><path d="M12 13.5V8"/>' },
+  { k: "dash.finance", t: "Moliya", i: '<circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/>' },
+  { k: "dash.admin", t: "Boshqaruv", i: '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>' },
+  { k: "dash.reports", t: "Hisobotlar", i: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 18v-2"/><path d="M12 18v-4"/><path d="M16 18v-6"/>' },
+];
+const appsNav = [
+  { k: "", t: "POS", i: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>' },
+  { k: "dash.ods", t: "Buyurtmalar ekrani (ODS)", i: '<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>' },
+  { k: "dash.guest", t: "Mehmon", i: '<path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 3 2h3Zm0 0v7"/>' },
+];
+const periods = [
+  { k: "dash.today", t: "Bugun" },
+  { k: "dash.yesterday", t: "Kecha" },
+  { k: "dash.week", t: "Shu hafta", on: true },
+  { k: "dash.month", t: "Shu oy" },
+  { k: "dash.quarter", t: "Shu chorak" },
+  { k: "dash.ytd", t: "Yil boshidan" },
+];
+const kpis = [
+  { k: "dash.netSales", t: "Sof savdo", v: "4 820 000", delta: "12.4%" },
+  { k: "dash.primeCost", t: "Tovar va xodimlar xarajati", v: "2 265 400", pct: "47%" },
+  { k: "dash.grossProfit", t: "Yalpi foyda", v: "3 133 000", pct: "65%", delta: "9.8%" },
+  { k: "dash.opProfit", t: "Operatsion foyda", v: "2 169 000", sub: true, delta: "14.1%" },
+];
+const split = [
+  { k: "dash.cogs", t: "Sotilgan tovarlar tannarxi", c: "var(--yellow)", p: 35, v: "1 687 000" },
+  { k: "dash.labor", t: "Mehnat haqi", c: "var(--cyan)", p: 12, v: "578 400" },
+  { k: "dash.opex", t: "Operatsion xarajatlar", c: "var(--grey)", p: 8, v: "385 600" },
+  { k: "dash.opProfit", t: "Operatsion foyda", c: "var(--accent)", p: 45, v: "2 169 000" },
+];
+const up = '<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>';
+
+---
+
+<div class="dash-hero" role="img" aria-label="Dash — foyda va zarar" data-i18n-attr="aria-label:dash.alt">
+  <div class="dh" aria-hidden="true">
+    {/* ---------- sidebar ---------- */}
+    <aside class="dh-side">
+      <p class="dh-logo">
+        <img src={logo.src} alt="" width="40" height="40" class="dh-mark" loading="lazy" decoding="async" />
+        Octopos
+      </p>
+      <ul class="dh-nav">
+        {nav.map((n) => (
+          <li class:list={[n.k === "dash.home" && "is-on"]}>
+            <span class="dh-ico"><svg viewBox="0 0 24 24" set:html={n.i} />{n.dot && <i />}</span>
+            <span data-i18n={n.k}>{n.t}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="dh-apps-h" data-i18n="dash.apps">Ilovalar</p>
+      <ul class="dh-nav dh-apps">
+        {appsNav.map((n) => (
+          <li>
+            <span class="dh-ico"><svg viewBox="0 0 24 24" set:html={n.i} /></span>
+            <span data-i18n={n.k || undefined}>{n.t}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
+
+    {/* ---------- main ---------- */}
+    <section class="dh-main">
+      <div class="dh-top">
+        <span class="dh-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg></span>
+        <span class="dh-user"><span class="dh-av">B</span>Bonet<svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></svg></span>
+      </div>
+
+      <p class="dh-label" data-i18n="dash.period">Davr</p>
+      <div class="dh-chips">
+        {periods.map((p) => <span class:list={["dh-chip", p.on && "is-on"]} data-i18n={p.k}>{p.t}</span>)}
+      </div>
+
+      <div class="dh-head">
+        <h3 data-i18n="dash.pl">Foyda va zarar</h3>
+        <p data-i18n="dash.range">2 Noy, 2026 – 8 Noy, 2026 · 26 Okt – 1 Noy, 2026 bilan taqqoslaganda</p>
+      </div>
+
+      <div class="dh-kpis">
+        {kpis.map((c) => (
+          <div class="dh-card">
+            <p class="dh-kpi-h">
+              <span data-i18n={c.k}>{c.t}</span>
+              {c.delta && <span class="dh-delta"><svg viewBox="0 0 24 24" set:html={up} />{c.delta}</span>}
+            </p>
+            <p class="dh-kpi">{c.v}{c.pct && <small>{c.pct}</small>}</p>
+            {c.sub && <p class="dh-of"><span>45%</span> <span data-i18n="dash.ofSales">sof savdodan</span></p>}
+          </div>
+        ))}
+      </div>
+
+      <div class="dh-card dh-where">
+        <p class="dh-card-h" data-i18n="dash.where">Pul qayerga ketadi</p>
+        <p class="dh-card-p" data-i18n="ft.whereHint">Har bir savdo xarajatlar va sizga qoladigan qism o'rtasida qanday taqsimlanadi.</p>
+        <div class="dh-split">{split.map((s) => <span style={`width:${s.p}%;background:${s.c}`} />)}</div>
+        <dl class="dh-legend">
+          {split.map((s) => (
+            <div>
+              <dt><i style={`background:${s.c}`} /><span data-i18n={s.k}>{s.t}</span></dt>
+              <dd><small>{s.p}%</small> {s.v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div class="dh-card dh-stmt">
+        <p class="dh-card-h" data-i18n="dash.statement">Foyda va zarar hisoboti</p>
+        <p class="dh-row"><span data-i18n="dash.grossSales">Yalpi savdo</span><b>5 012 800</b></p>
+        <p class="dh-row"><span data-i18n="dash.netSales">Sof savdo</span><b>4 820 000</b></p>
+        <p class="dh-row"><span data-i18n="dash.cogs">Sotilgan tovarlar tannarxi</span><b>−1 687 000</b></p>
+        <p class="dh-row"><span data-i18n="dash.grossProfit">Yalpi foyda</span><b>3 133 000</b></p>
+        <p class="dh-row"><span data-i18n="dash.labor">Mehnat haqi</span><b>−578 400</b></p>
+        <p class="dh-row"><span data-i18n="dash.opex">Operatsion xarajatlar</span><b>−385 600</b></p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<style>
+  /* Sizing: the frame is a container; 1em = 1/90 of its width (16px at 1440). */
+  .dash-hero {
+    container-type: inline-size;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  @media (min-width: 768px) {
+    .dash-hero {
+      border-radius: 24px;
+    }
+  }
+
+  /* Dash light-theme tokens (computed values from the live app). */
+  .dh {
+    --s100: oklch(98.09% 0.013 115.83);
+    --s200: oklch(96.49% 0.015 119.1);
+    --s300: oklch(94.79% 0.013 115.84);
+    --s500: oklch(91.35% 0.015 119.12);
+    --on: oklch(22.26% 0.027 133.88);
+    --on2: oklch(39.23% 0.036 133.1);
+    --forest: oklch(28.69% 0.0839 135.05);
+    --accent: oklch(85.7% 0.17 134.56);
+    --yellow: oklch(92% 0.16 100);
+    --cyan: oklch(86% 0.08 205);
+    --grey: oklch(56.54% 0.038 131.64);
+
+    font-size: calc(100cqw / 90);
+    aspect-ratio: 1440 / 860;
+    display: grid;
+    grid-template-columns: 16em 1fr;
+    background: var(--s100);
+    color: var(--on);
+    font-family: var(--font-sans);
+    line-height: 1.4;
+    text-align: left;
+    user-select: none;
+  }
+  .dh svg {
+    width: 1.25em;
+    height: 1.25em;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  /* ---------- sidebar ---------- */
+  .dh-side {
+    display: flex;
+    flex-direction: column;
+    padding: 2.6em 1em 1em;
+    min-height: 0;
+  }
+  .dh-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    padding-left: 2.25em;
+    font-size: 1.375em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .dh-mark {
+    width: 1.3em;
+    height: 1.3em;
+  }
+  .dh-nav {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3.2em;
+  }
+  .dh-nav li {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    height: 2.75em;
+    padding: 0 1em;
+    border-radius: 999px;
+    font-size: 0.875em;
+  }
+  .dh-nav li.is-on {
+    color: var(--forest);
+    font-weight: 600;
+  }
+  .dh-ico {
+    position: relative;
+    display: flex;
+  }
+  .dh-ico svg {
+    width: 1.15em;
+    height: 1.15em;
+  }
+  .dh-ico i {
+    position: absolute;
+    top: -0.2em;
+    right: -0.2em;
+    width: 0.45em;
+    height: 0.45em;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .dh-apps-h {
+    margin-top: auto;
+    padding: 0 0 0.6em 0.8em;
+    border-bottom: max(0.0625em, 0.5px) solid var(--s300);
+    color: var(--on2);
+    font-size: 0.875em;
+  }
+  .dh-apps {
+    margin-top: 0.4em;
+  }
+  .dh-apps li span:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ---------- main ---------- */
+  .dh-main {
+    min-width: 0;
+    padding: 2.4em 1.5em 0 1em;
+    overflow: hidden;
+  }
+  .dh-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .dh-search {
+    display: flex;
+    width: 2.5em;
+    height: 2.5em;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--s300);
+  }
+  .dh-user {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    padding-right: 0.25em;
+  }
+  .dh-av {
+    display: flex;
+    width: 2.5em;
+    height: 2.5em;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: var(--s300);
+    font-weight: 500;
+  }
+  .dh-user svg {
+    width: 1em;
+    height: 1em;
+  }
+  .dh-label {
+    margin-top: 1.9em;
+    color: var(--on2);
+    font-size: 0.875em;
+  }
+  .dh-chips {
+    display: flex;
+    gap: 0.5em;
+    margin-top: 0.75em;
+  }
+  .dh-chip {
+    display: flex;
+    align-items: center;
+    height: 2.25em;
+    padding: 0 0.95em;
+    border: max(0.09em, 1px) solid color-mix(in oklab, var(--on) 55%, transparent);
+    border-radius: 999px;
+    color: var(--forest);
+    font-size: 0.875em;
+    font-weight: 600;
+  }
+  .dh-chip.is-on {
+    border-color: transparent;
+    background: var(--forest);
+    color: var(--accent);
+  }
+  .dh-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1em;
+    margin-top: 1.6em;
+    padding-bottom: 1em;
+    border-bottom: max(0.0625em, 0.5px) solid var(--s300);
+  }
+  .dh-head h3 {
+    font-size: 1.125em;
+    font-weight: 600;
+  }
+  .dh-head p {
+    color: var(--on2);
+    font-size: 0.875em;
+    white-space: nowrap;
+  }
+  .dh-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1em;
+    margin-top: 1.5em;
+  }
+  .dh-card {
+    border-radius: 1em;
+    background: var(--s200);
+    padding: 1em;
+  }
+  .dh-kpi-h {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5em;
+    font-size: 0.875em;
+    font-weight: 500;
+  }
+  .dh-kpi-h > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dh-delta {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.2em;
+    border-radius: 999px;
+    background: color-mix(in oklab, var(--accent) 45%, transparent);
+    padding: 0.15em 0.55em;
+    color: var(--forest);
+    font-size: 0.857em;
+    font-weight: 600;
+  }
+  .dh-delta svg {
+    width: 0.95em;
+    height: 0.95em;
+  }
+  .dh-kpi {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35em;
+    margin-top: 0.55em;
+    font-size: 1.6em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .dh-kpi small {
+    color: var(--on2);
+    font-size: 0.55em;
+    font-weight: 400;
+  }
+  .dh-of {
+    margin-top: 0.3em;
+    color: var(--on2);
+    font-size: 0.875em;
+  }
+  .dh-where {
+    margin-top: 1em;
+  }
+  .dh-card-h {
+    font-size: 1em;
+    font-weight: 500;
+  }
+  .dh-card-p {
+    margin-top: 0.2em;
+    color: var(--on2);
+    font-size: 0.8125em;
+  }
+  .dh-split {
+    display: flex;
+    gap: 0.2em;
+    height: 0.7em;
+    margin-top: 1em;
+  }
+  .dh-split span {
+    border-radius: 999px;
+  }
+  .dh-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5em 2.5em;
+    margin-top: 1em;
+    font-size: 0.9375em;
+  }
+  .dh-legend div {
+    display: flex;
+    min-width: 0;
+    justify-content: space-between;
+    gap: 0.5em;
+  }
+  .dh-legend dt {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .dh-legend dt span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .dh-legend i {
+    width: 0.5em;
+    height: 0.5em;
+    flex-shrink: 0;
+    border-radius: 999px;
+  }
+  .dh-legend dd {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .dh-legend small {
+    color: var(--on2);
+    font-size: 0.8em;
+  }
+  .dh-stmt {
+    margin-top: 1em;
+  }
+  .dh-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.9em;
+    padding-top: 0.9em;
+    border-top: max(0.0625em, 0.5px) solid var(--s300);
+    font-size: 0.9375em;
+  }
+  .dh-row b {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

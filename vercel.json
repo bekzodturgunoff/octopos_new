@@ -2,563 +2,143 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
-      "source": "/en/solutions/pos-system/",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/pos-system/",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/pos-sistema/",
-      "destination": "/ru/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
       "source": "/uz/yechimlar/pos-tizim/",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/fast-food-pos/",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/fast-food-pos/",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/pos-dlya-fastfuda/",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/pos-tizim/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/fastfood-kassa/",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/waiter-app/",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/waiter-app/",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/programma-dlya-ofitsianta/",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/fastfood-kassa/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/ofitsiant-dasturi/",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/bill-management/",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/bill-management/",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/poryadok-v-uchete/",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/ofitsiant-dasturi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/hisob-tartibi/",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/order-management/",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/order-management/",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/upravleniye-zakazami/",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/hisob-tartibi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/buyurtma-boshqaruvi/",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/kitchen-display/",
-      "destination": "/en/apps/kitchen/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/kitchen-display/",
-      "destination": "/ko/apps/kitchen/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/kuhonniy-ekran/",
-      "destination": "/ru/apps/kitchen/",
+      "destination": "/yechimlar/buyurtma-boshqaruvi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/oshxona-ekrani/",
-      "destination": "/apps/kitchen/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/qr-menu/",
-      "destination": "/en/apps/guest/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/qr-menu/",
-      "destination": "/ko/apps/guest/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/qr-menyu/",
-      "destination": "/ru/apps/guest/",
+      "destination": "/yechimlar/oshxona-ekrani/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/qr-menyu/",
-      "destination": "/apps/guest/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/inventory-tracking/",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/inventory-tracking/",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/skladskoy-uchyot/",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/qr-menyu/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/ombor-hisobi/",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/recipe-costing/",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/recipe-costing/",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/kalkulyatsiya-blud/",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/ombor-hisobi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/taom-kalkulyatsiyasi/",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/reducing-shortages/",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/reducing-shortages/",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/borba-s-nedostachey/",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/taom-kalkulyatsiyasi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/kamomadni-yoqotish/",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/restaurant-reports/",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/restaurant-reports/",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/otchyoty-restorana/",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/kamomadni-yoqotish/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/restoran-hisobotlari/",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/remote-cafe-management/",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/remote-cafe-management/",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/distantsionnoye-upravleniye/",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/restoran-hisobotlari/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/kafeni-boshqarish/",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/cafe-automation/",
-      "destination": "/en/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/cafe-automation/",
-      "destination": "/ko/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/avtomatizatsiya-kafe/",
-      "destination": "/ru/",
+      "destination": "/yechimlar/kafeni-boshqarish/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/kafe-avtomatlashtirish/",
-      "destination": "/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/restaurant-management/",
-      "destination": "/en/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/restaurant-management/",
-      "destination": "/ko/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/upravleniye-restoranom/",
-      "destination": "/ru/",
+      "destination": "/yechimlar/kafe-avtomatlashtirish/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/restoran-boshqaruvi/",
-      "destination": "/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/pos-system",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/pos-system",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/pos-sistema",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/restoran-boshqaruvi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/pos-tizim",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/fast-food-pos",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/fast-food-pos",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/pos-dlya-fastfuda",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/pos-tizim/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/fastfood-kassa",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/waiter-app",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/waiter-app",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/programma-dlya-ofitsianta",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/fastfood-kassa/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/ofitsiant-dasturi",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/bill-management",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/bill-management",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/poryadok-v-uchete",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/ofitsiant-dasturi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/hisob-tartibi",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/order-management",
-      "destination": "/en/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/order-management",
-      "destination": "/ko/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/upravleniye-zakazami",
-      "destination": "/ru/apps/pos-restaurant/",
+      "destination": "/yechimlar/hisob-tartibi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/buyurtma-boshqaruvi",
-      "destination": "/apps/pos-restaurant/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/kitchen-display",
-      "destination": "/en/apps/kitchen/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/kitchen-display",
-      "destination": "/ko/apps/kitchen/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/kuhonniy-ekran",
-      "destination": "/ru/apps/kitchen/",
+      "destination": "/yechimlar/buyurtma-boshqaruvi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/oshxona-ekrani",
-      "destination": "/apps/kitchen/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/qr-menu",
-      "destination": "/en/apps/guest/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/qr-menu",
-      "destination": "/ko/apps/guest/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/qr-menyu",
-      "destination": "/ru/apps/guest/",
+      "destination": "/yechimlar/oshxona-ekrani/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/qr-menyu",
-      "destination": "/apps/guest/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/inventory-tracking",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/inventory-tracking",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/skladskoy-uchyot",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/qr-menyu/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/ombor-hisobi",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/recipe-costing",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/recipe-costing",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/kalkulyatsiya-blud",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/ombor-hisobi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/taom-kalkulyatsiyasi",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/reducing-shortages",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/reducing-shortages",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/borba-s-nedostachey",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/taom-kalkulyatsiyasi/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/kamomadni-yoqotish",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/restaurant-reports",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/restaurant-reports",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/otchyoty-restorana",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/kamomadni-yoqotish/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/restoran-hisobotlari",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/remote-cafe-management",
-      "destination": "/en/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/remote-cafe-management",
-      "destination": "/ko/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/distantsionnoye-upravleniye",
-      "destination": "/ru/apps/dash/",
+      "destination": "/yechimlar/restoran-hisobotlari/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/kafeni-boshqarish",
-      "destination": "/apps/dash/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/cafe-automation",
-      "destination": "/en/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/cafe-automation",
-      "destination": "/ko/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/avtomatizatsiya-kafe",
-      "destination": "/ru/",
+      "destination": "/yechimlar/kafeni-boshqarish/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/kafe-avtomatlashtirish",
-      "destination": "/",
-      "statusCode": 301
-    },
-    {
-      "source": "/en/solutions/restaurant-management",
-      "destination": "/en/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ko/solutions/restaurant-management",
-      "destination": "/ko/",
-      "statusCode": 301
-    },
-    {
-      "source": "/ru/resheniya/upravleniye-restoranom",
-      "destination": "/ru/",
+      "destination": "/yechimlar/kafe-avtomatlashtirish/",
       "statusCode": 301
     },
     {
       "source": "/uz/yechimlar/restoran-boshqaruvi",
-      "destination": "/",
+      "destination": "/yechimlar/restoran-boshqaruvi/",
       "statusCode": 301
     },
     {
@@ -629,6 +209,16 @@
     {
       "source": "/uz/terms",
       "destination": "/terms/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/yechimlar/",
+      "destination": "/yechimlar/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/yechimlar",
+      "destination": "/yechimlar/",
       "statusCode": 301
     }
   ]

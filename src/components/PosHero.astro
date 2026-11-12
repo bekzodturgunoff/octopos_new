@@ -121,7 +121,18 @@ const ico = {
           {tiles.map((t, i) => (
             <li class="pos-tile">
               <span class="pos-photo">
-                <img src={`${P}${t.img}.webp`} alt="" width="320" height="320" loading={i < 6 ? "eager" : "lazy"} decoding="async" fetchpriority={i < 6 ? "high" : "auto"} />
+                {/* Tiles are ~45px on phones, 128px on desktop: 160/320px files. Not high
+                    priority — the headline text is the page's largest paint. */}
+                <img
+                  src={`${P}${t.img}.webp`}
+                  srcset={`${P}${t.img}-160.webp 160w, ${P}${t.img}.webp 320w`}
+                  sizes="(max-width: 767px) 60px, 128px"
+                  alt=""
+                  width="320"
+                  height="320"
+                  loading={i < 12 ? "eager" : "lazy"}
+                  decoding="async"
+                />
                 {i < 9 && <kbd>{i + 1}</kbd>}
               </span>
               <span class="pos-tile-info">

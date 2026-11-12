@@ -216,7 +216,7 @@ const links = [
         <button type="button" data-plan-trigger="starter" data-menu-link class="btn-solid btn w-full">
           <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
         </button>
-        <a href="https://t.me/bekzodturgunoff" class="btn-outline btn w-full">Telegram</a>
+        <a href="tel:+998941500330" class="btn-outline btn w-full gap-2.5"><svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg> +998 94 150 03 30</a>
         <button type="button" data-theme-cycle aria-label="Toggle theme" class="mt-2 self-center font-geist text-[14px] font-medium text-muted underline underline-offset-4 sm:hidden">
           <span data-i18n="theme.toggle">Mavzu</span>
         </button>
@@ -350,7 +350,11 @@ const links = [
       const l = btn.getAttribute("data-set-lang") as Lang;
       closeMenu();
       if (l === getLang()) return;
-      window.location.assign(localizePath(l));
+      // Pages whose language versions have their own URLs (solution pages)
+      // list them as hreflang alternates; elsewhere the path just gets the prefix.
+      const alt = document.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${l}"]`);
+      const own = document.querySelector('link[rel="alternate"][hreflang="ru"]')?.getAttribute("href")?.includes("/resheniya/");
+      window.location.assign(alt ? new URL(alt.href).pathname : own ? (l === "uz" ? "/" : `/${l}/`) : localizePath(l));
     });
   });
 

@@ -21,7 +21,16 @@ let ssrPlansHtml = "";
 let ssrTableHtml = "";
 let ssrOffers: Record<string, unknown>[] = [];
 try {
-  const plans = await fetchPlans("uz", AbortSignal.timeout(8000));
+  // Up to three tries (15s each): the prices should be in the HTML search engines read.
+  let plans: Awaited<ReturnType<typeof fetchPlans>> | undefined;
+  for (let i = 0; i < 3 && !plans; i++) {
+    try {
+      plans = await fetchPlans("uz", AbortSignal.timeout(15000));
+    } catch (err) {
+      if (i === 2) throw err;
+    }
+  }
+  if (!plans) throw new Error("no plans");
   const uzL = (k: string) => UZ_PLAN_STRINGS[k] ?? "";
   ssrPlansHtml = renderPlanCards(plans, "uz", "monthly", uzL);
   ssrTableHtml = renderPlanTable(plans, uzL);
@@ -50,7 +59,6 @@ const homeLd = [
     logo: `${SITE_URL}/favicon.ico`,
     email: "support@octopos.uz",
     telephone: "+998941500330",
-    sameAs: ["https://t.me/bekzodturgunoff"],
   },
   {
     "@context": "https://schema.org",
@@ -496,7 +504,8 @@ const faqLd = {
         </div>
 
         <div class="card mx-auto mt-10 max-w-[1040px] p-6 lg:mt-14 lg:p-12">
-          <div class="grid gap-4 text-left sm:grid-cols-3">
+          {/* items-end: a label that wraps (commission) keeps the inputs on one line. */}
+          <div class="grid items-end gap-4 text-left sm:grid-cols-3">
             <label class="block">
               <span class="block font-geist text-[14px] font-semibold" data-i18n="calc.orders">Oyiga onlayn buyurtmalar</span>
               <span class="mt-2 flex h-14 items-center gap-2 rounded-[12px] border border-ink/20 bg-page px-4 transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ink focus-within:ring-[3px] focus-within:ring-accent"><input class="w-full min-w-0 bg-transparent font-geist text-[18px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-muted/60" inputmode="numeric" placeholder="500" data-calc-orders /></span>
@@ -506,7 +515,7 @@ const faqLd = {
               <span class="mt-2 flex h-14 items-center gap-2 rounded-[12px] border border-ink/20 bg-page px-4 transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ink focus-within:ring-[3px] focus-within:ring-accent"><input class="w-full min-w-0 bg-transparent font-geist text-[18px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-muted/60" inputmode="numeric" placeholder="120 000" data-calc-check /><span class="shrink-0 text-muted" data-i18n="calc.som">so'm</span></span>
             </label>
             <label class="block">
-              <span class="block font-geist text-[14px] font-semibold" data-i18n="calc.commission">Agregator komissiyasi</span>
+              <span class="block font-geist text-[14px] font-semibold"><span data-i18n="calc.commission">Agregator komissiyasi</span> <span class="font-normal whitespace-nowrap text-muted" >(Uzum Tezkor)</span></span>
               <span class="mt-2 flex h-14 items-center gap-2 rounded-[12px] border border-ink/20 bg-page px-4 transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ink focus-within:ring-[3px] focus-within:ring-accent"><input class="w-full min-w-0 bg-transparent font-geist text-[18px] font-medium text-ink outline-none placeholder:font-normal placeholder:text-muted/60" inputmode="decimal" placeholder="—" data-calc-rate /><span class="shrink-0 text-muted">%</span></span>
             </label>
           </div>
@@ -668,7 +677,7 @@ const faqLd = {
         </details>
         <noscript>
           <p class="mt-10 font-geist text-[16px] leading-[24px] text-muted">
-            Narxlarni ko'rish uchun <a href="https://t.me/bekzodturgunoff" class="text-link hover:underline" target="_blank" rel="noopener">Telegram orqali yozing</a>.
+            Narxlarni bilish uchun qo'ng'iroq qiling: <a href="tel:+998941500330" class="text-link hover:underline">+998 94 150 03 30</a>.
           </p>
         </noscript>
 
@@ -704,11 +713,8 @@ const faqLd = {
               </p>
             </details>
           </div>
-          <a
-            href="https://t.me/bekzodturgunoff"
-            class="btn-outline btn shrink-0"
-          >
-            <span data-i18n="plans.helpCta">Telegram orqali yozish</span>
+          <a href="#contact" data-lead-jump class="btn-outline btn shrink-0">
+            <span data-i18n="ct.callMe">Qo'ng'iroq so'rash</span>
           </a>
         </div>
       </div>
@@ -749,8 +755,8 @@ const faqLd = {
                     <p class="font-geist text-[13px] text-muted">
                       {t.name}
                     </p>
-                    <p class="mt-1 flex items-baseline gap-1">
-                      <span class="font-geist text-[16px] font-medium text-ink"
+                    <p class="mt-1 flex flex-wrap items-baseline gap-x-1">
+                      <span class="font-geist text-[16px] font-medium whitespace-nowrap text-ink tabular-nums"
                         >{t.price}</span
                       >
                       <span
@@ -942,7 +948,7 @@ const faqLd = {
                       {t.n} ta surat/oy
                     </span>
                     <span class="flex items-baseline gap-1">
-                      <span class="font-geist text-[15px] font-medium text-ink"
+                      <span class="font-geist text-[15px] font-medium whitespace-nowrap text-ink tabular-nums"
                         >{t.price}</span
                       >
                       <span
@@ -1067,10 +1073,6 @@ const faqLd = {
               <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
               +998 94 150 03 30
             </a>
-            <a href="https://t.me/bekzodturgunoff" class="btn-outline btn gap-2.5">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4z" /></svg>
-              Telegram
-            </a>
           </div>
           <button type="button" data-plan-trigger="starter" class="mt-6 rounded font-geist text-[15px] font-semibold text-link underline underline-offset-4 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
             <span data-i18n="ct.self">Yoki o'zingiz bepul boshlang</span>
@@ -1090,8 +1092,8 @@ const faqLd = {
       <a href="#contact" data-lead-jump class="btn-solid btn flex-1 !px-4">
         <span data-i18n="ct.callMe">Qo'ng'iroq so'rash</span>
       </a>
-      <a href="https://t.me/bekzodturgunoff" class="btn-outline btn !px-5" aria-label="Telegram">
-        Telegram
+      <a href="tel:+998941500330" class="btn-outline btn !px-5" aria-label="+998 94 150 03 30">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
       </a>
     </div>
   </div>
@@ -1267,7 +1269,7 @@ const faqLd = {
           return;
         }
         const msg = esc(FALLBACK[lang] ?? FALLBACK["en"] ?? "");
-        grid.innerHTML = `<p class="col-span-full font-geist text-[16px] leading-[24px] text-muted">${msg} — <a href="https://t.me/bekzodturgunoff" class="text-link hover:underline" target="_blank" rel="noopener">@bekzodturgunoff</a></p>`;
+        grid.innerHTML = `<p class="col-span-full font-geist text-[16px] leading-[24px] text-muted">${msg} — <a href="tel:+998941500330" class="text-link hover:underline">+998 94 150 03 30</a></p>`;
         return;
       }
       grid.innerHTML = renderPlanCards(plans, lang, cycle, (k) => L(k, lang));

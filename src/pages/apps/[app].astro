@@ -2,6 +2,8 @@
 import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/Footer.astro";
 import TopNav from "../../components/TopNav.astro";
+import PosHero from "../../components/PosHero.astro";
+import DashHero from "../../components/DashHero.astro";
 import { apps, imagesFor, imgDims, imgSrcset, type App } from "../../data/apps";
 import { has } from "../../data/i18n";
 
@@ -20,10 +22,36 @@ export function getStaticPaths() {
 const { app, images } = Astro.props;
 const idx = apps.findIndex((a) => a.slug === app.slug);
 const next = apps[(idx + 1) % apps.length];
-const ogImage = images[0] ? `https://octopos.uz${images[0]}` : undefined;
+const ogImage = `/og/app-${app.slug}.png`;
+// The gallery: every screen after the hero one; HTML-hero apps show all their screenshots.
+// Apps whose hero is an HTML rebuild of the live screen (not a screenshot).
+const HTML_HERO = ["pos-restaurant", "dash"];
+const gallery = HTML_HERO.includes(app.slug) ? images : images.slice(1);
 
+
+/* Search title: the app name plus what it is (other languages: meta.app.* in i18n.ts). */
+const APP_TITLE: Record<string, string> = {
+  "pos-restaurant": "RestaurantPOS — restoran va kafe uchun kassa dasturi | Octopos",
+  "pos-market": "MarketPOS — do'kon va market uchun kassa dasturi | Octopos",
+  "dash": "Dash — savdo, ombor va hisobotlar paneli | Octopos",
+  "kitchen": "Kitchen — oshxona ekrani (KDS) | Octopos",
+  "ods": "Display — buyurtmalar tayyorligi ekrani | Octopos",
+  "guest": "Order — QR-menyu va stoldan buyurtma | Octopos",
+  "website": "Store — restoran uchun onlayn do'kon va sayt | Octopos",
+  "dispatch": "Dispatch — yetkazib berish va kuryerlar | Octopos",
+};
 const SITE_URL = "https://octopos.uz";
 const appLd = [
+  {
+    // Names/URLs are translated per language by the i18n-static build step.
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Bosh sahifa", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Ilovalar", item: `${SITE_URL}/apps/` },
+      { "@type": "ListItem", position: 3, name: app.name, item: `${SITE_URL}/apps/${app.slug}/` },
+    ],
+  },
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -55,7 +83,7 @@ function frameLabel(url: string): string {
 }
 ---
 
-<Layout title={`${app.name} — Octopos`} description={app.desc} jsonLd={appLd} ogImage={ogImage}>
+<Layout title={APP_TITLE[app.slug] ?? `${app.name} — Octopos`} description={app.desc} jsonLd={appLd} ogImage={ogImage}>
   <TopNav />
 
   {/* ---------------- hero: forest band, name + one line + CTA, then the main visual ---------------- */}
@@ -91,8 +119,19 @@ function frameLabel(url: string): string {
         </div>
       </div>
 
-      {/* Main visual: the first screen, full width, shown whole. */}
-      {images[0] && (() => {
+      {/* Main visual. RestaurantPOS: the order screen rebuilt from the live app
+          (same as the homepage hero); other apps: their first screen, shown whole. */}
+      {app.slug === "pos-restaurant" && (
+        <div class="mt-10 lg:mt-14">
+          <PosHero />
+        </div>
+      )}
+      {app.slug === "dash" && (
+        <div class="mt-10 lg:mt-14">
+          <DashHero />
+        </div>
+      )}
+      {!HTML_HERO.includes(app.slug) && images[0] && (() => {
         const src = images[0];
         const dm = imgDims(src);
         const portrait = !!dm && dm.h > dm.w;
@@ -136,26 +175,11 @@ function frameLabel(url: string): string {
         }
       </ul>
 
-      {/* Specs: one compact table */}
-      <dl class="mt-4 grid overflow-hidden rounded-[24px] border border-ink/10 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          app.meta.map((row) => {
-            const labelKey = `meta.${row.label}`;
-            const valueKey = `v.${row.value}`;
-            return (
-              <div class="border-b border-ink/10 px-6 py-5 sm:border-r">
-                <dt class="font-geist text-[13px] leading-[1.4] text-muted" data-i18n={has(labelKey) ? labelKey : undefined}>{row.label}</dt>
-                <dd class="mt-1 font-geist text-[16px] leading-[1.4] font-medium" data-i18n={has(valueKey) ? valueKey : undefined}>{row.value}</dd>
-              </div>
-            );
-          })
-        }
-      </dl>
     </div>
   </section>
 
   {/* ---------------- screens: horizontal carousel, every screenshot ---------------- */}
-  {images.length > 1 && (
+  {gallery.length > 0 && (
     <section class="pb-24 lg:pb-32" data-shots>
       <div class="wrap flex items-end justify-between gap-6">
         <h2 class="display display-2" data-i18n="app.screens">Ekranlar</h2>
@@ -169,9 +193,10 @@ function frameLabel(url: string): string {
         </div>
       </div>
       <ul data-shots-track tabindex="0" aria-label="Ekranlar" data-i18n-attr="aria-label:app.screens" class="car-track mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 lg:mt-12 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+
         {
-          images.slice(1).map((src, k) => {
-            const i = k + 1;
+          gallery.map((src, k) => {
+            const i = k;
             const base = frameBase(src);
             const frameKey = `frame.${app.slug}.${base}`;
             const useKey = has(frameKey) && app.frames?.[base] != null;
@@ -195,7 +220,7 @@ function frameLabel(url: string): string {
                   </div>
                   <figcaption class="mt-3 flex items-baseline justify-between gap-4 font-geist text-[14px] leading-5">
                     <span class="text-muted" data-i18n={useKey ? frameKey : undefined}>{frameLabel(src)}</span>
-                    <span class="shrink-0 font-medium tabular-nums">{String(i + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}</span>
+                    <span class="shrink-0 font-medium tabular-nums">{String(i + 1).padStart(2, "0")} / {String(gallery.length).padStart(2, "0")}</span>
                   </figcaption>
                 </figure>
               </li>

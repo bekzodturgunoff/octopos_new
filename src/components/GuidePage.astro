@@ -1,0 +1,130 @@
+---
+/**
+ * One guide (src/data/guides.ts), built directly in its language like the
+ * solution pages: forest hero band, article sections, sources with dates,
+ * and a closing CTA. TopNav/Footer are translated by the i18n-static step.
+ */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "./TopNav.astro";
+import Footer from "./Footer.astro";
+import { STRINGS } from "../data/i18n";
+import { GUIDES, GUIDE_LANGS, GUIDE_UI, guidePath, guideHubPath, type Guide, type GuideLang } from "../data/guides";
+
+interface Props {
+  guide: Guide;
+  lang: GuideLang;
+}
+const { guide, lang } = Astro.props;
+const c = guide.content[lang];
+const ui = GUIDE_UI[lang];
+const SITE = "https://octopos.uz";
+const url = SITE + guidePath(guide, lang);
+const prefix = lang === "uz" ? "" : "/" + lang;
+const homeHref = prefix + "/";
+const t = (key: string, uz: string) => (lang === "uz" ? uz : STRINGS[key]?.[lang] ?? uz);
+const tryFree = t("nav.cta", "Bepul sinab ko'ring");
+const others = GUIDES.filter((g) => g.key !== guide.key);
+const fmt = (d: string) =>
+  new Date(d + "T12:00:00Z").toLocaleDateString(lang === "uz" ? "uz-Latn-UZ" : lang === "ru" ? "ru-RU" : "en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+const alternates = [
+  ...GUIDE_LANGS.map((l) => ({ lang: l, href: SITE + guidePath(guide, l) })),
+  { lang: "x-default", href: SITE + guidePath(guide, "uz") },
+];
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": url + "#article",
+    headline: c.h1,
+    description: c.desc,
+    inLanguage: lang,
+    dateModified: guide.checked,
+    author: { "@type": "Organization", name: "Octopos", url: SITE },
+    publisher: { "@type": "Organization", name: "Octopos", url: SITE },
+    mainEntityOfPage: url,
+    citation: guide.sources.map((s) => s.url),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": url + "#breadcrumb",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: ui.home, item: SITE + homeHref },
+      { "@type": "ListItem", position: 2, name: ui.hub, item: SITE + guideHubPath(lang) },
+      { "@type": "ListItem", position: 3, name: c.h1, item: url },
+    ],
+  },
+];
+---
+
+<Layout title={`${c.title} | Octopos`} description={c.desc} lang={lang} alternates={alternates} jsonLd={jsonLd}>
+  <TopNav />
+  <main>
+    <section class="on-forest band mt-2">
+      <div class="wrap pt-8 pb-12 lg:pt-12 lg:pb-16">
+        <nav aria-label="Breadcrumb" class="font-geist text-[14px] leading-5 font-medium text-muted">
+          <a href={homeHref} class="rounded transition-colors duration-200 ease-out hover:text-ink">{ui.home}</a>
+          <span class="mx-2" aria-hidden="true">/</span>
+          <a href={guideHubPath(lang)} class="rounded transition-colors duration-200 ease-out hover:text-ink">{ui.hub}</a>
+        </nav>
+        <h1 class="display display-1 mt-8 max-w-[960px] lg:mt-10">{c.h1}</h1>
+        <p class="mt-5 max-w-[720px] font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]">{c.lead}</p>
+        <p class="mt-6 font-geist text-[14px] text-muted">{ui.checked}: {fmt(guide.checked)}</p>
+      </div>
+    </section>
+
+    <article class="wrap py-14 lg:py-20 [&>*]:max-w-[760px]">
+      {
+        c.sections.map((s) => (
+          <section class="mt-10 first:mt-0">
+            <h2 class="display display-3">{s.h}</h2>
+            {s.p.map((p) => <p class="mt-4 font-geist text-[17px] leading-[1.7] text-ink/90">{p}</p>)}
+            {s.list && (
+              <ul class="mt-4 flex flex-col gap-2.5">
+                {s.list.map((li) => (
+                  <li class="flex gap-3 font-geist text-[17px] leading-[1.6] text-ink/90">
+                    <span class="mt-[0.6em] h-1.5 w-1.5 shrink-0 rounded-full bg-ink/60" aria-hidden="true" />
+                    <span>{li}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))
+      }
+
+      <aside class="card mt-12 p-6 lg:p-8">
+        <h2 class="font-geist text-[18px] font-semibold">{ui.sources}</h2>
+        <ul class="mt-4 flex flex-col gap-3">
+          {guide.sources.map((s) => (
+            <li class="font-geist text-[15px] leading-[1.5]">
+              <a href={s.url} rel="noopener" target="_blank" class="text-link underline underline-offset-4">{s.label}</a>
+              <span class="text-muted"> · {fmt(s.date)}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-5 font-geist text-[14px] leading-[1.55] text-muted">{ui.note}</p>
+      </aside>
+
+      {others.length > 0 && (
+        <div class="mt-12">
+          {others.map((g) => (
+            <a href={guidePath(g, lang)} class="card block p-6 transition-colors duration-200 ease-out hover:bg-[color-mix(in_oklab,var(--color-card)_88%,white)] lg:p-8">
+              <span class="font-geist text-[13px] font-semibold text-muted">{ui.hub}</span>
+              <span class="mt-1 block font-geist text-[20px] leading-[1.3] font-semibold">{g.content[lang].h1}</span>
+            </a>
+          ))}
+        </div>
+      )}
+    </article>
+
+    <section class="on-forest band-top">
+      <div class="wrap flex flex-wrap items-center justify-between gap-6 py-14 lg:py-20">
+        <h2 class="display display-2 max-w-[720px]">{t("ct.heading", "Bugun boshlaymizmi?")}</h2>
+        <button type="button" data-plan-trigger="starter" class="btn-solid btn">{tryFree}</button>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

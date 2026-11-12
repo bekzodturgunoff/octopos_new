@@ -1000,5 +1000,275 @@
     "w": 2048
    }
   ]
+ },
+ "/app_images/dash/dash-orders-list.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-orders-list.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-orders-list.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-orders-list.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-summary.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-summary.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-summary.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-summary.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-payments.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-payments.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-payments.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-payments.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-order-detail.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-order-detail.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-order-detail.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-order-detail.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-items.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-items.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-items.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-items.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-categories.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-categories.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-categories.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-categories.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-session.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-session.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-session.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-session.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-staff.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-staff.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-staff.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-staff.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-finance-statements.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-finance-statements.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-finance-statements.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-finance-statements.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-reports-stock-value.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-reports-stock-value.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-reports-stock-value.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-reports-stock-value.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-inventory-movements.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-inventory-movements.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-inventory-movements.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-inventory-movements.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-catalog-library.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-catalog-library.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-catalog-library.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-catalog-library.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-storefront-site.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-storefront-site.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-storefront-site.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-storefront-site.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-access-roles.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-access-roles.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-access-roles.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-access-roles.w2048.webp",
+    "w": 2048
+   }
+  ]
+ },
+ "/app_images/dash/dash-floor-editor.webp": {
+  "w": 2880,
+  "h": 1800,
+  "variants": [
+   {
+    "u": "/app_images/dash/dash-floor-editor.w800.webp",
+    "w": 800
+   },
+   {
+    "u": "/app_images/dash/dash-floor-editor.w1280.webp",
+    "w": 1280
+   },
+   {
+    "u": "/app_images/dash/dash-floor-editor.w2048.webp",
+    "w": 2048
+   }
+  ]
  }
 }

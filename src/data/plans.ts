@@ -5,12 +5,18 @@
  * the build output for /en, /ru, … the same way it does the rest of the page.
  */
 
+import { uzType } from "./uz-type";
+
+/** Every value through uzType (official Uzbek apostrophes). */
+const uzTypeAll = (o: Record<string, string>): Record<string, string> =>
+  Object.fromEntries(Object.entries(o).map(([k, v]) => [k, uzType(v)]));
+
 export const PLANS_API = "https://api.octopos.uz";
 
 export type Cycle = "monthly" | "yearly";
 
 /** Uzbek base strings (the dictionary in i18n.ts only holds en/ru/ko/tr). */
-export const UZ_PLAN_STRINGS: Record<string, string> = {
+export const UZ_PLAN_STRINGS: Record<string, string> = uzTypeAll({
   "plans.monthly": "Oylik",
   "plans.yearly": "Yillik",
   "plans.saveNote": "Yillik to'lov · 10% tejamkorlik",
@@ -31,7 +37,7 @@ export const UZ_PLAN_STRINGS: Record<string, string> = {
   "plans.compare": "Tariflarni solishtirish",
   "plans.loading": "Yuklanmoqda…",
   "common.showAll": "Barchasini ko'rsatish",
-};
+});
 
 export const esc = (s: unknown): string =>
   String(s ?? "").replace(

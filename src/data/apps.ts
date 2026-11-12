@@ -29,6 +29,8 @@ export interface App {
   /** Display order of images by filename fragment (first match wins).
    *  Matched with a "-" boundary, so "unactive" never matches "active". */
   order?: string[];
+  /** Screenshots kept in the folder but not shown (repeats, near-identical menus). */
+  exclude?: string[];
 }
 
 export const apps: App[] = [
@@ -53,6 +55,18 @@ export const apps: App[] = [
       "more",
       "lock",
       "screen",
+    ],
+    // The order screen is the hero (PosHero, from the live app); one shot per other screen.
+    exclude: [
+      "pos-main-view",
+      "Screen Shot 2026-10-08 at 7.14.52 PM",
+      "Screen Shot 2026-10-08 at 7.15.10 PM",
+      "pos-delivery-man-informations",
+      "pos-more-settings-appearance",
+      "pos-more-business-day-register",
+      "pos-notifications-requests",
+      "pos-orders-filter",
+      "pos-lock",
     ],
     features: [
       "Oflayn rejim: internet uzilsa ham savdo davom etadi",
@@ -139,15 +153,20 @@ export const apps: App[] = [
     tur: "Boshqaruv",
     devices: "Web · iOS · Android",
     desc: "Daromad, xarajatlar, marja, ombor qoldig'i va bir nechta filial bo'yicha real vaqt rejimidagi chuqur tahlil.",
-    order: [
-      "main",
-      "orders",
-      "catalog",
-      "inventory",
-      "reports",
-      "administration",
-      "account",
-      "website",
+    // Real Dash screenshots (a client's account, restaurant name shown as "Bonet",
+    // staff and customer names replaced). The home screen is the hero (DashHero).
+    order: ["orders-list", "order-detail", "reports-summary", "reports-items", "reports-categories", "reports-payments", "reports-session", "reports-staff", "finance-statements", "reports-stock-value", "inventory-movements", "catalog-library", "storefront-site", "access-roles", "floor-editor"],
+    exclude: [
+      "dash-main",
+      "dash-reports",
+      "dash-account",
+      "dash-administration",
+      "dash-catalog",
+      "dash-catalog-menu",
+      "dash-inventory",
+      "dash-orders",
+      "dash-website",
+      "dash-website-settings",
     ],
     features: [
       "Real vaqt rejimidagi foyda va zarar (P&L) paneli",
@@ -165,6 +184,13 @@ export const apps: App[] = [
       "Ish haqi hisoblash: komissiya va yetkazib berish to'lovlari bilan",
       "Chek dizaynini o'zingiz sozlash",
       "Telegram ogohlantirishlari: bekor qilish, tasdiqlash so'rovlari, qoldiq",
+      "Moliyaviy hisobotlar: foyda va zarar, balans va aylanma qaydnoma",
+      "Xodim va kuryerlar topshirgan naqd pulni sanab qabul qilish",
+      "Nima buyurtma qilish kerak: minimal qoldiq qoidalari bo'yicha xarid ro'yxati",
+      "Sarf va farqlar: inventarizatsiyada nima yetishmayotganini ko'ring",
+      "Omborlar orasida tovar ko'chirish",
+      "Xodimlar savdosi: kim qancha sotdi va qancha ishlab topdi",
+      "Hub & Spoke: yangi filiallarni asosiy hisobga ulash",
     ],
     frames: {
       "dash-main": "Boshqaruv paneli: foyda, xarajat va trendlar",
@@ -177,6 +203,21 @@ export const apps: App[] = [
       "dash-account": "Hisob va obuna ma'lumotlari",
       "dash-website": "Veb-sayt quruvchining sahifalari",
       "dash-website-settings": "Veb-sayt sozlamalari va SEO",
+      "dash-orders-list": "Buyurtmalar: holat, kanal va summa bo'yicha",
+      "dash-order-detail": "Buyurtma tafsiloti: stol, kassa, tarkib va to'lovlar",
+      "dash-reports-summary": "Ko'rib chiqish: o'rtacha chek va soatlik daromad",
+      "dash-reports-items": "Mahsulotlar hisoboti: eng yaxshi sotuvchilar",
+      "dash-reports-categories": "Kategoriyalar ulushi daromadda",
+      "dash-reports-payments": "To'lovlar: soatlar va usullar bo'yicha",
+      "dash-reports-session": "Smena: kun ochilgandan beri savdo",
+      "dash-reports-staff": "Xodimlar savdosi va ishlab topilgan haq",
+      "dash-finance-statements": "Moliyaviy hisobotlar: aylanma qaydnoma va balans",
+      "dash-reports-stock-value": "Zaxira qiymati: tannarx va sotuv narxida",
+      "dash-inventory-movements": "Ombor harakatlari: har bir kirim, sotuv va hisobdan chiqarish",
+      "dash-catalog-library": "Mahsulotlar ro'yxati: narxlar va variantlar",
+      "dash-storefront-site": "Onlayn do'kon: sayt sozlamalari va chop etish",
+      "dash-access-roles": "Rollar va huquqlar: kassir, ofitsiant, kuryer, menejer",
+      "dash-floor-editor": "Zal rejasi: bo'limlar va stollar",
     },
     meta: [
       { label: "Tur", value: "Tahlil Paneli" },
@@ -367,6 +408,7 @@ export function imagesFor(slug: string): string[] {
     return readdirSync(join(process.cwd(), "public", "app_images", slug))
       .filter((f) => !f.startsWith("."))
       .filter((f) => f.endsWith(".webp") && !/\.w\d+\.webp$/i.test(f))
+      .filter((f) => !app?.exclude?.includes(f.replace(/\.webp$/i, "")))
       .sort(
         (a, b) =>
           rank(a) - rank(b) ||

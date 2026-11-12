@@ -1,0 +1,230 @@
+---
+/**
+ * One solution page (e.g. /yechimlar/pos-tizim/, /ru/resheniya/pos-sistema/).
+ * Text comes from src/data/solutions.ts (the previous site's copy, per
+ * language); layout follows the app pages: forest hero band with the related
+ * app's screen, problem and feature cards, numbered steps, FAQ, a closing
+ * CTA band and links to the other solutions.
+ *
+ * Built directly in its own language. TopNav/Footer render in Uzbek with
+ * data-i18n keys and are translated by the i18n-static build step, which
+ * leaves this page's own text (no data-i18n) as it is.
+ */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "./TopNav.astro";
+import Footer from "./Footer.astro";
+import PosHero from "./PosHero.astro";
+import DashHero from "./DashHero.astro";
+import { apps, imagesFor, imgDims, imgSrcset } from "../data/apps";
+import { STRINGS } from "../data/i18n";
+import { SOLUTIONS, SOL_LANGS, SOL_CRUMBS, solPath, hubPath, solContent, type Solution, type SolLang } from "../data/solutions";
+
+interface Props {
+  sol: Solution;
+  lang: SolLang;
+}
+const { sol, lang } = Astro.props;
+const c = solContent(sol, lang);
+const app = apps.find((a) => a.slug === sol.app)!;
+const shot = imagesFor(app.slug)[0];
+const dm = shot ? imgDims(shot) : null;
+
+const SITE = "https://octopos.uz";
+const t = (key: string, uz: string) => (lang === "uz" ? uz : STRINGS[key]?.[lang] ?? uz);
+const UI = {
+  uz: { faq: "Savol-javob", more: "Boshqa yechimlar", app: `${app.name} ilovasi`, ctaBody: "Ismingiz va raqamingizni qoldiring, biz qo'ng'iroq qilib hammasini ko'rsatamiz." },
+  ru: { faq: "Вопросы и ответы", more: "Другие решения", app: `Приложение ${app.name}`, ctaBody: "Оставьте имя и номер — мы перезвоним и всё покажем." },
+  en: { faq: "Questions and answers", more: "More solutions", app: `The ${app.name} app`, ctaBody: "Leave your name and number — we'll call you back and show you everything." },
+  ko: { faq: "자주 묻는 질문", more: "다른 솔루션", app: `${app.name} 앱`, ctaBody: "이름과 번호를 남겨 주시면 전화드려 모든 것을 보여드립니다." },
+}[lang];
+const tryFree = t("nav.cta", "Bepul sinab ko'ring");
+const trust = t("hero.trust", "Bank kartasi shart emas · 1–3 kunda ishga tushadi · Internetsiz ishlaydi");
+// (No nested template strings here: the Astro compiler misreads them in frontmatter.)
+const prefix = lang === "uz" ? "" : "/" + lang;
+const homeHref = prefix + "/";
+const appHref = prefix + "/apps/" + app.slug + "/";
+const url = `${SITE}${solPath(sol, lang)}`;
+
+const alternates = [
+  ...SOL_LANGS.map((l) => ({ lang: l, href: `${SITE}${solPath(sol, l)}` })),
+  { lang: "x-default", href: `${SITE}${solPath(sol, "uz")}` },
+];
+const others = SOLUTIONS.filter((s) => s.key !== sol.key);
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${url}#breadcrumb`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SOL_CRUMBS[lang].home, item: `${SITE}${homeHref}` },
+      { "@type": "ListItem", position: 2, name: SOL_CRUMBS[lang].hub, item: `${SITE}${hubPath(lang)}` },
+      { "@type": "ListItem", position: 3, name: c.name, item: url },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${url}#faq`,
+    mainEntity: c.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  },
+];
+---
+
+<Layout title={`${c.title} | Octopos`} description={c.desc} lang={lang} alternates={alternates} jsonLd={jsonLd} ogImage={`/og/app-${sol.app}.png`}>
+  <TopNav />
+  <main>
+    {/* ---------------- hero: forest band, title + lead + CTA, then the app's screen ---------------- */}
+    <section class="on-forest band mt-2">
+      <div class="wrap pt-8 pb-10 lg:pt-12 lg:pb-14">
+        <nav aria-label="Breadcrumb" class="font-geist text-[14px] leading-5 font-medium text-muted">
+          <a href={homeHref} class="rounded transition-colors duration-200 ease-out hover:text-ink">{SOL_CRUMBS[lang].home}</a>
+          <span class="mx-2" aria-hidden="true">/</span>
+          <a href={hubPath(lang)} class="rounded transition-colors duration-200 ease-out hover:text-ink">{SOL_CRUMBS[lang].hub}</a>
+        </nav>
+        <div class="mt-8 lg:mt-10">
+          <div class="max-w-[900px]">
+            <h1 class="display display-1">{c.h1}</h1>
+            <p class="mt-5 max-w-[720px] font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]">{c.lead}</p>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <button type="button" data-plan-trigger="starter" class="btn-solid btn">{tryFree}</button>
+            <a href={appHref} class="btn-outline btn">{UI.app}</a>
+          </div>
+        </div>
+        {/* RestaurantPOS and Dash: the live screens rebuilt in HTML; other apps: their main screenshot. */}
+        {sol.app === "pos-restaurant" && <div class="mt-10 lg:mt-14"><PosHero /></div>}
+        {sol.app === "dash" && <div class="mt-10 lg:mt-14"><DashHero /></div>}
+        {shot && sol.app !== "pos-restaurant" && sol.app !== "dash" && (
+          <div class="mt-10 overflow-hidden rounded-[20px] bg-card lg:mt-14">
+            <img
+              src={shot}
+              alt={`${app.name} — ${c.name}`}
+              class="block h-auto w-full"
+              width={dm?.w}
+              height={dm?.h}
+              srcset={imgSrcset(shot)}
+              sizes="(max-width:1279px) 100vw, 1184px"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+        )}
+      </div>
+    </section>
+
+    {/* ---------------- the problem ---------------- */}
+    <section class="section">
+      <div class="wrap">
+        <h2 class="display display-2 max-w-[760px]">{c.probH}</h2>
+        <ul class="mt-10 grid gap-4 md:grid-cols-3 lg:mt-14">
+          {
+            c.prob.map((p) => (
+              <li class="card flex flex-col p-6 lg:p-8">
+                <h3 class="font-geist text-[20px] leading-[1.3] font-semibold">{p.t}</h3>
+                <p class="mt-3 font-geist text-[16px] leading-[1.6] text-muted">{p.d}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    {/* ---------------- what Octopos does ---------------- */}
+    <section class="section pt-0">
+      <div class="wrap">
+        <h2 class="display display-2 max-w-[760px]">{c.featH}</h2>
+        {c.featP && <p class="mt-5 max-w-[640px] font-geist text-[17px] leading-[1.6] text-muted lg:text-[18px]">{c.featP}</p>}
+        <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:mt-14">
+          {
+            c.feat.map((f, i) => (
+              <li class="card flex flex-col gap-4 p-6 lg:p-8">
+                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-accent font-geist text-[14px] font-semibold text-accent-emphasis tabular-nums">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 class="font-geist text-[20px] leading-[1.3] font-semibold">{f.t}</h3>
+                  <p class="mt-2 font-geist text-[16px] leading-[1.6] text-muted">{f.d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    {/* ---------------- how to start ---------------- */}
+    {c.steps.length > 0 && (
+      <section class="section bg-card">
+        <div class="wrap">
+          <h2 class="display display-2">{c.stepsH}</h2>
+          <ol class="mt-10 grid gap-8 lg:mt-14 lg:grid-cols-3 lg:gap-12">
+            {c.steps.map((s, i) => (
+              <li class="grid grid-cols-[64px_1fr] gap-x-4 border-t border-ink/15 pt-6 lg:block">
+                <span class="display row-span-2 block text-[56px] leading-none text-ink lg:text-[96px]" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                <h3 class="font-geist text-[20px] leading-[1.3] font-semibold lg:mt-5 lg:text-[24px]">{s.t}</h3>
+                <p class="mt-2 max-w-[420px] font-geist text-[16px] leading-[1.6] text-muted lg:mt-3">{s.d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+    )}
+
+    {/* ---------------- FAQ ---------------- */}
+    <section class="section">
+      <div class="wrap grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-20">
+        <h2 class="display display-2">{UI.faq}</h2>
+        <div class="border-t border-ink/15">
+          {
+            c.faq.map((f) => (
+              <details class="group border-b border-ink/15">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 rounded py-5 lg:py-6 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+                  <span class="font-geist text-[18px] leading-[1.4] font-semibold lg:text-[20px]">{f.q}</span>
+                  <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                </summary>
+                <p class="max-w-[640px] pb-6 font-geist text-[16px] leading-[1.6] text-muted lg:pb-7">{f.a}</p>
+              </details>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ---------------- other solutions (internal links) ---------------- */}
+    <section class="section pt-0">
+      <div class="wrap">
+        <h2 class="display display-3">{UI.more}</h2>
+        <ul class="mt-8 flex flex-wrap gap-2.5">
+          {
+            others.map((s) => (
+              <li>
+                <a
+                  href={solPath(s, lang)}
+                  class="flex min-h-[44px] items-center rounded-full border border-hairline px-4 font-geist text-[15px] font-medium transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
+                >
+                  {solContent(s, lang).name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    {/* ---------------- closing CTA (dark band) ---------------- */}
+    <section class="on-forest band-top">
+      <div class="wrap py-16 lg:py-24">
+        <h2 class="display display-2 max-w-[760px]">{c.ctaH}</h2>
+        <p class="mt-5 max-w-[520px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]">{UI.ctaBody}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button type="button" data-plan-trigger="starter" class="btn-solid btn">{tryFree}</button>
+          <a href="tel:+998941500330" class="btn-outline btn">+998 94 150 03 30</a>
+        </div>
+        <p class="mt-6 font-geist text-[14px] leading-[1.5] text-muted">{trust}</p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

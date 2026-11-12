@@ -1,0 +1,71 @@
+---
+/**
+ * Solutions index for one language (/yechimlar/, /ru/resheniya/,
+ * /en/solutions/, /ko/solutions/): every solution as a card linking to it.
+ */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "./TopNav.astro";
+import Footer from "./Footer.astro";
+import { SOLUTIONS, SOL_LANGS, SOL_CRUMBS, solPath, hubPath, solContent, type SolLang } from "../data/solutions";
+
+interface Props {
+  lang: SolLang;
+}
+const { lang } = Astro.props;
+const SITE = "https://octopos.uz";
+const T = {
+  uz: { h1: "Restoran va kafe uchun yechimlar", lead: "Kassa, oshxona, QR-menyu, ombor va hisobotlar: har bir vazifa uchun Octopos nima qilishini ko'ring.", title: "Restoran va kafe uchun yechimlar | Octopos" },
+  ru: { h1: "Решения для ресторанов и кафе", lead: "Касса, кухня, QR-меню, склад и отчёты: посмотрите, что Octopos делает для каждой задачи.", title: "Решения для ресторанов и кафе | Octopos" },
+  en: { h1: "Solutions for restaurants and cafés", lead: "Register, kitchen, QR menu, inventory and reports: see what Octopos does for each job.", title: "Solutions for restaurants and cafés | Octopos" },
+  ko: { h1: "레스토랑과 카페를 위한 솔루션", lead: "계산대, 주방, QR 메뉴, 재고, 리포트까지 — 업무별로 Octopos가 하는 일을 확인하세요.", title: "레스토랑과 카페를 위한 솔루션 | Octopos" },
+}[lang];
+const alternates = [
+  ...SOL_LANGS.map((l) => ({ lang: l, href: `${SITE}${hubPath(l)}` })),
+  { lang: "x-default", href: `${SITE}${hubPath("uz")}` },
+];
+const homeHref = lang === "uz" ? "/" : `/${lang}/`;
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${SITE}${hubPath(lang)}#breadcrumb`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SOL_CRUMBS[lang].home, item: `${SITE}${homeHref}` },
+      { "@type": "ListItem", position: 2, name: SOL_CRUMBS[lang].hub, item: `${SITE}${hubPath(lang)}` },
+    ],
+  },
+];
+---
+
+<Layout title={T.title} description={T.lead} lang={lang} alternates={alternates} jsonLd={jsonLd}>
+  <TopNav />
+  <main>
+    <section class="on-forest band mt-2">
+      <div class="wrap pt-10 pb-12 lg:pt-16 lg:pb-16">
+        <h1 class="display display-1 max-w-[900px]">{T.h1}</h1>
+        <p class="mt-5 max-w-[680px] font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]">{T.lead}</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap">
+        <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            SOLUTIONS.map((s) => (
+              <li class="min-w-0">
+                <a
+                  href={solPath(s, lang)}
+                  class="card group flex h-full flex-col p-6 transition-colors duration-200 ease-out hover:bg-[color-mix(in_oklab,var(--color-card)_88%,white)] focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent lg:p-8"
+                >
+                  <h2 class="font-geist text-[20px] leading-[1.3] font-semibold">{solContent(s, lang).name}</h2>
+                  <p class="mt-2 font-geist text-[16px] leading-[1.6] text-muted">{solContent(s, lang).lead}</p>
+                  <span class="mt-auto pt-5 font-geist text-[15px] font-semibold text-link" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

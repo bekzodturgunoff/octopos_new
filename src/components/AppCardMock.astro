@@ -10,7 +10,7 @@
  *   ods            — pickup board           guest      — table landing (QR)
  *   website        — yeah.uz storefront     dispatch   — coming soon
  */
-import logoLight from "../assets/logo_light.webp";
+import logoDark from "../assets/logo_dark.webp"; // dark artwork: the cards are always light
 
 interface Props {
   slug: string;
@@ -179,7 +179,7 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
       <div class="phone sf">
         <div class="flex items-center justify-between">
           <span class="flex items-center gap-1.5">
-            <img src={logoLight.src} alt="" width="22" height="22" class="h-[22px] w-[22px]" loading="lazy" decoding="async" />
+            <img src={logoDark.src} alt="" width="22" height="22" class="h-[22px] w-[22px]" loading="lazy" decoding="async" />
           </span>
           <span class="flex gap-2.5"><Fragment set:html={svg(I.search)} /><Fragment set:html={svg(I.bag)} /></span>
         </div>

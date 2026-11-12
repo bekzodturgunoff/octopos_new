@@ -2,12 +2,22 @@ import type { AstroIntegration } from "astro";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import {
   PREFIXED_LOCALES,
   STRINGS,
   type Lang,
 } from "../data/i18n";
 import { LEGAL } from "../data/legal";
+import { uzTypeHtml } from "../data/uz-type";
+import { SOLUTIONS, SOL_LANGS, SOL_BASE, solPath, hubPath } from "../data/solutions";
+import { GUIDES, GUIDE_LANGS, GUIDE_BASE, guidePath, guideHubPath } from "../data/guides";
+
+/** Sections whose language versions have their own URLs (built per language). */
+const OWN_URL_BASES: { lang: string; base: string }[] = [
+  ...SOL_LANGS.map((l) => ({ lang: l, base: SOL_BASE[l] })),
+  ...GUIDE_LANGS.map((l) => ({ lang: l, base: GUIDE_BASE[l] })),
+];
 
 const SITE = "https://octopos.uz";
 
@@ -87,6 +97,15 @@ function prefixLinks(html: string, locale: Lang): string {
     /(\bhref=")([^"]+)(")/g,
     (_m, pre: string, url: string, post: string) => {
       if (!url.startsWith("/") || url.startsWith("//")) return `${pre}${url}${post}`;
+      // The solutions and guides hubs have their own URL per language (else English).
+      if (url === `${SOL_BASE.uz}/`) {
+        const l = (SOL_LANGS as readonly string[]).includes(locale) ? (locale as (typeof SOL_LANGS)[number]) : "en";
+        return `${pre}${hubPath(l)}${post}`;
+      }
+      if (url === `${GUIDE_BASE.uz}/`) {
+        const l = (GUIDE_LANGS as readonly string[]).includes(locale) ? (locale as (typeof GUIDE_LANGS)[number]) : "en";
+        return `${pre}${guideHubPath(l)}${post}`;
+      }
       if (LOCALE_SEG.test(url) || ASSET.test(url)) return `${pre}${url}${post}`;
       if (HAS_EXT.test(url.split(/[?#]/)[0])) return `${pre}${url}${post}`;
       return `${pre}/${locale}${url}${post}`;
@@ -103,10 +122,9 @@ function metaFor(pathname: string): { title: string; desc: string; titleSuffix?:
     const page = p.slice(1);
     return { title: `legal.${page}.title`, desc: `legal.${page}.intro`, titleSuffix: true };
   }
-  // App pages: the title is the app name (same in every language); the
-  // description is the app's translated summary.
+  // App pages: the search title (meta.app.*) and the app's translated summary.
   const app = p.match(/^\/apps\/([a-z-]+)$/);
-  if (app) return { title: "", desc: `app.${app[1]}.desc` };
+  if (app) return { title: `meta.app.${app[1]}`, desc: `app.${app[1]}.desc` };
   return null;
 }
 
@@ -133,10 +151,20 @@ function translateLd(html: string, locale: Lang): string {
     (m, open: string, body: string, close: string) => {
       try {
         const node = JSON.parse(body);
+        // Blocks with their own @id carry their page's own text (solution pages).
+        if (node["@id"]) return m;
         if (node["@type"] === "FAQPage" && Array.isArray(node.mainEntity)) {
           node.mainEntity.forEach((q: any, i: number) => {
             q.name = lookup(`faq.${i + 1}q`, locale, q.name);
             if (q.acceptedAnswer) q.acceptedAnswer.text = lookup(`faq.${i + 1}a`, locale, q.acceptedAnswer.text);
+          });
+        } else if (node["@type"] === "BreadcrumbList" && Array.isArray(node.itemListElement)) {
+          // Uzbek crumb names -> their UI string keys; URLs get the locale prefix.
+          const HOME: Record<string, string> = { en: "Home", ru: "Главная", ko: "홈", tr: "Ana sayfa" };
+          node.itemListElement.forEach((it: any) => {
+            if (it.name === "Bosh sahifa") it.name = HOME[locale] ?? it.name;
+            else if (it.name === "Ilovalar") it.name = lookup("nav.apps", locale, it.name);
+            if (typeof it.item === "string") it.item = it.item.replace(`${SITE}/`, `${SITE}/${locale}/`);
           });
         } else if (node["@type"] === "WebSite") {
           node.inLanguage = locale;
@@ -205,6 +233,10 @@ export function translateHtml(
     /(<link rel="canonical" href=")[^"]*(")/,
     `$1${canonical}$2`,
   );
+  // Uzbek pages: official apostrophes (oʻ gʻ, tutuq ʼ) in all visible text.
+  if (locale === "uz") out = uzTypeHtml(out);
+  // The default share card has a version per language.
+  if (locale !== "uz") out = out.replaceAll("/og/home-uz.png", `/og/home-${locale}.png`);
   // Share links point at the page in this language, not the Uzbek one.
   out = out.replace(/(<meta property="og:url" content=")[^"]*(")/, `$1${canonical}$2`);
   if (!out.includes('property="og:locale"')) {
@@ -217,6 +249,17 @@ export function translateHtml(
     out = out.replace(/<\/head>/, `${alternates(pathname)}</head>`);
   }
   return out;
+}
+
+/** Solution pages have their own slug per language (and no Turkish), so
+ * their sitemap groups are listed explicitly: each group is one page in
+ * uz/ru/en/ko. */
+function solutionGroups(): [string, string][][] {
+  const groups: [string, string][][] = SOLUTIONS.map((sol) => SOL_LANGS.map((l) => [l, solPath(sol, l)]));
+  groups.push(SOL_LANGS.map((l) => [l, hubPath(l)]));
+  for (const g of GUIDES) groups.push(GUIDE_LANGS.map((l) => [l, guidePath(g, l)]));
+  groups.push(GUIDE_LANGS.map((l) => [l, guideHubPath(l)]));
+  return groups;
 }
 
 /** Write `sitemap-0.xml` / `sitemap-index.xml` with hreflang alternates.
@@ -238,12 +281,24 @@ async function writeSitemap(root: string, bases: string[]): Promise<void> {
     })
     .join("");
 
+  const solUrls = solutionGroups()
+    .map((pairs) => {
+      const links =
+        pairs.map(([l, p]) => `<xhtml:link rel="alternate" hreflang="${l}" href="${SITE}${p}" />`).join("") +
+        `<xhtml:link rel="alternate" hreflang="x-default" href="${SITE}${pairs[0][1]}" />`;
+      return pairs.map(([, p]) => `<url><loc>${SITE}${p}</loc>${links}</url>`).join("");
+    })
+    .join("");
+
   const urlset =
     `<?xml version="1.0" encoding="UTF-8"?>` +
-    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls}</urlset>`;
+    `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${urls}${solUrls}</urlset>`;
   const index =
     `<?xml version="1.0" encoding="UTF-8"?>` +
-    `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>${SITE}/sitemap-0.xml</loc></sitemap></sitemapindex>`;
+    `<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>${SITE}/sitemap-0.xml</loc></sitemap>` +
+    // Temporary list of old URLs that now redirect (public/sitemap-legacy.xml), while the move settles.
+    (existsSync(join(root, "sitemap-legacy.xml")) ? `<sitemap><loc>${SITE}/sitemap-legacy.xml</loc></sitemap>` : "") +
+    `</sitemapindex>`;
 
   await writeFile(join(root, "sitemap-0.xml"), urlset);
   await writeFile(join(root, "sitemap-index.xml"), index);
@@ -338,6 +393,12 @@ export default function i18nStatic(): AstroIntegration {
           } catch {
             return;
           }
+          // Uzbek solution pages: their other languages are separate pages
+          // with their own slugs (see below), so no copies and no standard set.
+          if (pathname.startsWith(`${SOL_BASE.uz}/`) || pathname.startsWith(`${GUIDE_BASE.uz}/`)) {
+            await writeFile(src, translateHtml(html, "uz", pathname));
+            return;
+          }
           if (!/<meta name="robots" content="noindex/.test(html)) bases.push(pathname);
           await writeFile(src, translateHtml(html, "uz", pathname));
 
@@ -361,6 +422,20 @@ export default function i18nStatic(): AstroIntegration {
           )
             continue;
           await walk(`/${rel}`);
+        }
+
+        // ru/en/ko solution pages are built in their language; only the shared
+        // chrome (nav, footer: data-i18n) and links need translating.
+        for (const f of entries) {
+          const rel = `/${String(f)}`;
+          if (!rel.endsWith("/index.html")) continue;
+          const own = OWN_URL_BASES.find((o) => o.lang !== "uz" && rel.startsWith(`${o.base}/`));
+          if (!own) continue;
+          const locale = own.lang as Lang;
+          const file = join(root, String(f));
+          const html = await readFile(file, "utf8");
+          const pathname = rel.slice(`/${locale}`.length, -"index.html".length);
+          await writeFile(file, translateHtml(html, locale, pathname));
         }
 
         await writeSitemap(root, bases.sort());
