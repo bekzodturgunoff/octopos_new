@@ -610,6 +610,26 @@
       "source": "/uz",
       "destination": "/",
       "statusCode": 301
+    },
+    {
+      "source": "/uz/privacy/",
+      "destination": "/privacy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/privacy",
+      "destination": "/privacy/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/terms/",
+      "destination": "/terms/",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/terms",
+      "destination": "/terms/",
+      "statusCode": 301
     }
   ]
 }

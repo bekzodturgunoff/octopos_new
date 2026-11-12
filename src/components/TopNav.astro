@@ -80,7 +80,8 @@ const links = [
           aria-label="Language"
           data-i18n-attr="aria-label:nav.lang"
           aria-haspopup="true"
-          class="flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-hairline px-4 font-geist text-[14px] leading-5 font-semibold text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
+          aria-expanded="false"
+          class="flex h-11 items-center gap-1.5 rounded-full border border-hairline px-4 font-geist text-[14px] leading-5 font-semibold lg:h-10 text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           <span data-lang-code>UZ</span>
           <svg
@@ -95,19 +96,19 @@ const links = [
         </button>
         <div
           data-lang-menu
-          class="absolute top-[calc(100%+8px)] right-0 hidden w-[170px] overflow-hidden rounded-2xl border border-hairline bg-page py-1 shadow-lg"
+          class="absolute top-[calc(100%+8px)] right-0 hidden w-[200px] overflow-hidden rounded-2xl border border-hairline bg-page p-1.5 shadow-lg"
         >
           {
             LANGS.map((l) => (
               <button
                 type="button"
                 data-set-lang={l.code}
-                class="flex min-h-[44px] w-full items-center justify-between gap-3 px-4 py-3 font-geist text-[12px] text-ink transition-colors duration-200 hover:bg-card focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
+                lang={l.code}
+                class="group flex min-h-[44px] w-full items-center justify-between gap-3 rounded-xl px-3 font-geist text-[15px] leading-5 font-medium text-ink transition-colors duration-200 hover:bg-card focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent aria-[current=true]:bg-card aria-[current=true]:font-semibold"
               >
                 <span>{l.native}</span>
-                <span class="font-geist-mono text-[10px] tracking-[0.72px] text-muted">
-                  {l.code}
-                </span>
+                {/* Tick on the current language (aria-current set by the script below). */}
+                <svg class="hidden h-4 w-4 text-link group-aria-[current=true]:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
               </button>
             ))
           }
@@ -119,7 +120,7 @@ const links = [
         type="button"
         data-theme-cycle
         aria-label="Toggle theme"
-        class="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-full border border-hairline text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex"
+        class="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-full border border-hairline lg:h-10 lg:w-10 text-ink transition-colors duration-200 ease-out hover:border-ink/50 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent sm:flex"
       >
         <span
           data-icon="light"
@@ -322,10 +323,7 @@ const links = [
   const syncLangUI = (l: Lang) => {
     if (codeEl) codeEl.textContent = l.toUpperCase();
     document.querySelectorAll<HTMLElement>("[data-set-lang]").forEach((b) => {
-      b.classList.toggle(
-        "text-link",
-        b.getAttribute("data-set-lang") === l,
-      );
+      b.setAttribute("aria-current", String(b.getAttribute("data-set-lang") === l));
     });
   };
 
@@ -333,11 +331,15 @@ const links = [
   applyLang(initial);
   syncLangUI(initial);
 
-  const closeMenu = () => menu?.classList.add("hidden");
+  const closeMenu = () => {
+    menu?.classList.add("hidden");
+    toggle?.setAttribute("aria-expanded", "false");
+  };
 
   toggle?.addEventListener("click", (e) => {
     e.stopPropagation();
-    menu?.classList.toggle("hidden");
+    const open = menu?.classList.toggle("hidden") === false;
+    toggle.setAttribute("aria-expanded", String(open));
   });
   document.addEventListener("click", (e) => {
     if (menu && !menu.contains(e.target as Node)) closeMenu();

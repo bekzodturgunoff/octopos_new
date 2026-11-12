@@ -280,8 +280,8 @@ const faqLd = {
         <div class="grid items-end gap-8 lg:grid-cols-[1fr_auto]">
           <div class="max-w-[820px]">
             <h1 class="display display-1">
-              <span data-i18n="hero.t1">Eng yaxshisini ishlating,</span>
-              <span class="text-link" data-i18n="hero.t2">boshliq!</span>
+              <span data-i18n="hero.t1">{uzApos("Har bir so'mingiz")}</span>
+              <span class="text-link" data-i18n="hero.t2">nazoratda.</span>
             </h1>
             <p class="mt-5 max-w-[640px] font-geist text-[17px] leading-[1.6] text-ink/90 lg:text-[20px]" data-i18n="hero.body">
               Kassa, oshxona ekrani, QR-menyu, onlayn do'kon va yetkazib berish
@@ -378,8 +378,8 @@ const faqLd = {
                   ))}
                 </ul>
                 </div>
-                {/* The full receipt is ~1000px tall: show its top in a window that fades out. */}
-                <div class="receipt-window min-w-0 h-[380px] overflow-hidden lg:h-[520px]"><Receipt /></div>
+                {/* The full receipt is ~1000px tall: it scrolls through this fixed window (see .receipt-window). */}
+                <div class="receipt-window min-w-0 h-[380px] overflow-hidden lg:h-[520px]" data-receipt-window><Receipt /></div>
               </div>
             </div>
           </article>
@@ -595,7 +595,7 @@ const faqLd = {
           Payme va Click integratsiyasi tayyor — bir marta ulang va barcha
           ilovalarda to'lovlarni qabul qiling.
         </p>
-        {/* Monochrome until hovered (pointer devices); always colour on touch. */}
+        {/* Brand logos in their own colours. */}
         <ul class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {
             payLogos.map((l) => {
@@ -1099,6 +1099,20 @@ const faqLd = {
   {/* ---------------- footer ---------------- */}
   <Footer mobileBar />
 
+  <script>
+    // Receipt window: how far the receipt must travel to show its bottom, and
+    // run the scroll only while the window is on screen.
+    {
+      const win = document.querySelector<HTMLElement>("[data-receipt-window]");
+      const fig = win?.querySelector<HTMLElement>("figure");
+      if (win && fig) {
+        const measure = () => win.style.setProperty("--travel", `${Math.max(0, fig.offsetHeight - win.clientHeight)}px`);
+        measure();
+        new ResizeObserver(measure).observe(fig);
+        new IntersectionObserver(([e]) => win.toggleAttribute("data-playing", e.isIntersecting), { threshold: 0.35 }).observe(win);
+      }
+    }
+  </script>
   <script>
     // Mobile call bar: show after the hero, hide while the form is on screen.
     (() => {

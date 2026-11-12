@@ -32,10 +32,14 @@ const contacts = [
 ];
 const pay = [
   { src: "/payments/payme.webp", alt: "Payme", w: 56 },
-  { src: "/payments/click.webp", alt: "Click", w: 71 },
+  // The footer is always the dark band: Click's white-lettered artwork.
+  { src: "/payments/click-dark.svg", alt: "Click", w: 70 },
   { src: "/payments/dodo-payments.webp", alt: "Dodo Payments", w: 45 },
 ];
-const legal: { href: string; key: string; uz: string }[] = [];
+const legal: { href: string; key: string; uz: string }[] = [
+  { href: "/privacy", key: "legal.privacy.title", uz: "Maxfiylik siyosati" },
+  { href: "/terms", key: "legal.terms.title", uz: "Foydalanish shartlari" },
+];
 const social: { href: string; label: string }[] = [];
 
 const head = "font-geist text-[14px] font-semibold text-muted";
@@ -87,11 +91,9 @@ const link =
     <div class="mt-14 flex flex-col gap-6 border-t border-hairline pt-8 lg:mt-20 lg:flex-row lg:items-center lg:justify-between">
       <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
         <span class="font-geist text-[14px] text-muted" data-i18n="ft.payments">To'lov usullari</span>
-        {/* brand marks keep their own colours, on light chips */}
+        {/* Brand marks in their own colours, straight on the dark band. */}
         {pay.map((l) => (
-          <span class="flex h-9 items-center rounded-full bg-[#f8faf0] px-4">
-            <img src={l.src} alt={l.alt} class="h-[18px] w-auto" width={l.w} height="18" loading="lazy" />
-          </span>
+          <img src={l.src} alt={l.alt} class="h-[22px] w-auto" width={Math.round((l.w * 22) / 18)} height="22" loading="lazy" decoding="async" />
         ))}
       </div>
 

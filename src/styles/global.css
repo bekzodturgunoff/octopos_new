@@ -27,36 +27,9 @@
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
-/* Display face: Oswald 700 (Anton has no Cyrillic, so /ru would fall back).
- * Three subsets, ~31KB total; the browser only fetches what a page uses. */
-@font-face {
-  font-family: "Oswald";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/Oswald-700-latin.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "Oswald";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/Oswald-700-latin-ext.woff2") format("woff2");
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: "Oswald";
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url("/fonts/Oswald-700-cyrillic.woff2") format("woff2");
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-
 @theme {
-  /* Body/UI: Inter (same as the Octopos apps). Display: Oswald, see .display. */
-  --font-display: "Oswald", "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* One family everywhere: Inter (same as the Octopos apps), bold and tight for display. */
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-anton: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-geist: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -157,21 +130,26 @@
 .display {
   font-family: var(--font-display);
   font-weight: 700;
-  /* Sentence case: first letter capital, the rest lower. Never all caps. */
-  line-height: 1.04;
-  letter-spacing: -0.005em;
+  /* Sentence case: first letter capital, the rest lower. Never all caps.
+   * Inter is wide, so display sizes are smaller than a condensed face needs
+   * and the tracking is pulled in, as large Inter is meant to be set. */
+  line-height: 1.05;
+  letter-spacing: -0.035em;
   text-wrap: balance;
 }
 .display-1 {
-  /* 375 → 48px, 768 → 72px, 1440 → 112px */
-  font-size: clamp(46px, 6vw + 26px, 112px);
+  /* 375 → 40px, 768 → 55px, 1440 → 84px */
+  font-size: clamp(40px, 4.5vw + 20px, 84px);
 }
 .display-2 {
-  font-size: clamp(40px, 5.5vw, 72px);
+  /* 375 → 32px, 1440 → 60px */
+  font-size: clamp(32px, 3.6vw + 14px, 60px);
+  line-height: 1.08;
 }
 .display-3 {
-  font-size: clamp(30px, 3.7vw, 52px);
-  line-height: 1.08;
+  font-size: clamp(26px, 2.6vw + 8px, 44px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 /* Hangul has no case and no condensed cut: heavy system/Noto face, roomier leading. */
 :lang(ko) .display {
@@ -322,19 +300,6 @@
   --color-link: oklch(85.7% 0.17 134.56);
   --color-on-ink: oklch(19.09% 0.009 137.85);
   --color-card: oklch(32% 0.009 137.85);
-}
-
-/* Integration logos: monochrome until hovered, on devices that can hover. */
-@media (hover: hover) {
-  .int-logo img {
-    filter: grayscale(1);
-    opacity: 0.7;
-    transition: filter 0.2s ease-out, opacity 0.2s ease-out;
-  }
-  .int-logo:hover img {
-    filter: none;
-    opacity: 1;
-  }
 }
 
 /* Brand logos are drawn for light grounds (Click and Yandex Go have dark
@@ -695,11 +660,46 @@
   }
 }
 
-/* Receipt shown in a fixed window on the homepage, fading at the bottom edge. */
+/* Receipt shown in a fixed window on the homepage. The whole receipt is
+ * ~1000px tall, so it scrolls slowly through the window (down, pause, back
+ * up) instead of the section growing to fit it. --travel is set by script
+ * from the real heights; edges fade so the cut never looks hard. */
 .receipt-window figure > div {
   filter: none !important; /* the drop shadow would be clipped into a grey band */
 }
 .receipt-window {
-  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
-  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 88%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 6%, #000 88%, transparent);
+}
+.receipt-window figure {
+  animation: receipt-read 16s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  animation-play-state: paused;
+}
+.receipt-window[data-playing] figure {
+  animation-play-state: running;
+}
+.receipt-window:hover figure {
+  animation-play-state: paused;
+}
+@keyframes receipt-read {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+  50%,
+  62% {
+    transform: translateY(calc(var(--travel, 0px) * -1));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+/* Reduced motion: no movement; the window scrolls by hand instead. */
+@media (prefers-reduced-motion: reduce) {
+  .receipt-window {
+    overflow-y: auto !important;
+  }
+  .receipt-window figure {
+    animation: none;
+  }
 }

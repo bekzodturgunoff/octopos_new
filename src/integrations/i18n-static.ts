@@ -7,6 +7,7 @@ import {
   STRINGS,
   type Lang,
 } from "../data/i18n";
+import { LEGAL } from "../data/legal";
 
 const SITE = "https://octopos.uz";
 
@@ -31,7 +32,7 @@ const escapeHtml = (s: string): string =>
   );
 
 const lookup = (key: string, locale: Lang, base: string): string =>
-  locale === "uz" ? base : (STRINGS[key]?.[locale] ?? base);
+  locale === "uz" ? base : ((STRINGS[key] ?? LEGAL[key])?.[locale] ?? base);
 
 /** Substitute `{n}` / `{name}` using the element's data attributes. */
 function placeholders(s: string, attrs: string): string {
@@ -93,11 +94,15 @@ function prefixLinks(html: string, locale: Lang): string {
   );
 }
 
-function metaFor(pathname: string): { title: string; desc: string } | null {
+function metaFor(pathname: string): { title: string; desc: string; titleSuffix?: boolean } | null {
   const p = pathname.replace(/\/+$/, "") || "/";
   if (p === "/") return { title: "meta.home.title", desc: "meta.home.desc" };
   if (p === "/apps") return { title: "meta.apps.title", desc: "meta.apps.desc" };
   if (p === "/404") return { title: "nf.title", desc: "nf.body" };
+  if (p === "/privacy" || p === "/terms") {
+    const page = p.slice(1);
+    return { title: `legal.${page}.title`, desc: `legal.${page}.intro`, titleSuffix: true };
+  }
   // App pages: the title is the app name (same in every language); the
   // description is the app's translated summary.
   const app = p.match(/^\/apps\/([a-z-]+)$/);
@@ -163,8 +168,10 @@ export function translateHtml(
 
     const meta = metaFor(pathname);
     if (meta) {
-      const title = lookup(meta.title, locale, "");
-      const desc = lookup(meta.desc, locale, "");
+      const rawTitle = lookup(meta.title, locale, "");
+      const title = rawTitle && meta.titleSuffix ? `${rawTitle} — Octopos` : rawTitle;
+      // Long body text (legal intro) is cut to a snippet-sized description.
+      const desc = lookup(meta.desc, locale, "").slice(0, 155);
       if (title) {
         out = out.replace(/<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`);
         out = out.replace(
