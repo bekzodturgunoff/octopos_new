@@ -407,8 +407,8 @@ const faqLd = {
                     {pr.body}
                   </p>
                 </div>
-                {/* Full mock, never cropped. */}
-                <div class="mx-auto mt-8 w-full max-w-[460px] pb-6 lg:pb-10"><Mock kind={pr.mock!} /></div>
+                {/* Full mock, never cropped, centred in an equal-height panel. */}
+                <div class="mt-8 flex flex-1 items-center justify-center pb-6 lg:min-h-[440px] lg:pb-10"><div class="w-full max-w-[460px]"><Mock kind={pr.mock!} /></div></div>
               </li>
             ))
           }

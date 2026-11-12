@@ -215,8 +215,12 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
 </div>
 
 <style>
+  /* One height for every card; the screen is centred, never cropped. */
   .acm {
-    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 272px;
     overflow: hidden;
     border-radius: 16px;
     font-family: var(--font-sans);
@@ -538,9 +542,10 @@ const svg = (d: string) => `<svg viewBox="0 0 24 24">${d}</svg>`;
 
   /* phone-shaped crops (guest, store) */
   .phone {
+    width: 100%;
     margin: 0 auto;
     max-width: 236px;
-    padding: 16px 14px;
+    padding: 10px 14px;
   }
   .rb {
     position: relative;

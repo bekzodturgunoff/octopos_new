@@ -29,7 +29,6 @@ const stockTiles = [
 const stockRows = [
   { k: "r1", t: "Zaxira holati", d: "Mahsulotlar va ingrediyentlar zaxirasini ko'rish" },
   { k: "r2", t: "Inventarizatsiyalar", d: "Tovarni sanang va farqlarni ko'ring" },
-  { k: "r3", t: "Nima buyurtma qilish kerak", d: "Nima va kimdan sotib olish" },
 ];
 const shiftSales = [
   { k: "gross", l: "Yalpi savdo", v: "9 005 600" },
@@ -39,8 +38,6 @@ const shiftSales = [
 ];
 const shiftVoids = [
   { k: "void", l: "Bekor qilingan (5)", v: "185 000" },
-  { k: "mistake", l: "Kiritish xatosi (3)", v: "111 000" },
-  { k: "changed", l: "Mijoz fikrini o'zgartirdi (2)", v: "74 000" },
 ];
 const chevron = "M9 6l6 6-6 6";
 
@@ -57,10 +54,6 @@ const I = {
   moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
 };
 
-const storeDishes = [
-  { src: "/mock/store/dish1.webp", p: "25 000", n: "Tar-tar non" },
-  { src: "/mock/store/dish2.webp", p: "42 000", n: "Koreyscha tovuq" },
-];
 const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
 ---
 
@@ -176,7 +169,7 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
 
             {/* Banner: the shop's own photo and copy (shop content, not translated). */}
             <div class="relative mt-3 overflow-hidden rounded-[10px]">
-              <img src="/mock/store/banner.webp" alt="" width="560" height="380" class="block aspect-[1.47] w-full object-cover" loading="lazy" decoding="async" />
+              <img src="/mock/store/banner.webp" alt="" width="560" height="380" class="block aspect-[2.1] w-full object-cover" loading="lazy" decoding="async" />
               <div class="absolute inset-0 flex flex-col justify-center bg-gradient-to-r from-black/55 to-transparent p-3.5 text-white">
                 <p class="text-[16px] leading-[1.15] font-bold tracking-[-0.3px]" data-i18n="mock.bannerT">Bir dona kamlik qiladi</p>
                 <p class="mt-1 max-w-[190px] text-[9.5px] leading-[13px] opacity-85" data-i18n="mock.bannerD">Mazali rollardan birini tanlash qiyinmi? Unda bir nechtasini sinab ko'ring.</p>
@@ -187,7 +180,7 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
               <span class="sf-dot h-1 w-4 rounded-full" /><span class="sf-dot-off h-1 w-1 rounded-full" /><span class="sf-dot-off h-1 w-1 rounded-full" />
             </div>
 
-            <ul class="mt-4 grid grid-cols-2 gap-x-3 gap-y-3 text-[11px]">
+            <ul class="mt-4 grid grid-cols-3 gap-x-2 pb-5 text-[10.5px]">
               <li class="flex gap-2">
                 <svg class="sf-accent mt-0.5 h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" set:html={I.truck} />
                 <span><b class="block font-semibold" data-i18n="mock.delivery">Yetkazib berish</b><span class="sf-muted" data-i18n="mock.toDoor">Eshigingizgacha</span></span>
@@ -202,16 +195,7 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
               </li>
             </ul>
 
-            <p class="mt-4 text-[14px] font-semibold">Sushi</p>
-            <ul class="mt-2 grid grid-cols-2 gap-2.5 pb-3">
-              {storeDishes.map((d) => (
-                <li>
-                  <img src={d.src} alt="" width="270" height="268" class="block aspect-square w-full rounded-[10px] object-cover" loading="lazy" decoding="async" />
-                  <p class="mt-1.5 text-[12px] font-bold tabular-nums">{d.p}</p>
-                  <p class="text-[11px]">{d.n}</p>
-                </li>
-              ))}
-            </ul>
+            
           </div>
           <nav class="sf-tabs">
             {storeTabs.map((icon, i) => (
