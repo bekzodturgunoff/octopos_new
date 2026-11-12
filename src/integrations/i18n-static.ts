@@ -88,6 +88,7 @@ function metaFor(pathname: string): { title: string; desc: string } | null {
   const p = pathname.replace(/\/+$/, "") || "/";
   if (p === "/") return { title: "meta.home.title", desc: "meta.home.desc" };
   if (p === "/apps") return { title: "meta.apps.title", desc: "meta.apps.desc" };
+  if (p === "/404") return { title: "nf.title", desc: "nf.body" };
   return null;
 }
 
@@ -107,6 +108,31 @@ function alternates(pathname: string): string {
   return out.join("");
 }
 
+/** Structured data follows the page language (FAQ text, inLanguage). */
+function translateLd(html: string, locale: Lang): string {
+  return html.replace(
+    /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g,
+    (m, open: string, body: string, close: string) => {
+      try {
+        const node = JSON.parse(body);
+        if (node["@type"] === "FAQPage" && Array.isArray(node.mainEntity)) {
+          node.mainEntity.forEach((q: any, i: number) => {
+            q.name = lookup(`faq.${i + 1}q`, locale, q.name);
+            if (q.acceptedAnswer) q.acceptedAnswer.text = lookup(`faq.${i + 1}a`, locale, q.acceptedAnswer.text);
+          });
+        } else if (node["@type"] === "WebSite") {
+          node.inLanguage = locale;
+        } else {
+          return m;
+        }
+        return `${open}${JSON.stringify(node).replace(/<\//g, "<\\/")}${close}`;
+      } catch {
+        return m;
+      }
+    },
+  );
+}
+
 export function translateHtml(
   html: string,
   locale: Lang,
@@ -120,6 +146,7 @@ export function translateHtml(
     out = translateText(out, locale);
     out = translateAttrs(out, locale);
     out = prefixLinks(out, locale);
+    out = translateLd(out, locale);
 
     const meta = metaFor(pathname);
     if (meta) {

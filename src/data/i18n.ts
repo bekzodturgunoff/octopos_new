@@ -339,6 +339,10 @@ export const STRINGS: Record<string, Dict> = {
   "plans.plus": { en: "Everything in {name}, plus:", ru: "Всё из {name}, плюс:", ko: "{name}의 모든 기능, 그리고:", tr: "{name} planındaki her şey, ayrıca:" },
   "plans.feature": { en: "Feature", ru: "Возможность", ko: "기능", tr: "Özellik" },
   "plans.compare": { en: "Compare plans", ru: "Сравнить тарифы", ko: "요금제 비교", tr: "Planları karşılaştır" },
+  "nf.title": { en: "Page not found", ru: "Страница не найдена", ko: "페이지를 찾을 수 없습니다", tr: "Sayfa bulunamadı" },
+  "nf.body": { en: "There is no page at this address, or it has moved. Continue from the home page.", ru: "По этому адресу страницы нет или она была перенесена. Продолжите с главной.", ko: "이 주소에는 페이지가 없거나 이동되었습니다. 홈에서 계속하세요.", tr: "Bu adreste sayfa yok ya da taşındı. Ana sayfadan devam edin." },
+  "nf.home": { en: "Home page", ru: "На главную", ko: "홈으로", tr: "Ana sayfa" },
+  "ft.agent": { en: "Octopos Agent", ru: "Octopos Agent", ko: "Octopos Agent", tr: "Octopos Agent" },
   "nav.cta": {
     en: "Try it free",
     ru: "Попробовать бесплатно",
@@ -2466,7 +2470,6 @@ export const STRINGS: Record<string, Dict> = {
   /* ---------- meta values (after claim cleanup) ---------- */
   "v.Payme · Click": { en: "Payme · Click", ru: "Payme · Click", ko: "Payme · Click", tr: "Payme · Click" },
   "v.Telegram": { en: "Telegram", ru: "Telegram", ko: "Telegram", tr: "Telegram" },
-  "v.Excel · API": { en: "Excel · API", ru: "Excel · API", ko: "Excel · API", tr: "Excel · API" },
   "v.RestaurantPOS · Order": { en: "RestaurantPOS · Order", ru: "RestaurantPOS · Order", ko: "RestaurantPOS · Order", tr: "RestaurantPOS · Order" },
   "v.RestaurantPOS · Payme": { en: "RestaurantPOS · Payme", ru: "RestaurantPOS · Payme", ko: "RestaurantPOS · Payme", tr: "RestaurantPOS · Payme" },
   "v.Telegram · Maps API": { en: "Telegram · Maps API", ru: "Telegram · Maps API", ko: "Telegram · Maps API", tr: "Telegram · Maps API" },

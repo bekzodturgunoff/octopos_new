@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TopNav from "../components/TopNav.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<Layout title="Sahifa topilmadi — Octopos" noindex>
+  <TopNav overHero />
+  <main class="on-forest">
+    <div class="wrap flex min-h-[70vh] flex-col justify-center py-20">
+      <p class="display text-[clamp(96px,22vw,240px)] leading-none text-link" aria-hidden="true">404</p>
+      <h1 class="display display-2 mt-4" data-i18n="nf.title">Sahifa topilmadi</h1>
+      <p class="mt-5 max-w-[520px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="nf.body">
+        Bu manzilda sahifa yoʻq yoki u koʻchirilgan. Bosh sahifadan davom eting.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="/" class="btn-solid btn"><span data-i18n="nf.home">Bosh sahifa</span></a>
+        <a href="/apps" class="btn-outline btn"><span data-i18n="nav.apps">Ilovalar</span></a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

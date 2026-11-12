@@ -17,11 +17,23 @@ import { fetchPlans, renderPlanCards, renderPlanTable, UZ_PLAN_STRINGS } from ".
  * back to the client-side fetch as before. */
 let ssrPlansHtml = "";
 let ssrTableHtml = "";
+let ssrOffers: Record<string, unknown>[] = [];
 try {
   const plans = await fetchPlans("uz", AbortSignal.timeout(8000));
   const uzL = (k: string) => UZ_PLAN_STRINGS[k] ?? "";
   ssrPlansHtml = renderPlanCards(plans, "uz", "monthly", uzL);
   ssrTableHtml = renderPlanTable(plans, uzL);
+  // Offers for the SoftwareApplication structured data (monthly USD prices).
+  ssrOffers = plans.map((p: any) => {
+    const m = (p.prices ?? []).find((x: any) => x.billingCycle === "monthly");
+    return {
+      "@type": "Offer",
+      name: p.name,
+      price: String(m?.value?.majorAmount ?? 0),
+      priceCurrency: "USD",
+      url: "https://octopos.uz/#plans",
+    };
+  });
 } catch (err) {
   console.warn("[plans] build-time fetch failed, falling back to client:", err);
 }
@@ -52,6 +64,18 @@ const homeLd = [
     name: "Octopos",
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.ico`,
+    email: "support@octopos.uz",
+    telephone: "+998941500330",
+    sameAs: ["https://t.me/octopos_support"],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Octopos",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web, Android, Windows",
+    url: SITE_URL,
+    ...(ssrOffers.length ? { offers: ssrOffers } : {}),
   },
   {
     "@context": "https://schema.org",
@@ -597,88 +621,24 @@ const faqLd = {
     {/* ---------------- integrations ---------------- */}
     <section class="section">
       <div class="wrap">
-        <h2
-          class="display display-2"
-          data-i18n="int.heading"
-        >
-          Toʻlov tizimlari va xizmatlar bilan integratsiya
-        </h2>
-
-        {/* Mobile: 4 key integrations + expander for the rest. */}
-        <div class="mt-8 grid grid-cols-2 gap-3 sm:hidden">
-          {
-            payLogos.slice(0, 4).map((l) => {
-              const dm = imgDims(l.src);
-              return (
-                <div class="flex h-[72px] items-center justify-center rounded-2xl border border-hairline bg-card/40 px-5">
-                  <img
-                    src={l.src}
-                    alt={l.alt}
-                    class="max-h-[28px] max-w-full object-contain"
-                    width={dm?.w}
-                    height={dm?.h}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              );
-            })
-          }
-        </div>
-        <details class="group mt-3 sm:hidden">
-          <summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">
-            <span data-i18n="common.showAll">Barchasini ko'rsatish</span>
-          </summary>
-          <div class="mt-3 grid grid-cols-2 gap-3">
-            {
-              payLogos.slice(4).map((l) => {
-                const dm = imgDims(l.src);
-                return (
-                  <div class="flex h-[72px] items-center justify-center rounded-2xl border border-hairline bg-card/40 px-5">
-                    <img
-                      src={l.src}
-                      alt={l.alt}
-                      class="max-h-[28px] max-w-full object-contain"
-                      width={dm?.w}
-                      height={dm?.h}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                );
-              })
-            }
-          </div>
-        </details>
-
-        <div class="mt-10 hidden grid-cols-3 gap-4 sm:grid lg:grid-cols-6">
+        <h2 class="display display-2 max-w-[820px]" data-i18n="int.heading">Toʻlov tizimlari va xizmatlar bilan integratsiya</h2>
+        <p class="mt-5 max-w-[620px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="int.note">
+          Payme va Click integratsiyasi tayyor — bir marta ulang va barcha
+          ilovalarda to'lovlarni qabul qiling.
+        </p>
+        {/* Monochrome until hovered (pointer devices); always colour on touch. */}
+        <ul class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {
             payLogos.map((l) => {
               const dm = imgDims(l.src);
               return (
-                <div class="flex h-[86px] items-center justify-center rounded-2xl border border-hairline bg-card/40 px-5">
-                  <img
-                    src={l.src}
-                    alt={l.alt}
-                    class="max-h-[30px] max-w-full object-contain"
-                    width={dm?.w}
-                    height={dm?.h}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
+                <li class="int-logo card flex h-[88px] items-center justify-center px-5">
+                  <img src={l.src} alt={l.alt} class="max-h-[30px] max-w-full object-contain" width={dm?.w} height={dm?.h} loading="lazy" decoding="async" />
+                </li>
               );
             })
           }
-        </div>
-
-        <p
-          class="mt-6 max-w-[720px] font-geist text-[20px] leading-[30px] text-muted"
-          data-i18n="int.note"
-        >
-          Payme va Click integratsiyasi tayyor — bir marta ulang va barcha
-          ilovalarda to'lovlarni qabul qiling.
-        </p>
+        </ul>
       </div>
     </section>
 
@@ -737,17 +697,17 @@ const faqLd = {
         </noscript>
 
         <div
-          class="mt-8 flex flex-col items-start justify-between gap-5 rounded-2xl border border-hairline bg-card/40 p-6 lg:flex-row lg:items-center"
+          class="card mt-4 flex flex-col items-start justify-between gap-5 p-6 lg:flex-row lg:items-center lg:p-8"
         >
           <div>
             <h3
-              class="font-geist text-[16px] leading-[1.3] font-medium"
+              class="font-geist text-[20px] leading-[1.3] font-semibold"
               data-i18n="plans.helpH"
             >
               Franshiza boshqarasizmi yoki sozlashda yordam kerakmi?
             </h3>
             <p
-              class="mt-2 hidden max-w-[760px] font-geist text-[20px] leading-[30px] text-muted lg:block"
+              class="mt-2 hidden max-w-[680px] font-geist text-[16px] leading-[1.6] text-muted lg:block"
               data-i18n="plans.helpB"
             >
               Barcha filiallaringiz uchun menyu, ombor va hisobotlarni
@@ -755,7 +715,7 @@ const faqLd = {
               tuzish va xodimlarni o'qitishda ham yordam beramiz.
             </p>
             <details class="mt-2 lg:hidden">
-              <summary class="cursor-pointer list-none font-geist-mono text-[12px] tracking-[0.72px] text-link [&::-webkit-details-marker]:hidden">
+              <summary class="cursor-pointer list-none font-geist text-[14px] font-semibold text-link underline underline-offset-4 [&::-webkit-details-marker]:hidden">
                 <span data-i18n="common.showMore">Batafsil</span>
               </summary>
               <p
@@ -770,7 +730,7 @@ const faqLd = {
           </div>
           <a
             href="https://t.me/octopos_support"
-            class="btn-outline h-[44px] shrink-0 px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+            class="btn-outline btn shrink-0"
           >
             <span data-i18n="plans.helpCta">Telegram orqali yozish</span>
           </a>
@@ -779,7 +739,7 @@ const faqLd = {
     </section>
 
     {/* ---------------- add-ons ---------------- */}
-    <section id="addons" class="scroll-mt-16 section">
+    <section id="addons" class="section scroll-mt-16">
       <div class="wrap">
         <h2
           class="display display-2"
@@ -790,15 +750,15 @@ const faqLd = {
 
         <div class="mt-10 grid gap-4 lg:grid-cols-3">
           {/* online store / website */}
-          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-addon="store">
+          <div class="card flex flex-col p-6 lg:p-8" data-addon="store">
             <h3
-              class="font-geist text-[19px] leading-[1.25] font-medium"
+              class="font-geist text-[24px] leading-[1.25] font-semibold"
               data-i18n="add.t1"
             >
               Onlayn do'kon
             </h3>
             <p
-              class="mt-3 font-geist text-[20px] leading-[30px] text-muted"
+              class="mt-3 font-geist text-[16px] leading-[1.6] text-muted"
               data-i18n="add.b1"
             >
               O'z saytingiz va Telegram orqali komissiyasiz buyurtmalar qabul
@@ -809,8 +769,8 @@ const faqLd = {
             <div class="mt-5 hidden grid-cols-2 gap-2 lg:grid">
               {
                 storeTiers.map((t) => (
-                  <div class="rounded-xl border border-hairline p-3">
-                    <p class="font-geist-mono text-[11px] tracking-[0.72px] text-muted">
+                  <div class="rounded-[12px] bg-page p-3">
+                    <p class="font-geist text-[13px] text-muted">
                       {t.name}
                     </p>
                     <p class="mt-1 flex items-baseline gap-1">
@@ -818,7 +778,7 @@ const faqLd = {
                         >{t.price}</span
                       >
                       <span
-                        class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                        class="font-geist text-[13px] text-muted"
                         data-i18n="plans.perMonthUzs">so'm/oy</span
                       >
                     </p>
@@ -849,7 +809,7 @@ const faqLd = {
                   ["add.f3", "Komissiyasiz"],
                 ].map(([k, uz]) => (
                   <li
-                    class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                    class="rounded-full border border-ink/20 px-3 py-1.5 font-geist text-[13px] text-muted"
                     data-i18n={k}
                   >
                     {uz}
@@ -860,14 +820,14 @@ const faqLd = {
 
             {/* Mobile: tiers behind an expander, CTA stays visible. */}
             <details class="mt-5 lg:hidden">
-              <summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">
+              <summary class="btn-outline btn btn-sm w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                 <span data-i18n="common.showPrices">Tariflarni ko'rsatish</span>
               </summary>
               <div class="mt-3 grid grid-cols-2 gap-2">
                 {
                   storeTiers.map((t) => (
-                    <div class="rounded-xl border border-hairline p-3">
-                      <p class="font-geist-mono text-[11px] tracking-[0.72px] text-muted">
+                    <div class="rounded-[12px] bg-page p-3">
+                      <p class="font-geist text-[13px] text-muted">
                         {t.name}
                       </p>
                       <p class="mt-1 font-geist text-[15px] font-medium text-ink">
@@ -890,18 +850,18 @@ const faqLd = {
               <button
                 type="button"
                 data-plan-trigger="starter"
-                class="btn-outline h-[44px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+                class="btn-outline btn w-full"
               >
-                <span data-i18n="cta.tryFree">Bepul sinab ko'ring →</span>
+                <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
               </button>
             </div>
           </div>
 
           {/* own delivery */}
-          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-addon="delivery">
+          <div class="card flex flex-col p-6 lg:p-8" data-addon="delivery">
             <div class="flex flex-wrap items-center justify-between gap-3">
               <h3
-                class="font-geist text-[19px] leading-[1.25] font-medium"
+                class="font-geist text-[24px] leading-[1.25] font-semibold"
                 data-i18n="sol.4t"
               >
                 O'z yetkazib berish
@@ -911,13 +871,13 @@ const faqLd = {
                   >390 000</span
                 >
                 <span
-                  class="font-geist-mono text-[12px] tracking-[0.72px] text-muted"
+                  class="font-geist text-[14px] text-muted"
                   data-i18n="plans.perMonthUzs">so'm/oy</span
                 >
               </p>
             </div>
             <p
-              class="mt-3 font-geist text-[20px] leading-[30px] text-muted"
+              class="mt-3 font-geist text-[16px] leading-[1.6] text-muted"
               data-i18n="add.b2"
             >
               O'z kuryerlaringiz orqali yetkazib bering: dispetcherlik,
@@ -934,7 +894,7 @@ const faqLd = {
                   ["add.d5", "Cheksiz kuryer"],
                 ].map(([k, uz]) => (
                   <li
-                    class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                    class="rounded-full border border-ink/20 px-3 py-1.5 font-geist text-[13px] text-muted"
                     data-i18n={k}
                   >
                     {uz}
@@ -944,7 +904,7 @@ const faqLd = {
             </ul>
 
             <details class="mt-5 lg:hidden">
-              <summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">
+              <summary class="btn-outline btn btn-sm w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                 <span data-i18n="common.showMore">Batafsil</span>
               </summary>
               <ul class="mt-3 flex flex-wrap gap-2">
@@ -957,7 +917,7 @@ const faqLd = {
                     ["add.d5", "Cheksiz kuryer"],
                   ].map(([k, uz]) => (
                     <li
-                      class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                      class="rounded-full border border-ink/20 px-3 py-1.5 font-geist text-[13px] text-muted"
                       data-i18n={k}
                     >
                       {uz}
@@ -971,23 +931,23 @@ const faqLd = {
               <button
                 type="button"
                 data-plan-trigger="starter"
-                class="btn-outline h-[44px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+                class="btn-outline btn w-full"
               >
-                <span data-i18n="cta.tryFree">Bepul sinab ko'ring →</span>
+                <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
               </button>
             </div>
           </div>
 
           {/* photo studio (AI) */}
-          <div class="flex flex-col rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-addon="photo">
+          <div class="card flex flex-col p-6 lg:p-8" data-addon="photo">
             <h3
-              class="font-geist text-[19px] leading-[1.25] font-medium"
+              class="font-geist text-[24px] leading-[1.25] font-semibold"
               data-i18n="add.t3"
             >
               Fotostudiya
             </h3>
             <p
-              class="mt-3 font-geist text-[20px] leading-[30px] text-muted"
+              class="mt-3 font-geist text-[16px] leading-[1.6] text-muted"
               data-i18n="add.b3"
             >
               Retush, toza fon, yagona uslub va mahsulotlarning yangi,
@@ -997,7 +957,7 @@ const faqLd = {
             <ul class="mt-5 hidden flex-col gap-2 lg:flex">
               {
                 photoTiers.map((t) => (
-                  <li class="flex items-center justify-between gap-3 rounded-xl border border-hairline px-3 py-2">
+                  <li class="flex items-center justify-between gap-3 rounded-[12px] bg-page px-3 py-2.5">
                     <span
                       class="font-geist text-[13px] text-ink"
                       data-i18n="add.photos"
@@ -1010,7 +970,7 @@ const faqLd = {
                         >{t.price}</span
                       >
                       <span
-                        class="font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                        class="font-geist text-[13px] text-muted"
                         data-i18n="plans.perMonthUzs">so'm/oy</span
                       >
                     </span>
@@ -1028,7 +988,7 @@ const faqLd = {
                   ["add.s4", "Fotorealistik suratlar"],
                 ].map(([k, uz]) => (
                   <li
-                    class="rounded-full border border-hairline px-3 py-1.5 font-geist-mono text-[11px] tracking-[0.72px] text-muted"
+                    class="rounded-full border border-ink/20 px-3 py-1.5 font-geist text-[13px] text-muted"
                     data-i18n={k}
                   >
                     {uz}
@@ -1038,13 +998,13 @@ const faqLd = {
             </ul>
 
             <details class="mt-5 lg:hidden">
-              <summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">
+              <summary class="btn-outline btn btn-sm w-full cursor-pointer list-none [&::-webkit-details-marker]:hidden">
                 <span data-i18n="common.showPrices">Tariflarni ko'rsatish</span>
               </summary>
               <ul class="mt-3 flex flex-col gap-2">
                 {
                   photoTiers.map((t) => (
-                    <li class="flex items-center justify-between gap-3 rounded-xl border border-hairline px-3 py-2">
+                    <li class="flex items-center justify-between gap-3 rounded-[12px] bg-page px-3 py-2.5">
                       <span
                         class="font-geist text-[13px] text-ink"
                         data-i18n="add.photos"
@@ -1065,9 +1025,9 @@ const faqLd = {
               <button
                 type="button"
                 data-plan-trigger="starter"
-                class="btn-outline h-[44px] w-full px-6 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
+                class="btn-outline btn w-full"
               >
-                <span data-i18n="cta.tryFree">Bepul sinab ko'ring →</span>
+                <span data-i18n="nav.cta">Bepul sinab ko'ring</span>
               </button>
             </div>
           </div>
@@ -1075,84 +1035,40 @@ const faqLd = {
       </div>
     </section>
 
-    {/* ---------------- onboarding steps ---------------- */}
-    <section class="section">
+    {/* ---------------- how we start ---------------- */}
+    <section class="section bg-card">
       <div class="wrap">
-        <h2
-          class="max-w-[1000px] display display-2"
-          data-i18n="steps.heading"
-        >
-          Qanday boshlaymiz
-        </h2>
-        <ol class="mt-10 grid gap-4 lg:grid-cols-3">
+        <h2 class="display display-2" data-i18n="steps.heading">Qanday boshlaymiz</h2>
+        <ol class="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-3 lg:gap-12">
           {
             steps.map((s) => (
-              <li class="rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8">
-                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-ink font-geist text-[15px] font-semibold text-on-ink">
-                  {s.n}
-                </span>
-                <h3
-                  class="mt-5 font-geist text-[20px] leading-[1.25] font-semibold tracking-[-0.2px] text-ink lg:text-[22px]"
-                  data-i18n={`steps.${s.n}t`}
-                >
-                  {s.t}
-                </h3>
-                <p
-                  class="mt-3 font-geist text-[17px] leading-[27px] text-muted lg:text-[18px] lg:leading-[28px]"
-                  data-i18n={`steps.${s.n}d`}
-                >
-                  {s.d}
-                </p>
+              <li class="border-t border-ink/15 pt-6">
+                <span class="display block text-[72px] leading-none text-link lg:text-[96px]" aria-hidden="true">{String(s.n).padStart(2, "0")}</span>
+                <h3 class="mt-5 font-geist text-[22px] leading-[1.3] font-semibold lg:text-[24px]" data-i18n={`steps.${s.n}t`}>{s.t}</h3>
+                <p class="mt-3 max-w-[420px] font-geist text-[16px] leading-[1.6] text-muted" data-i18n={`steps.${s.n}d`}>{s.d}</p>
               </li>
             ))
           }
         </ol>
-        <div class="mt-8">
-          <button
-            type="button"
-            data-plan-trigger="starter"
-            class="btn-solid h-[48px] px-7 font-geist-mono text-[12px] font-medium tracking-[0.72px]"
-          >
-            <span data-i18n="hero.cta">Bepul sinab ko'ring →</span>
-          </button>
+        <div class="mt-10 lg:mt-14">
+          <button type="button" data-plan-trigger="starter" class="btn-solid btn"><span data-i18n="nav.cta">Bepul sinab ko'ring</span></button>
         </div>
       </div>
     </section>
 
     {/* ---------------- faq ---------------- */}
-    <section id="faq" class="scroll-mt-16 section">
-      <div class="wrap">
-        <h2
-          class="max-w-[900px] display display-2"
-          data-i18n="faq.heading"
-        >
-          Ko'p so'raladigan savollar
-        </h2>
-
-        <div class="mt-8 border-t border-hairline lg:mt-12">
+    <section id="faq" class="section scroll-mt-16">
+      <div class="wrap grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-20">
+        <h2 class="display display-2" data-i18n="faq.heading">Koʻp soʻraladigan savollar</h2>
+        <div class="border-t border-ink/15">
           {
             faqs.map((f) => (
-              <details class="group border-b border-hairline">
-                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 lg:py-6 [&::-webkit-details-marker]:hidden">
-                  <span
-                    class="font-geist text-[18px] leading-[26px] font-medium text-ink lg:text-[20px] lg:leading-[28px]"
-                    data-i18n={f.q}
-                  >
-                    {f.uzQ}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hairline font-geist-mono text-[18px] text-muted transition-transform duration-300 ease-far group-open:rotate-45"
-                  >
-                    +
-                  </span>
+              <details class="group border-b border-ink/15">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 rounded py-5 lg:py-6 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+                  <span class="font-geist text-[18px] leading-[1.4] font-semibold lg:text-[20px]" data-i18n={f.q}>{f.uzQ}</span>
+                  <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
                 </summary>
-                <p
-                  class="max-w-[800px] pb-6 font-geist text-[16px] leading-[24px] text-muted lg:pb-7 lg:text-[18px] lg:leading-[28px]"
-                  data-i18n={f.a}
-                >
-                  {f.uzA}
-                </p>
+                <p class="max-w-[640px] pb-6 font-geist text-[16px] leading-[1.6] text-muted lg:pb-7" data-i18n={f.a}>{f.uzA}</p>
               </details>
             ))
           }
@@ -1160,44 +1076,30 @@ const faqLd = {
       </div>
     </section>
 
-    {/* ---------------- contact: callback form ---------------- */}
-    <section
-      id="contact"
-      class="scroll-mt-[70px] section"
-    >
-      <div class="wrap">
-        <div class="grid items-center gap-8 rounded-[28px] bg-ink px-5 py-8 sm:px-10 sm:py-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,560px)] lg:gap-16 lg:px-16 lg:py-20">
-          <div>
-            <h2
-              class="max-w-[640px] font-anton text-[32px] leading-[0.95] tracking-[-0.69px] text-on-ink [text-wrap:balance] lg:text-[72px]"
-              data-i18n="ct.heading"
-            >
-              Bugun boshlaymizmi?
-            </h2>
-            <p
-              class="mt-5 max-w-[480px] font-geist text-[18px] leading-[28px] text-on-ink/70 lg:text-[20px] lg:leading-[30px]"
-              data-i18n="ct.body"
-            >
-              Ismingiz va raqamingizni qoldiring, biz qo'ng'iroq qilib
-              hammasini ko'rsatamiz va savollaringizga javob beramiz.
-            </p>
-            <div class="mt-8 hidden flex-col gap-3 font-geist text-[16px] text-on-ink/80 lg:flex">
-              <a href="tel:+998941500330" class="inline-flex w-fit items-center gap-3 transition-colors duration-300 hover:text-on-ink">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.18 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
-                +998 94 150 03 30
-              </a>
-              <a href="https://t.me/octopos_support" class="inline-flex w-fit items-center gap-3 transition-colors duration-300 hover:text-on-ink">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9z" /></svg>
-                @octopos_support
-              </a>
-              <button type="button" data-plan-trigger="starter" class="inline-flex w-fit items-center gap-3 text-left transition-colors duration-300 hover:text-on-ink">
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-                <span data-i18n="ct.self">Yoki o'zingiz bepul boshlang</span>
-              </button>
-            </div>
+    {/* ---------------- final CTA (dark band) + callback form ---------------- */}
+    <section id="contact" class="on-forest scroll-mt-16">
+      <div class="wrap grid items-center gap-10 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-20 lg:py-28">
+        <div>
+          <h2 class="display display-2" data-i18n="ct.heading">Bugun boshlaymizmi?</h2>
+          <p class="mt-6 max-w-[480px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="ct.body">
+            Ismingiz va raqamingizni qoldiring, biz qo'ng'iroq qilib
+            hammasini ko'rsatamiz va savollaringizga javob beramiz.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href="tel:+998941500330" class="btn-outline btn gap-2.5">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+              +998 94 150 03 30
+            </a>
+            <a href="https://t.me/octopos_support" class="btn-outline btn gap-2.5">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4z" /></svg>
+              Telegram
+            </a>
           </div>
-          <LeadForm />
+          <button type="button" data-plan-trigger="starter" class="mt-6 rounded font-geist text-[15px] font-semibold text-link underline underline-offset-4 focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+            <span data-i18n="ct.self">Yoki o'zingiz bepul boshlang</span>
+          </button>
         </div>
+        <div class="surface-reset"><LeadForm /></div>
       </div>
     </section>
   </main>
@@ -1208,10 +1110,10 @@ const faqLd = {
     data-mobile-cta
   >
     <div class="mx-auto flex max-w-[560px] gap-3">
-      <a href="#contact" data-lead-jump class="btn-solid h-[48px] flex-1 px-4 font-geist text-[15px] font-semibold">
+      <a href="#contact" data-lead-jump class="btn-solid btn flex-1 !px-4">
         <span data-i18n="ct.callMe">Qo'ng'iroq so'rash</span>
       </a>
-      <a href="https://t.me/octopos_support" class="btn-outline h-[48px] px-5 font-geist text-[15px] font-semibold" aria-label="Telegram">
+      <a href="https://t.me/octopos_support" class="btn-outline btn !px-5" aria-label="Telegram">
         Telegram
       </a>
     </div>

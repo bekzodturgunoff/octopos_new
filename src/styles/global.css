@@ -249,6 +249,41 @@
   }
 }
 
+/* Back to the page's own surface inside a dark band (the contact form card):
+ * light tokens on the light theme, dark tokens on the dark theme. */
+.surface-reset {
+  --color-page: oklch(98.09% 0.013 115.83);
+  --color-ink: oklch(22.26% 0.027 133.88);
+  --color-muted: oklch(39.23% 0.036 133.1);
+  --color-hairline: oklch(91% 0.01 117.93);
+  --color-link: oklch(28.69% 0.08386907740604355 135.05042975542813);
+  --color-on-ink: oklch(98.09% 0.013 115.83);
+  --color-card: oklch(96.49% 0.015 119.1);
+  color: var(--color-ink);
+}
+:root[data-theme="dark"] .surface-reset {
+  --color-page: oklch(26% 0.009 137.85);
+  --color-ink: oklch(98.09% 0.013 115.83);
+  --color-muted: oklch(82.4% 0.04 129.72);
+  --color-hairline: oklch(38% 0.009 137.85);
+  --color-link: oklch(85.7% 0.17 134.56);
+  --color-on-ink: oklch(19.09% 0.009 137.85);
+  --color-card: oklch(32% 0.009 137.85);
+}
+
+/* Integration logos: monochrome until hovered, on devices that can hover. */
+@media (hover: hover) {
+  .int-logo img {
+    filter: grayscale(1);
+    opacity: 0.7;
+    transition: filter 0.2s ease-out, opacity 0.2s ease-out;
+  }
+  .int-logo:hover img {
+    filter: none;
+    opacity: 1;
+  }
+}
+
 /* A forest CARD (not a full band) must stay visible on the dark page. */
 .card.on-forest {
   background: var(--color-forest-card);

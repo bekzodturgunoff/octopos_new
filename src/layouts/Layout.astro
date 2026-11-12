@@ -25,6 +25,7 @@ const ld = (node: Record<string, unknown>) =>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://api.octopos.uz" />
+    <link rel="preload" href="/fonts/Oswald-700-latin.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="oklch(98.09% 0.013 115.83)" />
     <meta name="color-scheme" content="light" />
     <script is:inline>
@@ -70,7 +71,12 @@ const ld = (node: Record<string, unknown>) =>
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     {canonical && <meta property="og:url" content={canonical} />}
-    <meta property="og:image" content={ogImage ?? (Astro.site ? new URL("/og.webp", Astro.site).toString() : "/og.webp")} />
+    <meta property="og:image" content={ogImage ?? (Astro.site ? new URL("/og.png", Astro.site).toString() : "/og.png")} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={ogImage ?? (Astro.site ? new URL("/og.png", Astro.site).toString() : "/og.png")} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="shortcut icon" href="/favicon.ico" />
