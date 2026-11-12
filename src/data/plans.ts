@@ -193,3 +193,21 @@ export function renderPlanTable(plans: any[], L: Label): string {
     .join("");
   return `<table class="w-full min-w-[560px] border-collapse"><thead><tr><th scope="col" class="py-4 pr-4 text-left font-geist text-[14px] font-semibold text-muted" data-i18n="plans.feature">${esc(L("plans.feature"))}</th>${head}</tr></thead><tbody>${rows}</tbody></table>`;
 }
+
+/** Build time: the plans, fetched once for the whole build (three tries, 15s
+ * each, so prices are in the HTML search engines read). null if the API is down;
+ * the browser then loads them. */
+let buildPlansP: Promise<any[] | null> | undefined;
+export function buildPlans(): Promise<any[] | null> {
+  buildPlansP ??= (async () => {
+    for (let i = 0; i < 3; i++) {
+      try {
+        return await fetchPlans("uz", AbortSignal.timeout(15000));
+      } catch (err) {
+        if (i === 2) console.warn("[plans] build-time fetch failed, falling back to client:", err);
+      }
+    }
+    return null;
+  })();
+  return buildPlansP;
+}

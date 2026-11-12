@@ -2856,6 +2856,10 @@ export const STRINGS: Record<string, Dict> = {
   "dash.opex": { en: "Operating expenses", ru: "Операционные расходы", ko: "운영비", tr: "İşletme giderleri" },
   "dash.statement": { en: "Profit and loss statement", ru: "Отчёт о прибылях и убытках", ko: "손익계산서", tr: "Kâr ve zarar tablosu" },
   "dash.grossSales": { en: "Gross sales", ru: "Валовая выручка", ko: "총매출", tr: "Brüt satışlar" },
+  "meta.pricing.title": { en: "Pricing and plans — Octopos", ru: "Тарифы и цены — Octopos", ko: "요금제 — Octopos", tr: "Fiyatlar ve planlar — Octopos" },
+  "meta.pricing.desc": { en: "Octopos plans: start free and move up as you grow. Prices for POS, kitchen display, inventory and reports.", ru: "Тарифы Octopos: начните бесплатно и переходите выше по мере роста. Цены на кассу, кухонный экран, склад и отчёты.", ko: "Octopos 요금제: 무료로 시작해 성장에 맞춰 업그레이드하세요. POS, 주방 디스플레이, 재고, 리포트 요금.", tr: "Octopos planları: ücretsiz başlayın, büyüdükçe yükseltin. POS, mutfak ekranı, stok ve rapor fiyatları." },
+  "meta.faq.title": { en: "Frequently asked questions — Octopos", ru: "Частые вопросы — Octopos", ko: "자주 묻는 질문 — Octopos", tr: "Sık sorulan sorular — Octopos" },
+  "meta.faq.desc": { en: "Octopos questions and answers: offline work, what the price includes, supported hardware, how fast you go live.", ru: "Вопросы и ответы об Octopos: работа без интернета, что входит в цену, какое оборудование подходит, сроки запуска.", ko: "Octopos 질문과 답변: 오프라인 작동, 요금 포함 내역, 지원 장비, 도입 기간.", tr: "Octopos soru ve cevapları: çevrimdışı çalışma, fiyata dahil olanlar, desteklenen donanım, kurulum süresi." },
   "meta.home.title": {
     en: "Octopos — POS software for restaurants, cafés and shops",
     ru: "Octopos — кассовая программа для ресторанов, кафе и магазинов",

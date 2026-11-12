@@ -12,42 +12,24 @@ import Footer from "../components/Footer.astro";
 import trims from "../data/image-trims.json";
 import { testimonials, type Testimonial } from "../data/testimonials";
 import { has } from "../data/i18n";
-import { fetchPlans, renderPlanCards, renderPlanTable, UZ_PLAN_STRINGS } from "../data/plans";
+import { buildPlans } from "../data/plans";
+import { faqLd } from "../data/faqs";
+import PlansSection from "../components/PlansSection.astro";
+import FaqSection from "../components/FaqSection.astro";
 
-/* Plans are rendered into the HTML at build time (SEO, no loading flash); the
- * browser refreshes them. If the API is down during the build, the page falls
- * back to the client-side fetch as before. */
-let ssrPlansHtml = "";
-let ssrTableHtml = "";
-let ssrOffers: Record<string, unknown>[] = [];
-try {
-  // Up to three tries (15s each): the prices should be in the HTML search engines read.
-  let plans: Awaited<ReturnType<typeof fetchPlans>> | undefined;
-  for (let i = 0; i < 3 && !plans; i++) {
-    try {
-      plans = await fetchPlans("uz", AbortSignal.timeout(15000));
-    } catch (err) {
-      if (i === 2) throw err;
-    }
-  }
-  if (!plans) throw new Error("no plans");
-  const uzL = (k: string) => UZ_PLAN_STRINGS[k] ?? "";
-  ssrPlansHtml = renderPlanCards(plans, "uz", "monthly", uzL);
-  ssrTableHtml = renderPlanTable(plans, uzL);
-  // Offers for the SoftwareApplication structured data (monthly USD prices).
-  ssrOffers = plans.map((p: any) => {
-    const m = (p.prices ?? []).find((x: any) => x.billingCycle === "monthly");
-    return {
-      "@type": "Offer",
-      name: p.name,
-      price: String(m?.value?.majorAmount ?? 0),
-      priceCurrency: "USD",
-      url: "https://octopos.uz/#plans",
-    };
-  });
-} catch (err) {
-  console.warn("[plans] build-time fetch failed, falling back to client:", err);
-}
+/* Plan prices for the SoftwareApplication structured data (the cards
+ * themselves are rendered by PlansSection). */
+const plans = await buildPlans();
+const ssrOffers: Record<string, unknown>[] = (plans ?? []).map((p: any) => {
+  const m = (p.prices ?? []).find((x: any) => x.billingCycle === "monthly");
+  return {
+    "@type": "Offer",
+    name: p.name,
+    price: String(m?.value?.majorAmount ?? 0),
+    priceCurrency: "USD",
+    url: "https://octopos.uz/#plans",
+  };
+});
 
 const SITE_URL = "https://octopos.uz";
 const homeLd = [
@@ -218,60 +200,6 @@ const payLogos = [
   { src: "/integrations/yandex-go.webp", alt: "Yandex Go", icon: true },
 ];
 
-const faqs = [
-  {
-    q: "faq.1q",
-    a: "faq.1a",
-    uzQ: "Internet uzilsa tizim ishlashda davom etadimi?",
-    uzA:
-      "Ha. Octopos offline-first ishlaydi: aloqa uzilganda savdo, buyurtmalar va kassa to'xtamaydi, internet qaytgach barcha ma'lumotlar avtomatik sinxronlanadi.",
-  },
-  {
-    q: "faq.2q",
-    a: "faq.2a",
-    uzQ: "Obuna narxiga nimalar kiradi?",
-    uzA:
-      "Har bir tarifga barcha yangilanishlar va Telegram orqali yordam kiradi. Funksiyalar tarifga qarab ochiladi: fiskal chek va oshxona ekrani — Starter'dan, ombor, inventarizatsiya va ish haqi — Growth'dan, bir nechta filialni markazdan boshqarish — Scale'da. Qo'shimcha xizmatlar alohida hisoblanadi.",
-  },
-  {
-    q: "faq.3q",
-    a: "faq.3a",
-    uzQ: "Mening uskunalarim bilan ishlaydimi?",
-    uzA:
-      "Ha — Android planshetlar, Windows kompyuterlar, ESC/POS printerlar, pul tortmalari va barkod skanerlari bilan mos. To'liq ro'yxat uchun demo so'rang.",
-  },
-  {
-    q: "faq.4q",
-    a: "faq.4a",
-    uzQ: "Necha kunda ishga tushiramiz?",
-    uzA:
-      "Odatda 1–3 kun: menyuni kiritamiz, uskunalarni ulaymiz, jamoangizni o'qitamiz. Tarmoqlar uchun alohida reja tuzamiz.",
-  },
-  {
-    q: "faq.5q",
-    a: "faq.5a",
-    uzQ: "Eski tizimdagi ma'lumotlarni ko'chirish mumkinmi?",
-    uzA:
-      "Ha — menyu, narxlar va ombor qoldiqlari Excel'dan import qilinadi, o'tish davrida eski tizim bilan parallel ishlash mumkin.",
-  },
-  {
-    q: "faq.6q",
-    a: "faq.6a",
-    uzQ: "Qanday to'lov usullarini qabul qilamiz?",
-    uzA:
-      "Naqd, karta, QR, Payme va Click — barchasi avtomatik hisobga olinadi va hisobotlarga tushadi.",
-  },
-];
-
-const faqLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.uzQ,
-    acceptedAnswer: { "@type": "Answer", text: f.uzA },
-  })),
-};
 ---
 
 <Layout
@@ -628,97 +556,8 @@ const faqLd = {
     </section>
 
     {/* ---------------- plans ---------------- */}
-    <section
-      id="plans"
-      class="scroll-mt-[70px] section"
-    >
-      <div class="wrap">
-        <div class="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <h2 class="display display-2" data-i18n="plans.heading">Yagona va shaffof obuna</h2>
-            <p class="mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="plans.body">
-              Bepul tarifdan boshlang va biznes o'sgani sari keyingi tarifga o'ting. Qo'shimcha xizmatlar narxi pastda.
-            </p>
-          </div>
+    <PlansSection onHome />
 
-          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-            <div class="flex gap-1 rounded-full border border-ink/20 p-1 font-geist text-[14px] font-semibold" role="group" aria-label="Billing period">
-              <button type="button" data-cycle="monthly" aria-pressed="true" class="seg-toggle seg-toggle-on px-4" data-i18n="plans.monthly">Oylik</button>
-              <button type="button" data-cycle="yearly" aria-pressed="false" class="seg-toggle seg-toggle-off px-4" data-i18n="plans.yearly">Yillik</button>
-            </div>
-            <span class="font-geist text-[14px] text-muted" data-i18n="plans.saveNote">Yillik to'lov · 10% tejamkorlik</span>
-          </div>
-        </div>
-
-        <p
-          id="plans-loading"
-          class:list={["mt-10 font-geist text-[14px] text-muted", ssrPlansHtml && "hidden"]}
-          data-i18n="plans.loading"
-        >
-          Yuklanmoqda…
-        </p>
-        {/* <1024: swipeable cards; ≥1024: four across. */}
-        <div
-          id="plans-grid"
-          class="plans-track -mx-6 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pt-4 pb-2 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-4 lg:items-stretch lg:overflow-visible lg:px-0"
-          set:html={ssrPlansHtml}
-        />
-        <p class="mt-6 max-w-[760px] font-geist text-[15px] leading-[1.6] text-muted">
-          <span data-i18n="plans.ordersNote">Har bir tarifda oyiga 50 ta onlayn buyurtma (sayt va Telegram) bor. Ko'proq kerak bo'lsa —</span>
-          <a href="#addons" class="font-semibold text-link underline underline-offset-4" data-i18n="plans.ordersLink">Onlayn do'kon qo'shimchasi</a>.
-        </p>
-
-        <details class="group mt-8 rounded-[24px] bg-card" data-plan-compare>
-          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-[24px] px-6 py-5 font-geist text-[17px] font-semibold lg:px-8 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
-            <span data-i18n="plans.compare">Tariflarni solishtirish</span>
-            <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-          </summary>
-          <div id="plans-table" class="overflow-x-auto px-6 pb-6 lg:px-8 lg:pb-8" set:html={ssrTableHtml} />
-        </details>
-        <noscript>
-          <p class="mt-10 font-geist text-[16px] leading-[24px] text-muted">
-            Narxlarni bilish uchun qo'ng'iroq qiling: <a href="tel:+998941500330" class="text-link hover:underline">+998 94 150 03 30</a>.
-          </p>
-        </noscript>
-
-        <div
-          class="card mt-4 flex flex-col items-start justify-between gap-5 p-6 lg:flex-row lg:items-center lg:p-8"
-        >
-          <div>
-            <h3
-              class="font-geist text-[20px] leading-[1.3] font-semibold"
-              data-i18n="plans.helpH"
-            >
-              Franshiza boshqarasizmi yoki sozlashda yordam kerakmi?
-            </h3>
-            <p
-              class="mt-2 hidden max-w-[680px] font-geist text-[16px] leading-[1.6] text-muted lg:block"
-              data-i18n="plans.helpB"
-            >
-              Barcha filiallaringiz uchun menyu, ombor va hisobotlarni
-              markazlashtiramiz — menyuni raqamlashtirish, zal rejasini
-              tuzish va xodimlarni o'qitishda ham yordam beramiz.
-            </p>
-            <details class="mt-2 lg:hidden">
-              <summary class="cursor-pointer list-none font-geist text-[14px] font-semibold text-link underline underline-offset-4 [&::-webkit-details-marker]:hidden">
-                <span data-i18n="common.showMore">Batafsil</span>
-              </summary>
-              <p
-                class="mt-2 max-w-[760px] font-geist text-[16px] leading-[24px] text-muted"
-                data-i18n="plans.helpB"
-              >
-                Barcha filiallaringiz uchun menyu, ombor va hisobotlarni
-                markazlashtiramiz — menyuni raqamlashtirish, zal rejasini
-                tuzish va xodimlarni o'qitishda ham yordam beramiz.
-              </p>
-            </details>
-          </div>
-          <a href="#contact" data-lead-jump class="btn-outline btn shrink-0">
-            <span data-i18n="ct.callMe">Qo'ng'iroq so'rash</span>
-          </a>
-        </div>
-      </div>
-    </section>
 
     {/* ---------------- add-ons ---------------- */}
     <section id="addons" class="section scroll-mt-16">
@@ -1040,24 +879,8 @@ const faqLd = {
     </section>
 
     {/* ---------------- faq ---------------- */}
-    <section id="faq" class="section scroll-mt-16">
-      <div class="wrap grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-20">
-        <h2 class="display display-2" data-i18n="faq.heading">Koʻp soʻraladigan savollar</h2>
-        <div class="border-t border-ink/15">
-          {
-            faqs.map((f) => (
-              <details class="group border-b border-ink/15">
-                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 rounded py-5 lg:py-6 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
-                  <span class="font-geist text-[18px] leading-[1.4] font-semibold lg:text-[20px]" data-i18n={f.q}>{f.uzQ}</span>
-                  <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
-                </summary>
-                <p class="max-w-[640px] pb-6 font-geist text-[16px] leading-[1.6] text-muted lg:pb-7" data-i18n={f.a}>{f.uzA}</p>
-              </details>
-            ))
-          }
-        </div>
-      </div>
-    </section>
+    <FaqSection />
+
 
     {/* ---------------- final CTA (dark band) + callback form ---------------- */}
     <section id="contact" class="on-forest band-top scroll-mt-16">
@@ -1218,94 +1041,5 @@ const faqLd = {
       };
       [orders, check, rate].forEach((el) => el.addEventListener("input", update));
     });
-  </script>
-  <script>
-    import { STRINGS, getLang, type Lang } from "../data/i18n";
-    import {
-      apiLangFor,
-      esc,
-      fetchPlans,
-      renderPlanCards,
-      renderPlanTable,
-      UZ_PLAN_STRINGS,
-      type Cycle,
-    } from "../data/plans";
-
-    const grid = document.getElementById("plans-grid");
-    const loading = document.getElementById("plans-loading");
-    const cycleBtns = document.querySelectorAll<HTMLElement>("[data-cycle]");
-
-    let cycle: Cycle = "monthly";
-    let plans: any[] = [];
-    let fetchedFor = "";
-    // Build output already shows the Uzbek monthly cards; keep them if the
-    // refresh fails rather than replacing them with the Telegram fallback.
-    const staticHtml = grid?.innerHTML.trim() ?? "";
-    const hasStatic = staticHtml.length > 0;
-
-    const L = (k: string, lang: string): string =>
-      lang === "uz"
-        ? (UZ_PLAN_STRINGS[k] ?? "")
-        : (STRINGS[k]?.[lang as Lang] ?? UZ_PLAN_STRINGS[k] ?? "");
-
-    const table = document.getElementById("plans-table");
-    document.querySelector("[data-plan-compare]")?.addEventListener("toggle", (e) => {
-      if ((e.currentTarget as HTMLDetailsElement).open) (window as any).octoTrack?.("pricing_table_expand");
-    });
-
-    const FALLBACK: Partial<Record<string, string>> = {
-      uz: "Narxlarni ko'rish uchun",
-      en: "Contact us on Telegram for pricing",
-      ru: "Узнать цены в Telegram",
-      ko: "텔레그램에서 요금 문의",
-      tr: "Fiyatlar için Telegram'dan yazın",
-    };
-
-    function render(lang: string): void {
-      if (!grid) return;
-      if (plans.length === 0) {
-        if (hasStatic && cycle === "monthly") {
-          grid.innerHTML = staticHtml;
-          return;
-        }
-        const msg = esc(FALLBACK[lang] ?? FALLBACK["en"] ?? "");
-        grid.innerHTML = `<p class="col-span-full font-geist text-[16px] leading-[24px] text-muted">${msg} — <a href="tel:+998941500330" class="text-link hover:underline">+998 94 150 03 30</a></p>`;
-        return;
-      }
-      grid.innerHTML = renderPlanCards(plans, lang, cycle, (k) => L(k, lang));
-      if (table) table.innerHTML = renderPlanTable(plans, (k) => L(k, lang));
-    }
-
-    async function load(): Promise<void> {
-      const lang = getLang();
-      const apiLang = apiLangFor(lang);
-      if (fetchedFor !== apiLang) {
-        if (!hasStatic) loading?.classList.remove("hidden");
-        try {
-          plans = await fetchPlans(lang);
-          fetchedFor = apiLang;
-        } catch {
-          plans = [];
-        }
-        loading?.classList.add("hidden");
-      }
-      render(lang);
-    }
-
-    cycleBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        cycle = btn.getAttribute("data-cycle") as "monthly" | "yearly";
-        cycleBtns.forEach((x) => {
-          const on = x.getAttribute("data-cycle") === cycle;
-          x.classList.toggle("seg-toggle-on", on);
-          x.classList.toggle("seg-toggle-off", !on);
-          x.setAttribute("aria-pressed", String(on));
-        });
-        render(getLang());
-      });
-    });
-
-    document.addEventListener("langchange", () => void load());
-    void load();
   </script>
 </Layout>

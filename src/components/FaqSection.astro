@@ -1,0 +1,29 @@
+---
+/** The FAQ block: on the homepage (h2) and as the /faq page's content (h1). */
+import { faqs } from "../data/faqs";
+
+interface Props {
+  /** Heading level: "h1" when it is the page's main heading. */
+  as?: "h1" | "h2";
+}
+const { as: H = "h2" } = Astro.props;
+---
+
+<section id="faq" class="section scroll-mt-16">
+  <div class="wrap grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-20">
+    <H class="display display-2" data-i18n="faq.heading">Koʻp soʻraladigan savollar</H>
+    <div class="border-t border-ink/15">
+      {
+        faqs.map((f) => (
+          <details class="group border-b border-ink/15">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6 rounded py-5 lg:py-6 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+              <span class="font-geist text-[18px] leading-[1.4] font-semibold lg:text-[20px]" data-i18n={f.q}>{f.uzQ}</span>
+              <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="max-w-[640px] pb-6 font-geist text-[16px] leading-[1.6] text-muted lg:pb-7" data-i18n={f.a}>{f.uzA}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

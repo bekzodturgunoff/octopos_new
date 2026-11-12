@@ -118,6 +118,8 @@ function metaFor(pathname: string): { title: string; desc: string; titleSuffix?:
   if (p === "/") return { title: "meta.home.title", desc: "meta.home.desc" };
   if (p === "/apps") return { title: "meta.apps.title", desc: "meta.apps.desc" };
   if (p === "/404") return { title: "nf.title", desc: "nf.body" };
+  if (p === "/pricing") return { title: "meta.pricing.title", desc: "meta.pricing.desc" };
+  if (p === "/faq") return { title: "meta.faq.title", desc: "meta.faq.desc" };
   if (p === "/privacy" || p === "/terms") {
     const page = p.slice(1);
     return { title: `legal.${page}.title`, desc: `legal.${page}.intro`, titleSuffix: true };
@@ -386,6 +388,16 @@ export default function i18nStatic(): AstroIntegration {
         let count = 0;
         const bases: string[] = [];
 
+        // The old site served Uzbek under /uz/…; those URLs stay real pages:
+        // the same page again, whose canonical names the unprefixed URL.
+        const UZ_MIRRORED = new Set(["/", "/faq/", "/pricing/", "/privacy/", "/terms/"]);
+        const uzMirror = async (pathname: string, uzHtml: string): Promise<void> => {
+          if (!UZ_MIRRORED.has(pathname) && !pathname.startsWith(`${SOL_BASE.uz}/`)) return;
+          const dest = join(root, "uz", pathname === "/" ? "" : pathname);
+          await mkdir(dest, { recursive: true });
+          await writeFile(join(dest, "index.html"), uzHtml);
+        };
+
         const walk = async (pathname: string): Promise<void> => {
           const base = pathname === "/" ? "" : pathname;
           const src = join(root, base, "index.html");
@@ -398,11 +410,15 @@ export default function i18nStatic(): AstroIntegration {
           // Uzbek solution pages: their other languages are separate pages
           // with their own slugs (see below), so no copies and no standard set.
           if (pathname.startsWith(`${SOL_BASE.uz}/`) || pathname.startsWith(`${GUIDE_BASE.uz}/`)) {
-            await writeFile(src, translateHtml(html, "uz", pathname));
+            const uzHtml = translateHtml(html, "uz", pathname);
+            await writeFile(src, uzHtml);
+            await uzMirror(pathname, uzHtml);
             return;
           }
           if (!/<meta name="robots" content="noindex/.test(html)) bases.push(pathname);
-          await writeFile(src, translateHtml(html, "uz", pathname));
+          const uzHtml = translateHtml(html, "uz", pathname);
+          await writeFile(src, uzHtml);
+          await uzMirror(pathname, uzHtml);
 
           for (const locale of PREFIXED_LOCALES) {
             const out = translateHtml(html, locale, pathname);
@@ -420,7 +436,8 @@ export default function i18nStatic(): AstroIntegration {
           if (
             PREFIXED_LOCALES.some(
               (l) => rel === `${l}/` || rel.startsWith(`${l}/`),
-            )
+            ) ||
+            rel.startsWith("uz/")
           )
             continue;
           await walk(`/${rel}`);

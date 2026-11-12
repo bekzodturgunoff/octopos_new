@@ -1,0 +1,20 @@
+---
+/** /faq/ (and /ru/faq/ … via the i18n build): the questions as their own page, as on the old site. */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "../components/TopNav.astro";
+import Footer from "../components/Footer.astro";
+import FaqSection from "../components/FaqSection.astro";
+import { faqLd } from "../data/faqs";
+---
+
+<Layout
+  title="Ko'p so'raladigan savollar — Octopos"
+  description="Octopos haqida savol-javoblar: internet uzilsa ishlaydimi, narxga nima kiradi, qaysi uskunalar mos, necha kunda ishga tushadi."
+  jsonLd={[faqLd]}
+>
+  <TopNav />
+  <main>
+    <FaqSection as="h1" />
+  </main>
+  <Footer />
+</Layout>

@@ -1,0 +1,18 @@
+---
+/** /pricing/ (and /ru/pricing/ … via the i18n build): the plans block as its own page, as on the old site. */
+import Layout from "../layouts/Layout.astro";
+import TopNav from "../components/TopNav.astro";
+import Footer from "../components/Footer.astro";
+import PlansSection from "../components/PlansSection.astro";
+---
+
+<Layout
+  title="Tariflar va narxlar — Octopos"
+  description="Octopos tariflari: bepul tarifdan boshlang, biznes o'sgani sari keyingisiga o'ting. Kassa, oshxona ekrani, ombor va hisobotlar narxlari."
+>
+  <TopNav />
+  <main>
+    <PlansSection as="h1" />
+  </main>
+  <Footer />
+</Layout>

@@ -1,0 +1,208 @@
+---
+/**
+ * The plans block (cards rendered at build time, refreshed in the browser,
+ * comparison table, help card): on the homepage (h2) and as the /pricing
+ * page's content (h1). Off the homepage, its #addons / #contact links point
+ * back to the homepage sections.
+ */
+import { buildPlans, renderPlanCards, renderPlanTable, UZ_PLAN_STRINGS } from "../data/plans";
+
+interface Props {
+  as?: "h1" | "h2";
+  /** True on the homepage (same-page anchors). */
+  onHome?: boolean;
+}
+const { as: H = "h2", onHome = false } = Astro.props;
+const home = onHome ? "" : "/";
+
+let ssrPlansHtml = "";
+let ssrTableHtml = "";
+const plans = await buildPlans();
+if (plans) {
+  const uzL = (k: string) => UZ_PLAN_STRINGS[k] ?? "";
+  ssrPlansHtml = renderPlanCards(plans, "uz", "monthly", uzL);
+  ssrTableHtml = renderPlanTable(plans, uzL);
+}
+---
+
+<section
+  id="plans"
+  class="scroll-mt-[70px] section"
+>
+  <div class="wrap">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <H class="display display-2" data-i18n="plans.heading">Yagona va shaffof obuna</H>
+        <p class="mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n="plans.body">
+          Bepul tarifdan boshlang va biznes o'sgani sari keyingi tarifga o'ting. Qo'shimcha xizmatlar narxi pastda.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+        <div class="flex gap-1 rounded-full border border-ink/20 p-1 font-geist text-[14px] font-semibold" role="group" aria-label="Billing period">
+          <button type="button" data-cycle="monthly" aria-pressed="true" class="seg-toggle seg-toggle-on px-4" data-i18n="plans.monthly">Oylik</button>
+          <button type="button" data-cycle="yearly" aria-pressed="false" class="seg-toggle seg-toggle-off px-4" data-i18n="plans.yearly">Yillik</button>
+        </div>
+        <span class="font-geist text-[14px] text-muted" data-i18n="plans.saveNote">Yillik to'lov · 10% tejamkorlik</span>
+      </div>
+    </div>
+
+    <p
+      id="plans-loading"
+      class:list={["mt-10 font-geist text-[14px] text-muted", ssrPlansHtml && "hidden"]}
+      data-i18n="plans.loading"
+    >
+      Yuklanmoqda…
+    </p>
+    {/* <1024: swipeable cards; ≥1024: four across. */}
+    <div
+      id="plans-grid"
+      class="plans-track -mx-6 mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pt-4 pb-2 lg:mx-0 lg:mt-10 lg:grid lg:grid-cols-4 lg:items-stretch lg:overflow-visible lg:px-0"
+      set:html={ssrPlansHtml}
+    />
+    <p class="mt-6 max-w-[760px] font-geist text-[15px] leading-[1.6] text-muted">
+      <span data-i18n="plans.ordersNote">Har bir tarifda oyiga 50 ta onlayn buyurtma (sayt va Telegram) bor. Ko'proq kerak bo'lsa —</span>
+      <a href={`${home}#addons`} class="font-semibold text-link underline underline-offset-4" data-i18n="plans.ordersLink">Onlayn do'kon qo'shimchasi</a>.
+    </p>
+
+    <details class="group mt-8 rounded-[24px] bg-card" data-plan-compare>
+      <summary class="flex cursor-pointer list-none items-center justify-between gap-4 rounded-[24px] px-6 py-5 font-geist text-[17px] font-semibold lg:px-8 [&::-webkit-details-marker]:hidden focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent">
+        <span data-i18n="plans.compare">Tariflarni solishtirish</span>
+        <svg class="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+      </summary>
+      <div id="plans-table" class="overflow-x-auto px-6 pb-6 lg:px-8 lg:pb-8" set:html={ssrTableHtml} />
+    </details>
+    <noscript>
+      <p class="mt-10 font-geist text-[16px] leading-[24px] text-muted">
+        Narxlarni bilish uchun qo'ng'iroq qiling: <a href="tel:+998941500330" class="text-link hover:underline">+998 94 150 03 30</a>.
+      </p>
+    </noscript>
+
+    <div
+      class="card mt-4 flex flex-col items-start justify-between gap-5 p-6 lg:flex-row lg:items-center lg:p-8"
+    >
+      <div>
+        <h3
+          class="font-geist text-[20px] leading-[1.3] font-semibold"
+          data-i18n="plans.helpH"
+        >
+          Franshiza boshqarasizmi yoki sozlashda yordam kerakmi?
+        </h3>
+        <p
+          class="mt-2 hidden max-w-[680px] font-geist text-[16px] leading-[1.6] text-muted lg:block"
+          data-i18n="plans.helpB"
+        >
+          Barcha filiallaringiz uchun menyu, ombor va hisobotlarni
+          markazlashtiramiz — menyuni raqamlashtirish, zal rejasini
+          tuzish va xodimlarni o'qitishda ham yordam beramiz.
+        </p>
+        <details class="mt-2 lg:hidden">
+          <summary class="cursor-pointer list-none font-geist text-[14px] font-semibold text-link underline underline-offset-4 [&::-webkit-details-marker]:hidden">
+            <span data-i18n="common.showMore">Batafsil</span>
+          </summary>
+          <p
+            class="mt-2 max-w-[760px] font-geist text-[16px] leading-[24px] text-muted"
+            data-i18n="plans.helpB"
+          >
+            Barcha filiallaringiz uchun menyu, ombor va hisobotlarni
+            markazlashtiramiz — menyuni raqamlashtirish, zal rejasini
+            tuzish va xodimlarni o'qitishda ham yordam beramiz.
+          </p>
+        </details>
+      </div>
+      <a href={`${home}#contact`} data-lead-jump class="btn-outline btn shrink-0">
+        <span data-i18n="ct.callMe">Qo'ng'iroq so'rash</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { STRINGS, getLang, type Lang } from "../data/i18n";
+  import {
+    apiLangFor,
+    esc,
+    fetchPlans,
+    renderPlanCards,
+    renderPlanTable,
+    UZ_PLAN_STRINGS,
+    type Cycle,
+  } from "../data/plans";
+
+  const grid = document.getElementById("plans-grid");
+  const loading = document.getElementById("plans-loading");
+  const cycleBtns = document.querySelectorAll<HTMLElement>("[data-cycle]");
+
+  let cycle: Cycle = "monthly";
+  let plans: any[] = [];
+  let fetchedFor = "";
+  // Build output already shows the Uzbek monthly cards; keep them if the
+  // refresh fails rather than replacing them with the Telegram fallback.
+  const staticHtml = grid?.innerHTML.trim() ?? "";
+  const hasStatic = staticHtml.length > 0;
+
+  const L = (k: string, lang: string): string =>
+    lang === "uz"
+      ? (UZ_PLAN_STRINGS[k] ?? "")
+      : (STRINGS[k]?.[lang as Lang] ?? UZ_PLAN_STRINGS[k] ?? "");
+
+  const table = document.getElementById("plans-table");
+  document.querySelector("[data-plan-compare]")?.addEventListener("toggle", (e) => {
+    if ((e.currentTarget as HTMLDetailsElement).open) (window as any).octoTrack?.("pricing_table_expand");
+  });
+
+  const FALLBACK: Partial<Record<string, string>> = {
+    uz: "Narxlarni ko'rish uchun",
+    en: "Contact us on Telegram for pricing",
+    ru: "Узнать цены в Telegram",
+    ko: "텔레그램에서 요금 문의",
+    tr: "Fiyatlar için Telegram'dan yazın",
+  };
+
+  function render(lang: string): void {
+    if (!grid) return;
+    if (plans.length === 0) {
+      if (hasStatic && cycle === "monthly") {
+        grid.innerHTML = staticHtml;
+        return;
+      }
+      const msg = esc(FALLBACK[lang] ?? FALLBACK["en"] ?? "");
+      grid.innerHTML = `<p class="col-span-full font-geist text-[16px] leading-[24px] text-muted">${msg} — <a href="tel:+998941500330" class="text-link hover:underline">+998 94 150 03 30</a></p>`;
+      return;
+    }
+    grid.innerHTML = renderPlanCards(plans, lang, cycle, (k) => L(k, lang));
+    if (table) table.innerHTML = renderPlanTable(plans, (k) => L(k, lang));
+  }
+
+  async function load(): Promise<void> {
+    const lang = getLang();
+    const apiLang = apiLangFor(lang);
+    if (fetchedFor !== apiLang) {
+      if (!hasStatic) loading?.classList.remove("hidden");
+      try {
+        plans = await fetchPlans(lang);
+        fetchedFor = apiLang;
+      } catch {
+        plans = [];
+      }
+      loading?.classList.add("hidden");
+    }
+    render(lang);
+  }
+
+  cycleBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      cycle = btn.getAttribute("data-cycle") as "monthly" | "yearly";
+      cycleBtns.forEach((x) => {
+        const on = x.getAttribute("data-cycle") === cycle;
+        x.classList.toggle("seg-toggle-on", on);
+        x.classList.toggle("seg-toggle-off", !on);
+        x.setAttribute("aria-pressed", String(on));
+      });
+      render(getLang());
+    });
+  });
+
+  document.addEventListener("langchange", () => void load());
+  void load();
+</script>
