@@ -681,3 +681,12 @@
     animation: none;
   }
 }
+
+/* Receipt shown in a fixed window on the homepage, fading at the bottom edge. */
+.receipt-window figure > div {
+  filter: none !important; /* the drop shadow would be clipped into a grey band */
+}
+.receipt-window {
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent);
+}

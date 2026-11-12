@@ -45,7 +45,7 @@ const finders = [
 <figure class="relative mx-auto w-full max-w-[420px] lg:mr-0">
   <div class="[filter:drop-shadow(0_18px_28px_rgba(0,0,0,0.35))]">
     <div class="paper receipt-paper" aria-hidden="true">
-      <p class="big center">Buyurtma #128</p>
+      <p class="big center" data-i18n="rc.order">Buyurtma #128</p>
 
       <div class="logo">
         <img src={logo.src} alt="" width="256" height="256" loading="lazy" decoding="async" />
@@ -53,19 +53,19 @@ const finders = [
       </div>
 
       <hr />
-      <p class="center">Namuna ko'chasi, 1</p>
+      <p class="center" data-i18n="rc.address">Namuna ko'chasi, 1</p>
       <p class="center">Tel: +998000000000</p>
       <hr />
 
-      <p class="row"><span>Sana</span><span>2026-11-10 13:45</span></p>
-      <p class="row"><span>Stol</span><span>Zal, Stol 4</span></p>
-      <p class="row"><span>Ofitsiant</span><span>Ofitsiant 1</span></p>
-      <p class="row"><span>Manba</span><span>POS</span></p>
+      <p class="row"><span data-i18n="rc.date">Sana</span><span>2026-11-10 13:45</span></p>
+      <p class="row"><span data-i18n="rc.table">Stol</span><span data-i18n="rc.tableV">Zal, Stol 4</span></p>
+      <p class="row"><span data-i18n="rc.waiter">Ofitsiant</span><span data-i18n="rc.waiterV">Ofitsiant 1</span></p>
+      <p class="row"><span data-i18n="rc.source">Manba</span><span>POS</span></p>
       <hr />
-      <p class="center bold">Joyida</p>
+      <p class="center bold" data-i18n="rc.dineIn">Joyida</p>
       <hr />
 
-      <p class="row bold"><span>Mahsulotlar</span><span>Narx</span></p>
+      <p class="row bold"><span data-i18n="rc.items">Mahsulotlar</span><span data-i18n="rc.price">Narx</span></p>
       {
         items.map((i) => (
           <>
@@ -79,12 +79,12 @@ const finders = [
       }
       <hr />
 
-      <p class="row"><span>Oraliq jami</span><span>{som(subtotal)}</span></p>
-      <p class="row"><span>Xizmat 10%</span><span>{som(service)}</span></p>
-      <p class="row"><span>QQS 12% (ichida)</span><span>{som(vat)}</span></p>
-      <p class="row big"><span>Jami</span><span>{som(total)}</span></p>
+      <p class="row"><span data-i18n="rc.subtotal">Oraliq jami</span><span>{som(subtotal)}</span></p>
+      <p class="row"><span data-i18n="rc.service">Xizmat 10%</span><span>{som(service)}</span></p>
+      <p class="row"><span data-i18n="rc.vat">QQS 12% (ichida)</span><span>{som(vat)}</span></p>
+      <p class="row big"><span data-i18n="rc.total">Jami</span><span>{som(total)}</span></p>
       <hr />
-      <p class="row"><span>Naqd</span><span>{som(total)}</span></p>
+      <p class="row"><span data-i18n="rc.cash">Naqd</span><span>{som(total)}</span></p>
       <hr />
 
       <svg viewBox={`-1 -1 ${N + 2} ${N + 2}`} class="qr" shape-rendering="crispEdges">
@@ -101,12 +101,12 @@ const finders = [
         }
       </svg>
 
-      <p class="row"><span>Turi</span><span>Sotuv</span></p>
+      <p class="row"><span data-i18n="rc.type">Turi</span><span data-i18n="rc.sale">Sotuv</span></p>
       <p class="row"><span>FM</span><span>UZ000000000000</span></p>
       <p class="row"><span>FB</span><span>***</span></p>
       <hr />
-      <p class="center">Tashrifingiz uchun rahmat!</p>
-      <p class="center">Yana kutib qolamiz.</p>
+      <p class="center" data-i18n="rc.thanks">Tashrifingiz uchun rahmat!</p>
+      <p class="center" data-i18n="rc.again">Yana kutib qolamiz.</p>
     </div>
   </div>
 </figure>

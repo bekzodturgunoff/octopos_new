@@ -157,9 +157,9 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
 
   {
     kind === "store" && (
-      <div class="mx-auto max-w-[330px]">
-        <div class="screen screen-phone sf">
-          <div class="px-3.5 pt-3.5">
+      <div>
+        <div class="screen sf">
+          <div class="px-5 pt-5">
             <div class="flex items-center justify-between">
               {/* Shop logo slot: Octopos's own mark, not a client's. Same files the header loads. */}
               <span class="flex items-center gap-2">
@@ -243,13 +243,10 @@ const storeTabs = [I.house, I.grid, I.search, I.bag, I.user];
     stroke-linejoin: round;
   }
 
-  /* Store: a phone screen without a frame. */
+  /* Store: the storefront page, same width and corners as the other mocks. */
   .screen {
     overflow: hidden;
-    border-radius: 28px;
-  }
-  .screen-phone {
-    border-radius: 28px;
+    border-radius: 20px;
   }
 
   /* Storefront: its own neutral palette (white, not the brand cream). */

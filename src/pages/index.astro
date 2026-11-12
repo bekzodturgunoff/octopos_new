@@ -171,6 +171,9 @@ const extras = [
       "Menyu rasmini yoki oddiy ro'yxatni yuklang (Excel ham bo'ladi). AI taomlar, kategoriyalar va narxlarni mahsulotlar ro'yxatiga qo'shadi va taomlaringiz rasmini ham yaratib beradi: dastlabki 20 ta rasm bepul." },
   { n: 6, title: "Yandex va Uzum'da narx boshqacha bo'lishi kerakmi?", body:
       "Har bir savdo kanali uchun o'z narxi: zal, QR-menyu, sayt, Telegram, Yandex Eats va Uzum Tezkor. Ulgurji mijozlar uchun ham alohida narx ro'yxati." },
+  // Guest (QR at the table) + POS floor plan: kdsx-guest landing, kdsx-pos-v2 floor-plan.
+  { n: 7, title: "Mijoz ofitsiantni kutib qolyaptimi?", body:
+      "Stoldagi QR orqali mijoz telefondan ofitsiantni chaqiradi yoki hisobni so'raydi. Kassadagi zal rejasida o'sha stol qizil qo'ng'iroq bilan belgilanadi." },
 ];
 
 
@@ -338,8 +341,8 @@ const faqLd = {
       {
         problems.filter((pr) => pr.receipt).map((pr) => (
           <article class="bg-card">
-            <div class="wrap py-14 lg:py-20">
-              <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+            <div class="wrap py-12 lg:py-16">
+              <div class="grid items-center gap-10 lg:grid-cols-[1fr_420px] lg:gap-16">
                 <div class="min-w-0">
                   <p class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[1.4] font-semibold text-link lg:text-[16px]">
                       <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
@@ -358,20 +361,21 @@ const faqLd = {
                   <p class="mt-5 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted lg:text-[18px]" data-i18n={`prob.${pr.n}d`}>
                     {pr.body}
                   </p>
+                <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                  {fiscalPoints.map((f) => (
+                    <li class="flex gap-3">
+                      <svg class="mt-[3px] h-5 w-5 shrink-0 text-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                      <div>
+                        <p class="font-geist text-[15px] leading-[1.4] font-semibold" data-i18n={`fisc.${f.n}t`}>{f.t}</p>
+                        <p class="mt-0.5 hidden font-geist text-[13.5px] leading-[1.45] text-muted sm:block" data-i18n={`fisc.${f.n}d`}>{f.d}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
                 </div>
-                <div class="min-w-0"><Receipt /></div>
+                {/* The full receipt is ~1000px tall: show its top in a window that fades out. */}
+                <div class="receipt-window min-w-0 h-[380px] overflow-hidden lg:h-[520px]"><Receipt /></div>
               </div>
-              <ul class="mt-12 grid gap-x-10 gap-y-5 border-t border-ink/10 pt-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-y-8 lg:pt-12">
-                {fiscalPoints.map((f) => (
-                  <li class="flex gap-3">
-                    <svg class="mt-[3px] h-5 w-5 shrink-0 text-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                    <div>
-                      <p class="font-geist text-[16px] leading-[1.4] font-semibold" data-i18n={`fisc.${f.n}t`}>{f.t}</p>
-                      <p class="mt-1 hidden font-geist text-[14px] leading-[1.5] text-muted sm:block" data-i18n={`fisc.${f.n}d`}>{f.d}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
             </div>
           </article>
         ))
@@ -383,25 +387,28 @@ const faqLd = {
           {
             problems.filter((pr) => pr.mock).map((pr) => (
               <li class="card flex flex-col overflow-hidden p-6 pb-0 lg:p-10 lg:pb-0">
-                <p class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[1.4] font-semibold text-link lg:text-[16px]">
-                  <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
-                  {pr.plan && (
-                    <a
-                  href="#plans"
-                  class="rounded-full border border-ink/20 px-2.5 py-1 font-geist text-[12px] leading-none font-medium text-muted transition-colors duration-200 ease-out hover:border-ink/50 hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
-                  data-i18n="prob.planFrom"
-                  data-name={pr.plan}
-                    >
-                  {pr.plan} tarifidan
-                    </a>
-                  )}
-                </p>
-                <h3 class="display mt-4 text-[30px] leading-[1.02] lg:text-[40px]" data-i18n={`prob.${pr.n}t`}>{uzApos(pr.title)}</h3>
-                <p class="mt-4 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted" data-i18n={`prob.${pr.n}d`}>
-                  {pr.body}
-                </p>
+                {/* Same text height in every card, so the four mock windows start on one line. */}
+                <div class="lg:min-h-[270px]">
+                  <p class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[1.4] font-semibold text-link lg:text-[16px]">
+                    <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
+                    {pr.plan && (
+                      <a
+                    href="#plans"
+                    class="rounded-full border border-ink/20 px-2.5 py-1 font-geist text-[12px] leading-none font-medium text-muted transition-colors duration-200 ease-out hover:border-ink/50 hover:text-ink focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-accent"
+                    data-i18n="prob.planFrom"
+                    data-name={pr.plan}
+                      >
+                    {pr.plan} tarifidan
+                      </a>
+                    )}
+                  </p>
+                  <h3 class="display mt-4 text-[30px] leading-[1.02] lg:text-[40px]" data-i18n={`prob.${pr.n}t`}>{uzApos(pr.title)}</h3>
+                  <p class="mt-4 max-w-[560px] font-geist text-[16px] leading-[1.6] text-muted" data-i18n={`prob.${pr.n}d`}>
+                    {pr.body}
+                  </p>
+                </div>
                 {/* Fixed window cropped at the card's bottom edge, so every card is the same height. */}
-                <div class="mx-auto mt-8 h-[260px] w-full max-w-[460px] overflow-hidden lg:mt-auto lg:h-[300px]"><Mock kind={pr.mock!} /></div>
+                <div class="mx-auto mt-8 h-[260px] w-full max-w-[460px] overflow-hidden lg:h-[300px]"><Mock kind={pr.mock!} /></div>
               </li>
             ))
           }
