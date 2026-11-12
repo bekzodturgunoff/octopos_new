@@ -185,6 +185,8 @@ type ProblemIn = {
   n: number;
   img?: string;
   receipt?: boolean;
+  /** lowest plan that includes this, shown as a pill */
+  plan?: string;
   pain: string;
   title: string;
   body: string;
@@ -194,6 +196,7 @@ const problems = ([
   {
     n: 7,
     receipt: true,
+    plan: "Starter",
     pain: "Soliq tekshiruvidan xavotirdamisiz?",
     title: "Har bir savdoga fiskal chek, avtomatik",
     body:
@@ -211,6 +214,7 @@ const problems = ([
   {
     n: 2,
     img: "/app_images/dash/dash-inventory.webp",
+    plan: "Growth",
     pain: "Ombordan mahsulot yo'qolyaptimi?",
     title: "Texkarta sarfni hisoblaydi, inventarizatsiya farqni ko'rsatadi",
     body:
@@ -293,7 +297,7 @@ const faqs = [
     a: "faq.2a",
     uzQ: "Obuna narxiga nimalar kiradi?",
     uzA:
-      "Bitta obuna — sakkizta ilova, barcha yangilanishlar, Telegram orqali yordam va bitta filial uchun to'liq funksiyalar. Qo'shimcha filiallar va paketlar alohida hisoblanadi.",
+      "Har bir tarifga barcha yangilanishlar va Telegram orqali yordam kiradi. Funksiyalar tarifga qarab ochiladi: fiskal chek va oshxona ekrani — Starter'dan, ombor, inventarizatsiya va ish haqi — Growth'dan, bir nechta filialni markazdan boshqarish — Scale'da. Qo'shimcha xizmatlar alohida hisoblanadi.",
   },
   {
     q: "faq.3q",
@@ -472,9 +476,19 @@ const faqLd = {
               >
                 <div class:list={["min-w-0", pr.receipt ? "max-w-[820px]" : "max-w-[760px]"]}>
                   <p
-                    class="font-geist text-[15px] leading-[22px] font-medium text-link lg:text-[17px]"
+                    class="flex flex-wrap items-center gap-x-3 gap-y-2 font-geist text-[15px] leading-[22px] font-medium text-link lg:text-[17px]"
                   >
                     <span data-i18n={`prob.${pr.n}p`}>{pr.pain}</span>
+                    {pr.plan && (
+                      <a
+                        href="#plans"
+                        class="rounded-full border border-hairline px-2.5 py-1 font-geist-mono text-[11px] leading-none font-normal tracking-[0.5px] text-muted transition-colors duration-300 hover:border-link/40 hover:text-ink"
+                        data-i18n="prob.planFrom"
+                        data-name={pr.plan}
+                      >
+                        {pr.plan} tarifidan
+                      </a>
+                    )}
                   </p>
                   <h3
                     class="mt-4 font-geist text-[28px] leading-[1.15] font-semibold tracking-[-0.6px] text-balance text-ink lg:text-[44px] lg:leading-[1.08] lg:tracking-[-1px]"
@@ -912,6 +926,10 @@ const faqLd = {
           class="mt-12 grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4"
           set:html={ssrPlansHtml}
         />
+        <p class="mt-5 font-geist text-[15px] leading-[23px] text-muted">
+          <span data-i18n="plans.ordersNote">Har bir tarifda oyiga 50 ta onlayn buyurtma (sayt va Telegram) bor. Ko'proq kerak bo'lsa —</span>
+          <a href="#addons" class="text-link hover:underline" data-i18n="plans.ordersLink">Onlayn do'kon qo'shimchasi</a>.
+        </p>
         <noscript>
           <p class="mt-10 font-geist text-[16px] leading-[24px] text-muted">
             Narxlarni ko'rish uchun <a href="https://t.me/octopos_support" class="text-link hover:underline" target="_blank" rel="noopener">Telegram orqali yozing</a>.
@@ -961,7 +979,7 @@ const faqLd = {
     </section>
 
     {/* ---------------- add-ons ---------------- */}
-    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
+    <section id="addons" class="scroll-mt-16 px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
       <div class="mx-auto max-w-[1600px]">
         <h2
           class="font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
@@ -1254,6 +1272,59 @@ const faqLd = {
             </div>
           </div>
         </div>
+
+        {/* aggregator commission vs own online store */}
+        <div class="mt-4 rounded-2xl border border-hairline bg-card/40 p-6 lg:p-8" data-calc>
+          <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16">
+            <div>
+              <h3 class="font-geist text-[22px] leading-[1.2] font-semibold tracking-[-0.3px] lg:text-[28px]" data-i18n="calc.heading">
+                Agregatorlarga oyiga qancha komissiya to'layapsiz?
+              </h3>
+              <p class="mt-3 max-w-[560px] font-geist text-[16px] leading-[25px] text-muted lg:text-[17px] lg:leading-[27px]" data-i18n="calc.body">
+                O'z raqamlaringizni kiriting va o'z onlayn do'koningiz narxi bilan solishtiring.
+              </p>
+              <div class="mt-6 grid gap-4 sm:grid-cols-3">
+                <label class="block">
+                  <span class="block font-geist text-[14px] font-medium" data-i18n="calc.orders">Oyiga onlayn buyurtmalar</span>
+                  <span class="mt-2 flex items-center gap-2 rounded-xl border border-hairline bg-page px-4 py-3 transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"><input class="w-full min-w-0 bg-transparent font-geist text-[16px] text-ink outline-none placeholder:text-muted/70" inputmode="numeric" placeholder="500" data-calc-orders /></span>
+                </label>
+                <label class="block">
+                  <span class="block font-geist text-[14px] font-medium" data-i18n="calc.check">O'rtacha chek</span>
+                  <span class="mt-2 flex items-center gap-2 rounded-xl border border-hairline bg-page px-4 py-3 transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"><input class="w-full min-w-0 bg-transparent font-geist text-[16px] text-ink outline-none placeholder:text-muted/70" inputmode="numeric" placeholder="120 000" data-calc-check /><span class="shrink-0 text-muted" data-i18n="calc.som">so'm</span></span>
+                </label>
+                <label class="block">
+                  <span class="block font-geist text-[14px] font-medium" data-i18n="calc.commission">Agregator komissiyasi</span>
+                  <span class="mt-2 flex items-center gap-2 rounded-xl border border-hairline bg-page px-4 py-3 transition-[border-color,box-shadow] duration-200 focus-within:border-accent focus-within:ring-4 focus-within:ring-accent/25"><input class="w-full min-w-0 bg-transparent font-geist text-[16px] text-ink outline-none placeholder:text-muted/70" inputmode="decimal" placeholder="—" data-calc-rate /><span class="shrink-0 text-muted">%</span></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="flex flex-col justify-center rounded-xl border border-hairline bg-page p-5 lg:p-6" aria-live="polite">
+              <p class="font-geist text-[15px] leading-[23px] text-muted" data-calc-empty data-i18n="calc.empty">
+                Uchala maydonni to'ldiring — natija shu yerda chiqadi.
+              </p>
+              <dl class="hidden flex-col gap-3 font-geist text-[15px] leading-[22px]" data-calc-result>
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-muted" data-i18n="calc.youPay">Agregatorga komissiya</dt>
+                  <dd class="text-right font-semibold text-ink tabular-nums"><span data-calc-fee></span> <span data-i18n="calc.somMo">so'm/oy</span></dd>
+                </div>
+                <div class="flex items-baseline justify-between gap-4">
+                  <dt class="text-muted"><span data-i18n="calc.store">Onlayn do'kon</span> <span data-calc-tier></span></dt>
+                  <dd class="text-right font-semibold text-ink tabular-nums"><span data-calc-cost></span> <span data-i18n="calc.somMo">so'm/oy</span></dd>
+                </div>
+                <div class="mt-1 border-t border-hairline pt-4">
+                  <p class="hidden" data-calc-save>
+                    <span class="block text-muted" data-i18n="calc.save">Har oy tejaysiz</span>
+                    <span class="mt-1 block font-anton text-[40px] leading-none tracking-tight text-ink tabular-nums lg:text-[48px]"><span data-calc-diff></span> <span class="font-geist text-[15px] font-normal tracking-normal text-muted" data-i18n="calc.som">so'm</span></span>
+                  </p>
+                  <p class="hidden text-ink" data-calc-nosave data-i18n="calc.noSave">Bu hajmda agregator hozircha arzonroq. Buyurtmalar ko'paysa, qayta hisoblang.</p>
+                  <p class="hidden text-ink" data-calc-big data-i18n="calc.big">10 000 dan ortiq buyurtma uchun narxni alohida kelishamiz — Telegramga yozing.</p>
+                </div>
+                <p class="font-geist text-[13px] leading-[19px] text-muted" data-i18n="calc.note">Kuryer va to'lov tizimi xarajatlari hisobga olinmagan.</p>
+              </dl>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1302,7 +1373,7 @@ const faqLd = {
     </section>
 
     {/* ---------------- faq ---------------- */}
-    <section class="px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
+    <section id="faq" class="scroll-mt-16 px-5 py-[32px] lg:px-[32px] lg:py-[96px]">
       <div class="mx-auto max-w-[1600px]">
         <h2
           class="max-w-[900px] font-anton text-[34px] leading-[0.92] tracking-[-0.69px] [hyphens:auto] [-webkit-hyphens:auto] [overflow-wrap:anywhere] lg:text-[60px]"
@@ -1721,6 +1792,54 @@ const faqLd = {
     })();
   </script>
 
+  <script>
+    // Aggregator commission vs own online store. Tiers mirror `storeTiers`.
+    const TIERS = [
+      { name: "Start", price: 790000, n: 1000 },
+      { name: "Pro", price: 2190000, n: 3000 },
+      { name: "Business", price: 3990000, n: 6000 },
+      { name: "Enterprise", price: 7490000, n: 10000 },
+    ];
+    const fmt = (n: number) => Math.round(n).toLocaleString("ru-RU").replace(/\s/g, " ");
+    const num = (el: HTMLInputElement) => Number(el.value.replace(/[^\d.,]/g, "").replace(",", ".")) || 0;
+    document.querySelectorAll<HTMLElement>("[data-calc]").forEach((root) => {
+      const q = <T extends Element = HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+      const orders = q<HTMLInputElement>("[data-calc-orders]");
+      const check = q<HTMLInputElement>("[data-calc-check]");
+      const rate = q<HTMLInputElement>("[data-calc-rate]");
+      // group digits as the owner types: 120000 -> 120 000
+      [orders, check].forEach((el) =>
+        el.addEventListener("input", () => {
+          const d = el.value.replace(/\D/g, "").slice(0, 9);
+          el.value = d ? fmt(Number(d)) : "";
+        }),
+      );
+      let tracked = false;
+      const update = () => {
+        const o = num(orders), c = num(check), r = Math.min(num(rate), 100);
+        const ready = o > 0 && c > 0 && r > 0;
+        q("[data-calc-empty]").classList.toggle("hidden", ready);
+        q("[data-calc-result]").classList.toggle("hidden", !ready);
+        q("[data-calc-result]").classList.toggle("flex", ready);
+        if (!ready) return;
+        const fee = (o * c * r) / 100;
+        const tier = TIERS.find((t) => o <= t.n);
+        q("[data-calc-fee]").textContent = fmt(fee);
+        q("[data-calc-tier]").textContent = tier ? `(${tier.name})` : "";
+        q("[data-calc-cost]").textContent = tier ? fmt(tier.price) : "—";
+        const diff = tier ? fee - tier.price : 0;
+        q("[data-calc-diff]").textContent = fmt(diff);
+        q("[data-calc-save]").classList.toggle("hidden", !tier || diff <= 0);
+        q("[data-calc-nosave]").classList.toggle("hidden", !tier || diff > 0);
+        q("[data-calc-big]").classList.toggle("hidden", Boolean(tier));
+        if (!tracked) {
+          tracked = true;
+          (window as any).octoTrack?.("calc_used");
+        }
+      };
+      [orders, check, rate].forEach((el) => el.addEventListener("input", update));
+    });
+  </script>
   <script>
     import { STRINGS, getLang, type Lang } from "../data/i18n";
     import {

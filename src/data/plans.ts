@@ -22,7 +22,9 @@ export const UZ_PLAN_STRINGS: Record<string, string> = {
   "plans.perYear": "/yil",
   "plans.locations": "{n} ta filial",
   "plans.aiPhotos": "Oyiga {n} ta AI-surati",
-  "plans.onlineOrders": "Oyiga {n} ta onlayn buyurtma",
+  "plans.orders": "Oyiga {n} ta buyurtma",
+  "plans.items": "{n} ta mahsulot",
+  "plans.fiscalFrom": "Fiskal chek — Starter tarifidan",
   "plans.loading": "Yuklanmoqda…",
   "common.showAll": "Barchasini ko'rsatish",
 };
@@ -83,6 +85,11 @@ export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label):
   const ctaKey = amount === 0 ? "plans.startFree" : "plans.getStarted";
 
   const quotas: any[] = Array.isArray(plan.quotas) ? plan.quotas : [];
+  // Quota without channels = the plan-wide limit (Free only). The
+  // per-channel online-order quota is the same on every tier, so it is
+  // stated once under the grid instead of on each card.
+  const planWide = (meter: string): number =>
+    Number(quotas.find((q) => q?.meter === meter && !(q.channels ?? []).length)?.max) || 0;
   const quotaMax = (meter: string): number => {
     const matches = quotas.filter((q) => q?.meter === meter);
     if (!matches.length) return 0;
@@ -95,7 +102,8 @@ export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label):
   const chips = [
     chip("plans.locations", quotaMax("location")),
     chip("plans.aiPhotos", quotaMax("imageGeneration")),
-    chip("plans.onlineOrders", quotaMax("order")),
+    chip("plans.orders", planWide("order")),
+    chip("plans.items", planWide("item")),
   ]
     .filter(Boolean)
     .join("");
@@ -117,6 +125,7 @@ export function renderPlanCard(plan: any, lang: string, cycle: Cycle, L: Label):
         </div>
         ${note}
         ${chips ? `<div class="mt-4 flex flex-wrap gap-1.5">${chips}</div>` : ""}
+        ${amount === 0 ? `<p class="mt-3 flex items-center gap-1.5 font-geist text-[13px] text-ink/80"><svg class="h-3.5 w-3.5 shrink-0 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>${t("plans.fiscalFrom")}</p>` : ""}
         <div class="mt-5 h-px w-full bg-hairline"></div>
         <ul class="mt-5 hidden flex-col gap-2.5 md:flex">${feats}</ul>
         ${feats ? `<details class="mt-5 md:hidden"><summary class="btn-outline h-[44px] w-full cursor-pointer list-none px-6 font-geist-mono text-[12px] tracking-[0.72px] [&::-webkit-details-marker]:hidden">${t("common.showAll")}</summary><ul class="mt-4 flex flex-col gap-2.5">${feats}</ul></details>` : ""}
