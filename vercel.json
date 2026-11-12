@@ -220,6 +220,46 @@
       "source": "/uz/yechimlar",
       "destination": "/yechimlar/",
       "statusCode": 301
+    },
+    {
+      "source": "/pricing",
+      "destination": "/#plans",
+      "statusCode": 301
+    },
+    {
+      "source": "/faq",
+      "destination": "/#faq",
+      "statusCode": 301
+    },
+    {
+      "source": "/ru/pricing",
+      "destination": "/ru/#plans",
+      "statusCode": 301
+    },
+    {
+      "source": "/ru/faq",
+      "destination": "/ru/#faq",
+      "statusCode": 301
+    },
+    {
+      "source": "/ko/pricing",
+      "destination": "/ko/#plans",
+      "statusCode": 301
+    },
+    {
+      "source": "/ko/faq",
+      "destination": "/ko/#faq",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/pricing",
+      "destination": "/#plans",
+      "statusCode": 301
+    },
+    {
+      "source": "/uz/faq",
+      "destination": "/#faq",
+      "statusCode": 301
     }
   ]
 }
